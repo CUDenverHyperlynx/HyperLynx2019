@@ -22,10 +22,10 @@ Commands:
     -Tube Length (126492cm)
     
 Functions:
-
-  -get_velocity()
-  -get_acceleration()
-  -get_position()
+  -poll_sensors
+      -poll_resolver()
+      -poll_IMUs()
+      -poll_LSTs()
   -
 
 Classes:
