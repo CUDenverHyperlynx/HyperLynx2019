@@ -70,6 +70,7 @@ import ctypes
 import struct
 
 class Status(IntEnum):
+    
     Fault = 0
     SafeToApproach = 1
     FlightControlToLaunch = 2
@@ -78,6 +79,7 @@ class Status(IntEnum):
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 5
+    abort_table = dict()
     
 def poll_sensors():
     
@@ -90,6 +92,14 @@ def poll_sensors():
         return
     
     def poll_LSTs():
+        
+        return
+    
+    def poll_lidar():
+        
+        return
+
+    def poll_BMEs():
         
         return
     
@@ -133,3 +143,4 @@ if __name__ == "__main__":
     status = Status.SafeToApproach
 
     seconds = 0
+    
