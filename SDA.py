@@ -89,17 +89,17 @@ def get_acceleration_highspeed():
     return
             
 if __name__ == "__main__":
-    parser = ArgumentParser(description="Mock the run of our Hyperlynx system")
+    parser = ArgumentParser(description="Hyperlynx POD Run")
     parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
-    parser.add_argument("--frequency", type=int, default=25, help="The frequency for sending packets")
+    parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
     parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send packets to")
     parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
-    parser.add_argument("--tube_length", type=int, default=126492, help="Total length of the tube")
-    parser.add_argument("--bbp", type=int, default=98390, help="Begin Braking Point")
-    parser.add_argument("--cbp", type=int, default=123749, help="Crawling Brake Point")
-    parser.add_argument("--topspeed", type=int, default=120, help="Top Speed in m/s")
-    parser.add_argument("--crawlspeed", type=int, default=9, help="Crawl Speed in m/s")
-    parser.add_argument("--time_run_highspeed", type=int, default=30, help="Run Time in seconds")
+    parser.add_argument("--tube_length", type=int, default=4150, help="Total length of the tube(ft)")
+    parser.add_argument("--bbp", type=int, default=3228, help="Begin Braking Point(ft)")
+    parser.add_argument("--cbp", type=int, default=4060, help="Crawling Brake Point(ft)")
+    parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
+    parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
+    parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
     
     args = parser.parse_args()
     
@@ -109,15 +109,18 @@ if __name__ == "__main__":
         print("Send frequency should be lower than 50Hz")
         
     team_id = args.team_id
-    tube_length = args.tube_length
-    BBP = args.bbp
-    CBP = args.cbp
-    top_speed = args.topspeed
-    crawl_speed = args.crawlspeed
-    time_run_highspeed = args.time_run_highspeed
     wait_time = (1/args.frequency)
     server = (args.server_ip, args.server_port)
-
+    
+    tube_length = args.tube_length
+    time_run_highspeed = args.time_run_highspeed
+    
+    top_speed = args.topspeed    
+    BBP = args.bbp
+    
+    crawl_speed = args.crawlspeed
+    CBP = args.cbp
+    
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     postition = 0
@@ -126,32 +129,6 @@ if __name__ == "__main__":
     status = Status.SafeToApproach
 
     seconds = 0
-    should_launch = True
-
-    while True:
-        
-        start_time = time()
-        
-        if status == Status.SafeToApproach and should_launch:
-            
-            if seconds > 10:
-                
-                status = Status.FlightControlToLaunch
-                seconds = 0
-                should_launch = False
-                
-        elif status == Status.FlightControlToLaunch:
-            
-            if seconds > 5:
-                
-                status = Status. Launching
-                seconds = 0
-                
-        elif status == Status.Launching:
-            
-            position = get_position_highspeed()
-            velocity = get_velocity_highspeed()
-            acceleration = get_acceleration_highspeed()
             
             
         
