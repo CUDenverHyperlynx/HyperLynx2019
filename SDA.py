@@ -79,27 +79,14 @@ class Status(IntEnum):
     Crawling = 6
     BrakingLow = 5
     
-def get_position_highspeed(time_sec, time_run_highspeed, tube_length):
-    return (1-1*math.cos(time_sec*math.pi/time_run_highspeed)) / 2.0 * tube_length
+def get_position_highspeed():
+    return
 
-def get_velocity_highspeed(time_sec, time_run_highspeed, tube_length):
-    return (get_position_highspeed(time_sec, time_run_highspeed, tube_length) \
-            - get_position_highspeed(time_sec-0.1, time_run_highspeed, tube_length)) * 10
+def get_velocity_highspeed():
+    return
 
-def get_acceleration_highspeed(time_sec, time_run_highspeed, tube_length):
-    return (get_velocity_highspeed(time_sec, time_run_highspeed, tube_length) \
-            - get_velocity_highspeed(time_sec-0.1, time_run_highspeed, tube_length)) * 10
-            
-def get_position_lowspeed(time_sec, tube_length_remaining):
-    return (1-1*math.cos(time_sec*math.pi/10)) / 2.0 * tube_length_remaining
-
-def get_velocity_lowspeed(time_sec, tube_length_remaining):
-    return (get_position_lowspeed(time_sec, tube_length_remaining) \
-            - get_position_lowspeed(time_sec-0.1, tube_length_remaining)) * 10
-
-def get_acceleration_lowspeed(time_sec, tube_length_remaining):
-    return (get_velocity_lowspeed(time_sec, tube_length_remaining) \
-            - get_velocity_lowspeed(time_sec-0.1, tube_length_remaining)) * 10
+def get_acceleration_highspeed():
+    return
             
 if __name__ == "__main__":
     parser = ArgumentParser(description="Mock the run of our Hyperlynx system")
@@ -123,6 +110,10 @@ if __name__ == "__main__":
         
     team_id = args.team_id
     tube_length = args.tube_length
+    BBP = args.bbp
+    CBP = args.cbp
+    top_speed = args.topspeed
+    crawl_speed = args.crawlspeed
     time_run_highspeed = args.time_run_highspeed
     wait_time = (1/args.frequency)
     server = (args.server_ip, args.server_port)
@@ -138,22 +129,29 @@ if __name__ == "__main__":
     should_launch = True
 
     while True:
+        
         start_time = time()
         
         if status == Status.SafeToApproach and should_launch:
+            
             if seconds > 10:
+                
                 status = Status.FlightControlToLaunch
                 seconds = 0
                 should_launch = False
+                
         elif status == Status.FlightControlToLaunch:
+            
             if seconds > 5:
+                
                 status = Status. Launching
                 seconds = 0
+                
         elif status == Status.Launching:
-            position = get_position_highspeed(seconds, time_run_highspeed, tube_length)
-            velocity = get_velocity_highspeed(seconds, time_run_highspeed, tube_length)
-            acceleration = get_acceleration_highspeed(seconds, time_run_highspeed, tube_length)
             
+            position = get_position_highspeed()
+            velocity = get_velocity_highspeed()
+            acceleration = get_acceleration_highspeed()
             
             
         
