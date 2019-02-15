@@ -17,15 +17,17 @@ Commands:
   -HV Contactors
   -MC Throttle
   -Parameters
-    -BBP (3228ft w/o load)
-    -Top Speed (396ft/s)
-    -Tube Length (126492cm)
+    -BBP (3228ft w/o load) (3125ft w/ load)
+    -Top Speed (396ft/s w/o load) (312ft/s w/ load)
+    -Tube Length (4150ft)
+    -Crawl Speed (30ft/s)
+    -CBP (90ft from end of tube or 4060ft)
     
 Functions:
   -poll_sensors
       -poll_resolver()
       -poll_IMUs()
-      -poll_LSTs()
+      -poll_LSTs() (laser trackers)
   -
 
 Classes:
