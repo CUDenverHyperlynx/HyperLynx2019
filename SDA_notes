@@ -33,3 +33,5 @@ Functions:
 Classes:
   
   -state()
+    -States: 0 - 7 from Fault - BrakingLowSpeed
+    -abort_state = dict() abort state dictionary ready to upload abort .dat profile
