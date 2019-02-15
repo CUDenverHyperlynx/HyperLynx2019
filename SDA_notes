@@ -1,0 +1,29 @@
+SDA:
+
+  -30Hz
+  -Read cmd inputs
+  -Read sensor data
+  -add data to 15Ms queue
+  -compare queue to abort criteria
+  -send data to GUI
+  -boot
+    -load abort data file to matrix
+    
+Commands:
+
+  -Launch
+  -Abort
+  -Solenoid Valves
+  -HV Contactors
+  -MC Throttle
+  -Parameters
+    -BBP (3228ft w/o load)
+    -Top Speed (396ft/s)
+    -Tube Length (126492cm)
+    
+Functions:
+
+    -get_velocity()
+    -get_acceleration()
+    -get_position()
+    -
