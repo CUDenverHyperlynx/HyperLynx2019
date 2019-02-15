@@ -79,13 +79,20 @@ class Status(IntEnum):
     Crawling = 6
     BrakingLow = 5
     
-def get_position_highspeed():
-    return
-
-def get_velocity_highspeed():
-    return
-
-def get_acceleration_highspeed():
+def poll_sensors():
+    
+    def poll_resolvers():
+    
+        return
+    
+    def poll_IMUs():
+        
+        return
+    
+    def poll_LSTs():
+        
+        return
+    
     return
             
 if __name__ == "__main__":
@@ -123,17 +130,6 @@ if __name__ == "__main__":
     
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    postition = 0
-    velocity = 0
-    acceleration = 0
     status = Status.SafeToApproach
 
     seconds = 0
-            
-            
-        
-    
-        
-    
-    
-    
