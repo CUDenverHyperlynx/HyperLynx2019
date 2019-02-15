@@ -23,7 +23,11 @@ Commands:
     
 Functions:
 
-    -get_velocity()
-    -get_acceleration()
-    -get_position()
-    -
+  -get_velocity()
+  -get_acceleration()
+  -get_position()
+  -
+
+Classes:
+  
+  -state()
