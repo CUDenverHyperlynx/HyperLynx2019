@@ -82,6 +82,7 @@ class Status(IntEnum):
     abort_table = dict()
     
 def poll_sensors():
+    #JEFF: I think all the following can be condensed based on Patrick's SENSOR_DATA_1.py code speed
     
     def poll_resolvers():
     

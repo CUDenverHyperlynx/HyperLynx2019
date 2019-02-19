@@ -31,7 +31,7 @@ BME280_ADDRESS_B = 0x76
 PASC2PSI = 6894.757  #TO CONVERT PASCALS TO PSI
 METER2FEET = 3.281
 DATA_READ = 0.005 #time between readings, in seconds
-DATA_DISP = 0.003333333 #sleep time between displays(5 sensors * 0.005s + 0.0053333s = 30Hz display)
+DATA_DISP = 0.01/3 #0.00333333; sleep time between displays(5 sensors * 0.005s + 0.0053333s = 30Hz display)
 
 #INITIALIZE SENSORS
 IR_Therm = MLX90614(IR_ADDRESS)
