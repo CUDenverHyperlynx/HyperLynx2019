@@ -81,7 +81,7 @@ class Status():
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 5
-    table_of_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, dtype=int)
+    table_of_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, delimiter=',', usecols=numpy.arange(1,9))
 
 
 status = Status.table_of_ranges
