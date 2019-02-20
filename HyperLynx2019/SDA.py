@@ -28,7 +28,7 @@
 
       - E(t) = (LV Current, LV Voltage, LV Temp., BME1, BME2, BMP, IMU's, BMS Current,
                 BMS Voltage, BMS Temp., Pneumatics, MC Current, MC Voltage, MC Temp., Comms Loss, Spare)
-   
+
    OUTPUTS
    HVC(t)-High Voltage Contactors(0-CLOSED/SHORT/ON 1-OPEN/OFF)
    TR(t) -Throttle Control(MAX/CRAWL/OFF)
@@ -57,7 +57,6 @@
 '''
 
 from argparse import ArgumentParser
-from enum import IntEnum
 from time import sleep
 from time import time
 import sys
@@ -68,44 +67,29 @@ import socket
 import pickle
 import ctypes
 import struct
+import numpy
 
-class Status(IntEnum):
-    
+
+class Status():
     Fault = 0
     SafeToApproach = 1
     FlightControlToLaunch = 2
     Launching = 3
-    Coasting = 4 #Unused
+    Coasting = 4  # Unused
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 5
-    abort_table = dict()
-    
-def poll_sensors():
-    #JEFF: I think all the following can be condensed based on Patrick's SENSOR_DATA_1.py code speed
-    
-    def poll_resolvers():
-    
-        return
-    
-    def poll_IMUs():
-        
-        return
-    
-    def poll_LSTs():
-        
-        return
-    
-    def poll_lidar():
-        
-        return
+    table_of_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, dtype=int)
 
-    def poll_BMEs():
-        
-        return
-    
+
+status = Status.table_of_ranges
+print(status)
+
+
+def poll_sensors():
     return
-            
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(description="Hyperlynx POD Run")
     parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
@@ -118,30 +102,29 @@ if __name__ == "__main__":
     parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
     parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
     parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
-    
+
     args = parser.parse_args()
-    
+
     if args.frequency < 10:
         print("Send frequency should be higher than 10Hz")
     if args.frequency > 50:
         print("Send frequency should be lower than 50Hz")
-        
+
     team_id = args.team_id
-    wait_time = (1/args.frequency)
+    wait_time = (1 / args.frequency)
     server = (args.server_ip, args.server_port)
-    
+
     tube_length = args.tube_length
     time_run_highspeed = args.time_run_highspeed
-    
-    top_speed = args.topspeed    
+
+    top_speed = args.topspeed
     BBP = args.bbp
-    
+
     crawl_speed = args.crawlspeed
     CBP = args.cbp
-    
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     status = Status.SafeToApproach
 
     seconds = 0
-    
