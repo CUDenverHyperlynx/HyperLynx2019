@@ -73,7 +73,7 @@ import numpy
 
 
 class Status():
-    Fault = 0
+    Fault = False
     SafeToApproach = 1
     FlightControlToLaunch = 2
     Launching = 3
@@ -81,18 +81,57 @@ class Status():
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 5
-    abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
-    table_of_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1,10))
 
-print(Status.table_of_ranges)
-print(Status.abort_labels)
-
+    def __init__(self):
+        self.state = self.FlightControlToLaunch
+        self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
+        self.abort_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 10))
+        self.current_abort_list = numpy.empty(9)
+        print("Pod init complete, State: " + str(self.state))
 
 def poll_sensors():
+    PodStatus.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
+    #print(PodStatus.sensor_data)
     return
 
+def eval_abort():
+    a = numpy.shape(PodStatus.abort_ranges) # Load abort_ranges size into tuple
 
-if __name__ == "__main__":
+    if PodStatus.state == PodStatus.SafeToApproach:        # Evaluates abort criteria for Safe To Approach state
+        for i in range(a[0]):
+            temp_range = PodStatus.abort_ranges[i]    # Loads current sensor range to temp
+            temp_sensor = PodStatus.sensor_data[i]
+            if temp_range[3] == 1:                    # Evaluates the S2A column value
+                if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
+                    PodStatus.Fault = True
+                    print("Pod Fault!\tSensor ID: " + str(temp_sensor[0]) +
+                          "\tValue: " + str(temp_sensor[1]) +
+                          "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
+                if temp_sensor[1] > temp_range[2]:    # Evaluates "HIGH" values
+                    PodStatus.Fault = True
+                    print("Pod Fault!\tSensor ID: " + str(temp_sensor[0]) +
+                          "\tValue: " + str(temp_sensor[1]) +
+                          "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
+
+    if PodStatus.state == PodStatus.FlightControlToLaunch:        # Evaluates abort criteria for FC2L state
+        for i in range(a[0]):
+            temp_range = PodStatus.abort_ranges[i]    # Loads current sensor range to temp
+            temp_sensor = PodStatus.sensor_data[i]
+            if temp_range[4] == 1:                    # Evaluates the FC2L column value
+                if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
+                    PodStatus.Fault = True
+                    print("Pod Fault!\tSensor ID: " + str(temp_sensor[0]) +
+                          "\tValue: " + str(temp_sensor[1]) +
+                          "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
+                if temp_sensor[1] > temp_range[2]:    # Evaluates "HIGH" values
+                    PodStatus.Fault = True
+                    print("Pod Fault!\tSensor ID: " + str(temp_sensor[0]) +
+                          "\tValue: " + str(temp_sensor[1]) +
+                          "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
+
+    return
+
+def send_data():
     parser = ArgumentParser(description="Hyperlynx POD Run")
     parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
     parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
@@ -130,3 +169,13 @@ if __name__ == "__main__":
     status = Status.SafeToApproach
 
     seconds = 0
+
+if __name__ == "__main__":
+
+    PodStatus = Status()
+    poll_sensors()
+    eval_abort()
+    print("State: " + str(PodStatus.state))
+    print("Fault: " + str(PodStatus.Fault))
+    send_data()
+
