@@ -105,6 +105,8 @@ def eval_abort():
         #   6 - Brake1 bool
         #   7 - Postflight bool
         #   8 - Brake2 bool
+        #   9 - Trigger bool
+        #   10 - Fault bool
 
     a = numpy.shape(PodStatus.abort_ranges) # Load abort_ranges size into tuple, so we can iterate any array size
 
