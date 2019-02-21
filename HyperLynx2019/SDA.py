@@ -81,11 +81,11 @@ class Status():
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 5
-    table_of_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, delimiter=',', usecols=numpy.arange(1,10))
+    abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
+    table_of_ranges = numpy.genfromtxt(r'abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1,10))
 
-
-check_aborts = Status.table_of_ranges
-print(check_aborts)
+print(Status.table_of_ranges)
+print(Status.abort_labels)
 
 
 def poll_sensors():
