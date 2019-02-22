@@ -1,9 +1,9 @@
 Sensor	ID#	    Low	     High	1 - S2A	2 - FC2L	3 - Launch	5 - Brake1	Postflight	6 - Crawling	7 - Brake2	Trigger	Fault (INIT TO ZERO)	NOTES (not read by SDA)
-BMS_Cell_Temp	0	0	45	1	0	1	0	0	0	0	1	0	Pre-launch max temp
-BMS_Cell_Temp	1	0	55	0	0	1	1	1	1	1	0	0	Post-flight max temp
-BMS_Cell_Voltage_Leader	2	3.8	4.3	1	1	1	1	1	1	1	0	0	Highest cell voltage
-BMS_Cell_Voltage_Laggard	3	3.8	4.3	1	1	1	0	1	1	0	0	0	Lowest cell voltage
-BMSConn	4	0.9	1.1	1	1	1	0	1	1	0	0	0	
+BMS_Cell_Temp	0	0	45	1	0	1	0	0	0	0	0	0	Pre-launch max temp
+BMS_Cell_Temp	1	0	55	0	0	1	1	1	1	1	1	0	Post-flight max temp
+BMS_Cell_Voltage_Leader	2	3.8	4.3	0	1	1	1	1	1	1	1	0	Highest cell voltage
+BMS_Cell_Voltage_Laggard	3	3.8	4.3	0	1	1	0	1	1	1	1	0	Lowest cell voltage
+BMSConn	4	0.9	1.1	0	1	1	1	1	1	1	1	0	
 MotorRes	5	0	1	1	1	0	0	0	0	0	0	0	
 MotorRes	6	0	1	0	0	0	1	0	0	1	0	0	
 MotorRes	7	0	400	0	0	1	0	0	0	0	0	0	Sets pod max speed
@@ -223,4 +223,3 @@ LSTLeftD	220	0	10	1	0	1	1	1		0	0	0
 LSTRightD	221	0	10	1	0	1	1	1		0	0	0	
 LSTLeftConn	222	0	10	1	0	1	1	1		0	0	0	
 LSTRightConn	223	1	10	1	0	1	1	1		0	0	0	
-Launch	224	0	0	1	0	0	0	0	0	0	1	0	GUI COMMANDS HERE

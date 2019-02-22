@@ -59,7 +59,7 @@
 #Trying to get changes correct
 
 from argparse import ArgumentParser
-from time import sleep, time
+from time import sleep
 # import sys
 # import math
 # import cmath
@@ -98,6 +98,7 @@ class Status():
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1,3))
+        self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
         print("Pod init complete, State: " + str(self.state))
 
 def poll_sensors():
@@ -130,7 +131,7 @@ def eval_abort():
     if PodStatus.state == PodStatus.SafeToApproach:   # Evaluates abort criteria for Safe To Approach state
         for i in range(a[0]):
             temp_range = PodStatus.abort_ranges[i]    # Loads current abort range
-            temp_sensor = PodStatus.sensor_data[i]    # Loads current sensor data
+            temp_sensor = PodStatus.sensor_data[i,:]    # Loads current sensor data
             if temp_range[3] == 1:                    # Evaluates the S2A column value
                 if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
                     PodStatus.abort_ranges[i,11] = 1
@@ -146,7 +147,7 @@ def eval_abort():
                     print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
                           "\tValue: " + str(temp_sensor[1]) +
                           "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-                    if temp_sensor[10] == 1:    # IF FAULT IS A TRIGGER, ABORT()
+                    if temp_range[10] == 1:    # IF FAULT IS A TRIGGER, ABORT()
                         abort()
                 else:
                     PodStatus.abort_ranges[i,11] = 0
@@ -154,7 +155,7 @@ def eval_abort():
     if PodStatus.state == PodStatus.Launching:        # Evaluates abort criteria for FC2L state
         for i in range(a[0]):
             temp_range = PodStatus.abort_ranges[i]    # Loads current sensor range to temp
-            temp_sensor = PodStatus.sensor_data[i]
+            temp_sensor = PodStatus.sensor_data[i,:]
             if temp_range[5] == 1:                    # Evaluates the FC2L column value
                 if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
                     PodStatus.abort_ranges[i,11] = 1
@@ -174,7 +175,7 @@ def eval_abort():
     if PodStatus.state == PodStatus.BrakingHigh:   # Evaluates abort criteria for Safe To Approach state
         for i in range(a[0]):
             temp_range = PodStatus.abort_ranges[i]    # Loads current abort range
-            temp_sensor = PodStatus.sensor_data[i]    # Loads current sensor data
+            temp_sensor = PodStatus.sensor_data[i,:]    # Loads current sensor data
             if temp_range[6] == 1:                    # Evaluates the S2A column value
                 if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
                     PodStatus.abort_ranges[i,11] = 1
@@ -194,7 +195,7 @@ def eval_abort():
     if PodStatus.state == PodStatus.Crawling:        # Evaluates abort criteria for FC2L state
         for i in range(a[0]):
             temp_range = PodStatus.abort_ranges[i]    # Loads current sensor range to temp
-            temp_sensor = PodStatus.sensor_data[i]
+            temp_sensor = PodStatus.sensor_data[i,:]
             if temp_range[8] == 1:                    # Evaluates the FC2L column value
                 if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
                     PodStatus.abort_ranges[i,11] = 1
@@ -214,7 +215,7 @@ def eval_abort():
     if PodStatus.state == PodStatus.BrakingLow:   # Evaluates abort criteria for Safe To Approach state
         for i in range(a[0]):
             temp_range = PodStatus.abort_ranges[i]    # Loads current abort range
-            temp_sensor = PodStatus.sensor_data[i]    # Loads current sensor data
+            temp_sensor = PodStatus.sensor_data[i,:]    # Loads current sensor data
             if temp_range[9] == 1:                    # Evaluates the S2A column value
                 if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
                     PodStatus.abort_ranges[i,11] = 1
@@ -258,20 +259,22 @@ def eval_abort():
 def rec_data():     # This function parses received data into useable commands by SDA.
 
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
-    print("*** POD STATUS***\n\n"
-        "State:         " + str(PodStatus.state) + "\n"
-        "HV System:     " + str(PodStatus.HV) + "\n"
-        "Brakes:        " + str(PodStatus.Brakes) + "\n"
-        "Vent Solenoid: " + str(PodStatus.Vent_Sol) + "\n"
-        "Res1 Solenoid: " + str(PodStatus.Res1_Sol) + "\n"
-        "Res2 Solenoid: " + str(PodStatus.Res2_Sol) + "\n"
-        "MC Pump:       " + str(PodStatus.MC_Pump) + "\n\n")
+    print("\n******* POD STATUS ******\n"
+        "* State:         " + str(PodStatus.state) + "\t\t*\n"
+        "* Fault:         " + str(PodStatus.Fault) + "\t*\n"
+        "* HV System:     " + str(PodStatus.HV) + "\t*\n"
+        "* Brakes:        " + str(PodStatus.Brakes) + "\t*\n"
+        "* Vent Solenoid: " + str(PodStatus.Vent_Sol) + "\t*\n"
+        "* Res1 Solenoid: " + str(PodStatus.Res1_Sol) + "\t*\n"
+        "* Res2 Solenoid: " + str(PodStatus.Res2_Sol) + "\t*\n"
+        "* MC Pump:       " + str(PodStatus.MC_Pump) + "\t*\n"
+        "*************************")
 
     if PodStatus.state == PodStatus.SafeToApproach:
-        print("\n***MENU***\n\t1. Launch\n\t2. HV On/Off\n\t3. Vent Solenoid Open/Close"
+        print("\n*** MENU ***\n\t1. Launch\n\t2. HV On/Off\n\t3. Vent Solenoid Open/Close"
               "\n\t4. Brake Res #1 Open/Close\n\t5. Brake Res #2 Open/Close"
-              "\n\t6. MC Coolant Pump On/Off\n\t7. Quit\nEnter choice: ")
-        a = input()
+              "\n\t6. MC Coolant Pump On/Off\n\t7. Quit")
+        a = input('Enter choice: ')
         if a == '1':
             PodStatus.commands[1,1] = 1
             PodStatus.Launch = True
@@ -286,7 +289,7 @@ def rec_data():     # This function parses received data into useable commands b
             if PodStatus.commands[3,1] == 0:
                 PodStatus.commands[3,1] = 1           # Brake Vent opens
                 PodStatus.Vent_Sol = False
-                PodStatus.sensor_data[24] = 15      # Change brake pressure to atmo
+                PodStatus.sensor_data[24,1] = 15      # Change brake pressure to atmo
             else:
                 PodStatus.commands[3,1] = 0
                 PodStatus.Vent_Sol = True
@@ -301,14 +304,43 @@ def rec_data():     # This function parses received data into useable commands b
             else:
                 PodStatus.commands[5] = 1
         elif a == '6':
-            if PodStatus.commands[6] == 0:
-                PodStatus.commands[6] = 1
+            if PodStatus.commands[6,1] == 0:
+                PodStatus.commands[6,1] = 1
+                PodStatus.MC_Pump = True
             else:
-                PodStatus.commands[6] = 0
+                PodStatus.commands[6,1] = 0
+                PodStatus.MC_Pump = False
         elif a == '7':
             PodStatus.Quit = True
         else:
             pass
+
+    elif PodStatus.state == PodStatus.Launching:
+        print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
+        a = input('Enter choice: ')
+        if a == '1':
+            PodStatus.commands[0,1] = 1
+            abort()
+        elif a == '2':
+            PodStatus.Quit = True
+        else:
+            pass
+    elif PodStatus.state == PodStatus.BrakingHigh:
+        pass
+    elif PodStatus.state == PodStatus.Crawling:
+        print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
+        a = input('Enter choice: ')
+        if a == '1':
+            PodStatus.commands[0,1] = 1
+            abort()
+        elif a == '2':
+            PodStatus.Quit = True
+        else:
+            pass
+    elif PodStatus.state == PodStatus.BrakingLow:
+        pass
+    else:
+        pass
     ### END TEST SCRIPT
 
 def spacex_data():
@@ -370,9 +402,16 @@ def run_state():
         # 3. Set Brake Vent Solenoid to open
 
         #TRANSITIONS
-        if PodStatus.commands[1,1] == 1:
-            PodStatus.commands[1] = 0   # RESETS LAUNCH CUE
-            transition()
+        if PodStatus.Fault == True:
+            print("Cannot launch, pod in fault state.")
+        else:
+            if PodStatus.commands[1,1] == 1:
+                PodStatus.commands[1] = 0   # RESETS LAUNCH CUE
+                for i in range(0,600,60):
+                    print("Precharging..." + str(i) + "V")
+                    sleep(0.1)
+                transition()
+
 
     # LAUNCHING STATE
     elif PodStatus.state == 3:
@@ -394,7 +433,10 @@ def run_state():
 
     # BRAKE, FINAL
     elif PodStatus.state == 7:
-        pass
+        print("Braking, Final")
+        if PodStatus.sensor_data[5,1] < 1:
+            print("Pod stopped")
+            transition()
         # DO STUFF
 
     else:
@@ -424,25 +466,29 @@ def transition():
         print("POD IN INVALID STATE: " + str(PodStatus.state))
         PodStatus.state = 1
         PodStatus.Fault = True
+        PodStatus.Quit = True
     return
 
 def abort():
     if PodStatus.state == 1:          # S2A STATE FUNCTIONS
-        print("Abort attempted in S2A")
+        #print("Abort attempted in S2A")
+        pass
 
     elif PodStatus.state == 3:          # LAUNCH STATE FUNCTIONS
-        print("Aborting from 3 to 7")
+        print("ABORTING from 3 to 7")
         PodStatus.state = 7
 
     elif PodStatus.state == 5:
-        print("Aborting from 5 to 7")
+        print("ABORTING from 5 to 7")
         PodStatus.state = 7
 
     elif PodStatus.state == 6:
         PodStatus.state = 7
     elif PodStatus.state == 7:
-        print("Aborting from 7 to 1")
-        PodStatus.state = 1
+        if PodStatus.sensor_data[5,1] > 0:
+            print("Waiting for pod to stop.")
+        else:
+            PodStatus.state = 1
     else:
         PodStatus.state = 1
 
@@ -451,8 +497,8 @@ if __name__ == "__main__":
     PodStatus = Status()
 
     while PodStatus.Quit == False:
-        print("Begin State: " + str(PodStatus.state))
-        print("Begin Fault: " + str(PodStatus.Fault))
+        #print("Begin State: " + str(PodStatus.state))
+        #print("Begin Fault: " + str(PodStatus.Fault))
         poll_sensors()
         run_state()
         eval_abort()
@@ -460,8 +506,8 @@ if __name__ == "__main__":
         send_data()
         spacex_data()
 
-        print("End State: " + str(PodStatus.state))
-        print("End Fault: " + str(PodStatus.Fault))
+        #print("End State: " + str(PodStatus.state))
+        #print("End Fault: " + str(PodStatus.Fault))
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
 

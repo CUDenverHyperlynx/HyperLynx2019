@@ -1,6 +1,6 @@
 Sensor	ID#	Value
-BMS_Cell_Temp	0	0
-BMS_Cell_Temp	1	60
+BMS_Cell_Temp	0	30
+BMS_Cell_Temp	1	35
 BMS_Cell_Voltage_Leader	2	4
 BMS_Cell_Voltage_Laggard	3	4
 BMSConn	4	1
