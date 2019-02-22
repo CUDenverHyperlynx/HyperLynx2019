@@ -241,7 +241,6 @@ def transition():
     if PodStatus.state == 1:          # S2A trans
         PodStatus.state = 3
         print("TRANS: S2A(1) to LAUNCH(3)")
-        return
     elif PodStatus.state == 3:          # LAUNCH trans
         PodStatus.state = 5
         print("TRANS: LAUNCH(3) TO BRAKE(5)")
