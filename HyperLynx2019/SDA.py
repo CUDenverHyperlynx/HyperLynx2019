@@ -71,29 +71,41 @@ import socket
 import numpy
 
 class Status():
-    # ACTUAL POD STATES, NOT SPACEX STATES
+    # DEBUG init for script:
+    Quit = False
+
+    # Pod Abort conditions init:
     Fault = False
     Trigger = False
+
+    # States
     SafeToApproach = 1
     Launching = 3
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 7
-    Quit = False
+
+    # Pod Current Status
+    HV = False
+    Brakes = True
+    Vent_Sol = True
+    Res1_Sol = False
+    Res2_Sol = False
+    MC_Pump = False
 
     def __init__(self):
         self.state = self.SafeToApproach
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
-        #print(self.abort_ranges)
+        self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1,3))
         print("Pod init complete, State: " + str(self.state))
 
 def poll_sensors():
     PodStatus.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
-
-
-
-
+    if PodStatus.sensor_data[24,1] > 30:
+        PodStatus.Brakes = False
+    else:
+        PodStatus.Brakes = True
 
 def eval_abort():
     # temp_range column values
@@ -243,7 +255,63 @@ def eval_abort():
     #     PodStatus.Trigger = False
     # return
 
-def send_data():
+def rec_data():     # This function parses received data into useable commands by SDA.
+
+    ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
+    print("*** POD STATUS***\n\n"
+        "State:         " + str(PodStatus.state) + "\n"
+        "HV System:     " + str(PodStatus.HV) + "\n"
+        "Brakes:        " + str(PodStatus.Brakes) + "\n"
+        "Vent Solenoid: " + str(PodStatus.Vent_Sol) + "\n"
+        "Res1 Solenoid: " + str(PodStatus.Res1_Sol) + "\n"
+        "Res2 Solenoid: " + str(PodStatus.Res2_Sol) + "\n"
+        "MC Pump:       " + str(PodStatus.MC_Pump) + "\n\n")
+
+    if PodStatus.state == PodStatus.SafeToApproach:
+        print("\n***MENU***\n\t1. Launch\n\t2. HV On/Off\n\t3. Vent Solenoid Open/Close"
+              "\n\t4. Brake Res #1 Open/Close\n\t5. Brake Res #2 Open/Close"
+              "\n\t6. MC Coolant Pump On/Off\n\t7. Quit\nEnter choice: ")
+        a = input()
+        if a == '1':
+            PodStatus.commands[1,1] = 1
+            PodStatus.Launch = True
+        elif a == '2':
+            if PodStatus.HV == False:
+                PodStatus.commands[2,1] = 1
+                PodStatus.HV = True
+            else:
+                PodStatus.commands[2,1] = 0
+                PodStatus.HV = False
+        elif a == '3':
+            if PodStatus.commands[3,1] == 0:
+                PodStatus.commands[3,1] = 1           # Brake Vent opens
+                PodStatus.Vent_Sol = False
+                PodStatus.sensor_data[24] = 15      # Change brake pressure to atmo
+            else:
+                PodStatus.commands[3,1] = 0
+                PodStatus.Vent_Sol = True
+        elif a == '4':
+            if PodStatus.commands[4] == 1:
+                PodStatus.commands[4] = 0
+            else:
+                PodStatus.commands[4] = 1
+        elif a == '5':
+            if PodStatus.commands[5] == 1:
+                PodStatus.commands[5] = 0
+            else:
+                PodStatus.commands[5] = 1
+        elif a == '6':
+            if PodStatus.commands[6] == 0:
+                PodStatus.commands[6] = 1
+            else:
+                PodStatus.commands[6] = 0
+        elif a == '7':
+            PodStatus.Quit = True
+        else:
+            pass
+    ### END TEST SCRIPT
+
+def spacex_data():
     parser = ArgumentParser(description="Hyperlynx POD Run")
     parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
     parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
@@ -282,37 +350,58 @@ def send_data():
 
     seconds = 0
 
+def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
+
+    ### Test CAN comms ###
+
+    ### End Test CAN comms ###
+
+    ### Test UDP comms ###
+
+    ### End Test UDP comms ###
+    pass
+
 def run_state():
 
-    if PodStatus.state == 1:          # S2A STATE FUNCTIONS
+    # S2A STATE
+    if PodStatus.state == 1:
         # 1. Set HV Contactors to open (no voltage)
         # 2. Set Brake Reservoir Solenoids (2&3) to close
         # 3. Set Brake Vent Solenoid to open
-        if PodStatus.sensor_data[9,1] == 0:       # Check SD100 power, turn on
-            print("Turning on " + str(PodStatus.abort_labels[9]))
-            PodStatus.sensor_data[9,1] = 1 # DEBUG LINE
-            pass
-        if PodStatus.sensor_data[4,1] == 0:
-            print("Turning on " + str(PodStatus.abort_labels[4]))
-            PodStatus.sensor_data[4,1] = 1 # DEBUG LINE
-            pass
 
+        #TRANSITIONS
+        if PodStatus.commands[1,1] == 1:
+            PodStatus.commands[1] = 0   # RESETS LAUNCH CUE
+            transition()
+
+    # LAUNCHING STATE
     elif PodStatus.state == 3:
-        pass               # LAUNCH STATE FUNCTIONS
+        pass
+
+    # COAST (NOT USED)
     elif PodStatus.state == 4:
         pass
-        # DO STUFF
+
+    # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
         pass
         # DO STUFF
+
+    # CRAWLING
     elif PodStatus.state == 6:
         pass
         # DO STUFF
+
+    # BRAKE, FINAL
     elif PodStatus.state == 7:
         pass
         # DO STUFF
+
     else:
+        print("Invalid pod state found: " + str(PodStatus.state))
+        print("Quitting")
         PodStatus.Fault = True
+        PodStatus.Quit = True
 
 
 def transition():
@@ -367,16 +456,9 @@ if __name__ == "__main__":
         poll_sensors()
         run_state()
         eval_abort()
+        rec_data()
         send_data()
-
-        if PodStatus.Quit == False:
-            a = input("type 1 to transition, 2 to abort")
-            if a == '1':
-                transition()
-            elif a == '2':
-                abort()
-            else:
-                pass
+        spacex_data()
 
         print("End State: " + str(PodStatus.state))
         print("End Fault: " + str(PodStatus.Fault))
