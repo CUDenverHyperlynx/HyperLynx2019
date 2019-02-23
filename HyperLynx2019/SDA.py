@@ -85,21 +85,39 @@ class Status():
     Crawling = 6
     BrakingLow = 7
 
-    # Pod Current Status
-    HV = False
-    Brakes = True
-    Vent_Sol = True
-    Res1_Sol = False
-    Res2_Sol = False
-    MC_Pump = False
-
     def __init__(self):
+        # BOOT FUNCTIONS
         self.state = self.SafeToApproach
+        self.HV = False
+        self.Brakes = True
+        self.Vent_Sol = True
+        self.Res1_Sol = 0
+        self.Res2_Sol = 0
+        self.MC_Pump = False
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1,3))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
         print("Pod init complete, State: " + str(self.state))
+
+    def toggle_res1(self):
+        if self.Res1_Sol == 0:
+            ### SET RESERVOIR SOLENOID TO CLOSE
+            ## DEBUG:
+            self.Res1_Sol = 1
+        else:
+            ### SET RESERVOIR SOLENOID TO OPEN
+            ## DEBUG:
+            self.Res1_Sol = 0
+
+    def toggle_res2(self):
+        if self.Res2_Sol == 0:
+            self.Res2_Sol = 1
+        else:
+            self.Res2_Sol = 0
+
+
+
 
 def poll_sensors():
     PodStatus.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
@@ -260,10 +278,13 @@ def rec_data():     # This function parses received data into useable commands b
 
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
-        "* State:         " + str(PodStatus.state) + "\t\t*\n"
-        "* Fault:         " + str(PodStatus.Fault) + "\t*\n"
-        "* HV System:     " + str(PodStatus.HV) + "\t*\n"
-        "* Brakes:        " + str(PodStatus.Brakes) + "\t*\n"
+        "* State:         " + str(PodStatus.state) + "\t\t*")
+    if PodStatus.Fault == True:
+        print("* Fault:         " + "TRUE" + "\t*")
+    else: print("* Fault:         " + "TRUE" + "\t*")
+    if PodStatus.HV == True:    print("* HV System:     " + "ON" + "\t\t*")
+    else: print("* HV System:     " + "OFF" + "\t*")
+    print("* Brakes:        " + str(PodStatus.Brakes) + "\t*\n"
         "* Vent Solenoid: " + str(PodStatus.Vent_Sol) + "\t*\n"
         "* Res1 Solenoid: " + str(PodStatus.Res1_Sol) + "\t*\n"
         "* Res2 Solenoid: " + str(PodStatus.Res2_Sol) + "\t*\n"
@@ -294,10 +315,10 @@ def rec_data():     # This function parses received data into useable commands b
                 PodStatus.commands[3,1] = 0
                 PodStatus.Vent_Sol = True
         elif a == '4':
-            if PodStatus.commands[4] == 1:
-                PodStatus.commands[4] = 0
+            if PodStatus.commands[4,1] == 0:
+                PodStatus.commands[4,1] = 1
             else:
-                PodStatus.commands[4] = 1
+                PodStatus.commands[4,1] = 0
         elif a == '5':
             if PodStatus.commands[5] == 1:
                 PodStatus.commands[5] = 0
@@ -342,6 +363,11 @@ def rec_data():     # This function parses received data into useable commands b
     else:
         pass
     ### END TEST SCRIPT
+
+def do_commands():
+    if PodStatus.commands[4,1] != PodStatus.Res1_Sol:
+        PodStatus.toggle_res1()
+    else: pass
 
 def spacex_data():
     parser = ArgumentParser(description="Hyperlynx POD Run")
@@ -397,9 +423,7 @@ def run_state():
 
     # S2A STATE
     if PodStatus.state == 1:
-        # 1. Set HV Contactors to open (no voltage)
-        # 2. Set Brake Reservoir Solenoids (2&3) to close
-        # 3. Set Brake Vent Solenoid to open
+        do_commands()
 
         #TRANSITIONS
         if PodStatus.Fault == True:

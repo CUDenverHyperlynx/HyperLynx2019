@@ -3,6 +3,6 @@ Abort	0	1
 Launch	1	0
 HV	2	0
 Vent_Sol	3	0
-Res1_Sol	4	1
-Res2_Sol	5	1
+Res1_Sol	4	0
+Res2_Sol	5	0
 MC_Pump	6	0
