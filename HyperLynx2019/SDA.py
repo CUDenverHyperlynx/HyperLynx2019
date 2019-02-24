@@ -59,7 +59,7 @@
 #Trying to get changes correct
 
 from argparse import ArgumentParser
-from time import sleep
+from time import sleep, clock
 # import sys
 # import math
 # import cmath
@@ -87,6 +87,7 @@ class Status():
 
     def __init__(self):
         # BOOT FUNCTIONS
+        self.StartTime = clock()
         self.state = self.SafeToApproach
         self.HV = False
         self.Brakes = True
@@ -96,7 +97,7 @@ class Status():
         self.MC_Pump = False
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
-        self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1,3))
+        self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1,4))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
         print("Pod init complete, State: " + str(self.state))
 
@@ -279,6 +280,7 @@ def rec_data():     # This function parses received data into useable commands b
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
         "* State:         " + str(PodStatus.state) + "\t\t*")
+    print("* Pod Clock Time: " + str(round(clock(),3)) + "\t*")
     if PodStatus.Fault == True:
         print("* Fault:         " + "TRUE" + "\t*")
     else: print("* Fault:         " + "TRUE" + "\t*")
@@ -298,6 +300,7 @@ def rec_data():     # This function parses received data into useable commands b
         a = input('Enter choice: ')
         if a == '1':
             PodStatus.commands[1,1] = 1
+            PodStatus.commands[1,2] = str(round(clock(),3))
             PodStatus.Launch = True
         elif a == '2':
             if PodStatus.HV == False:
@@ -320,10 +323,10 @@ def rec_data():     # This function parses received data into useable commands b
             else:
                 PodStatus.commands[4,1] = 0
         elif a == '5':
-            if PodStatus.commands[5] == 1:
-                PodStatus.commands[5] = 0
+            if PodStatus.commands[5,1] == 1:
+                PodStatus.commands[5,1] = 0
             else:
-                PodStatus.commands[5] = 1
+                PodStatus.commands[5,1] = 1
         elif a == '6':
             if PodStatus.commands[6,1] == 0:
                 PodStatus.commands[6,1] = 1
@@ -367,7 +370,8 @@ def rec_data():     # This function parses received data into useable commands b
 def do_commands():
     if PodStatus.commands[4,1] != PodStatus.Res1_Sol:
         PodStatus.toggle_res1()
-    else: pass
+    if PodStatus.commands[5,1] != PodStatus.Res2_Sol:
+        PodStatus.toggle_res2()
 
 def spacex_data():
     parser = ArgumentParser(description="Hyperlynx POD Run")

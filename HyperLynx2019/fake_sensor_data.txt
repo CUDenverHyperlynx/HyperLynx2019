@@ -1,226 +1,226 @@
-Sensor	ID#	Value
-BMS_Cell_Temp	0	30
-BMS_Cell_Temp	1	35
-BMS_Cell_Voltage_Leader	2	4
-BMS_Cell_Voltage_Laggard	3	4
-BMSConn	4	1
-MotorRes	5	0
-MotorRes	6	0
-MotorRes	7	0
-MotorRes	8	0
-SD_Conn	9	1
-SD_Temp	10	0
-SD_Temp	11	0
-SD_HV_Curr	12	0
-SD_HV_Curr	13	0
-LVBatt_Temp	14	0
-LVBatt_Curr	15	0
-LVBatt_Voltage	16	0
-RPi_Temp	17	0
-RPi_Proc_Load	18	0
-RPi_Mem_Load	19	0
-PV_Left_Temp	20	0
-PV_Left_Press	21	0
-PV_Right_Temp	22	0
-PV_Right_Press	23	0
-PX2BrakeP	24	0
-BMPAmbP	25	0
-IMUFrontX	26	0
-IMUFrontY	27	0
-IMUFrontZ	28	0
-IMURearX	29	0
-IMURearY	30	0
-IMURearZ	31	0
-LIDAR	32	0
-RadioConn	33	0
-LSTLeftD	34	0
-LSTRightD	35	0
-LSTLeftConn	36	0
-LSTRightConn	37	0
-BMSCellT	38	0
-BMSCellV	39	0
-BMSConn	40	0
-MotorRes	41	0
-SDConn	42	0
-SDT	43	0
-SDHVC	44	0
-LVBattT	45	0
-LVBattC	46	0
-LVBattV	47	0
-RPiOBT	48	0
-RPiProc	49	0
-RPiMem	50	0
-BMELeftT	51	0
-BMELeftP	52	0
-BMERightT	53	0
-BMERightP	54	0
-PX2BrakeP	55	0
-BMPAmbP	56	0
-IMUFrontX	57	0
-IMUFrontY	58	0
-IMUFrontZ	59	0
-IMURearX	60	0
-IMURearY	61	0
-IMURearZ	62	0
-LIDAR	63	0
-RadioConn	64	0
-LSTLeftD	65	0
-LSTRightD	66	0
-LSTLeftConn	67	0
-LSTRightConn	68	0
-BMSCellT	69	0
-BMSCellV	70	0
-BMSConn	71	0
-MotorRes	72	0
-SDConn	73	0
-SDT	74	0
-SDHVC	75	0
-LVBattT	76	0
-LVBattC	77	0
-LVBattV	78	0
-RPiOBT	79	0
-RPiProc	80	0
-RPiMem	81	0
-BMELeftT	82	0
-BMELeftP	83	0
-BMERightT	84	0
-BMERightP	85	0
-PX2BrakeP	86	0
-BMPAmbP	87	0
-IMUFrontX	88	0
-IMUFrontY	89	0
-IMUFrontZ	90	0
-IMURearX	91	0
-IMURearY	92	0
-IMURearZ	93	0
-LIDAR	94	0
-RadioConn	95	0
-LSTLeftD	96	0
-LSTRightD	97	0
-LSTLeftConn	98	0
-LSTRightConn	99	0
-BMSCellT	100	0
-BMSCellV	101	0
-BMSConn	102	0
-MotorRes	103	0
-SDConn	104	0
-SDT	105	0
-SDHVC	106	0
-LVBattT	107	0
-LVBattC	108	0
-LVBattV	109	0
-RPiOBT	110	0
-RPiProc	111	0
-RPiMem	112	0
-BMELeftT	113	0
-BMELeftP	114	0
-BMERightT	115	0
-BMERightP	116	0
-PX2BrakeP	117	0
-BMPAmbP	118	0
-IMUFrontX	119	0
-IMUFrontY	120	0
-IMUFrontZ	121	0
-IMURearX	122	0
-IMURearY	123	0
-IMURearZ	124	0
-LIDAR	125	0
-RadioConn	126	0
-LSTLeftD	127	0
-LSTRightD	128	0
-LSTLeftConn	129	0
-LSTRightConn	130	0
-BMSCellT	131	0
-BMSCellV	132	0
-BMSConn	133	0
-MotorRes	134	0
-SDConn	135	0
-SDT	136	0
-SDHVC	137	0
-LVBattT	138	0
-LVBattC	139	0
-LVBattV	140	0
-RPiOBT	141	0
-RPiProc	142	0
-RPiMem	143	0
-BMELeftT	144	0
-BMELeftP	145	0
-BMERightT	146	0
-BMERightP	147	0
-PX2BrakeP	148	0
-BMPAmbP	149	0
-IMUFrontX	150	0
-IMUFrontY	151	0
-IMUFrontZ	152	0
-IMURearX	153	0
-IMURearY	154	0
-IMURearZ	155	0
-LIDAR	156	0
-RadioConn	157	0
-LSTLeftD	158	0
-LSTRightD	159	0
-LSTLeftConn	160	0
-LSTRightConn	161	0
-BMSCellT	162	0
-BMSCellV	163	0
-BMSConn	164	0
-MotorRes	165	0
-SDConn	166	0
-SDT	167	0
-SDHVC	168	0
-LVBattT	169	0
-LVBattC	170	0
-LVBattV	171	0
-RPiOBT	172	0
-RPiProc	173	0
-RPiMem	174	0
-BMELeftT	175	0
-BMELeftP	176	0
-BMERightT	177	0
-BMERightP	178	0
-PX2BrakeP	179	0
-BMPAmbP	180	0
-IMUFrontX	181	0
-IMUFrontY	182	0
-IMUFrontZ	183	0
-IMURearX	184	0
-IMURearY	185	0
-IMURearZ	186	0
-LIDAR	187	0
-RadioConn	188	0
-LSTLeftD	189	0
-LSTRightD	190	0
-LSTLeftConn	191	0
-LSTRightConn	192	0
-BMSCellT	193	0
-BMSCellV	194	0
-BMSConn	195	0
-MotorRes	196	0
-SDConn	197	0
-SDT	198	0
-SDHVC	199	0
-LVBattT	200	0
-LVBattC	201	0
-LVBattV	202	0
-RPiOBT	203	0
-RPiProc	204	0
-RPiMem	205	0
-BMELeftT	206	0
-BMELeftP	207	0
-BMERightT	208	0
-BMERightP	209	0
-PX2BrakeP	210	0
-BMPAmbP	211	0
-IMUFrontX	212	0
-IMUFrontY	213	0
-IMUFrontZ	214	0
-IMURearX	215	0
-IMURearY	216	0
-IMURearZ	217	0
-LIDAR	218	0
-RadioConn	219	0
-LSTLeftD	220	0
-LSTRightD	221	0
-LSTLeftConn	222	0
-LSTRightConn	223	1
-Launch	224	0
+Sensor	ID#	Value	Time Changed
+BMS_Cell_Temp	0	30	0
+BMS_Cell_Temp	1	35	0
+BMS_Cell_Voltage_Leader	2	4	0
+BMS_Cell_Voltage_Laggard	3	4	0
+BMSConn	4	1	0
+MotorRes	5	0	0
+MotorRes	6	0	0
+MotorRes	7	0	0
+MotorRes	8	0	0
+SD_Conn	9	1	0
+SD_Temp	10	0	0
+SD_Temp	11	0	0
+SD_HV_Curr	12	0	0
+SD_HV_Curr	13	0	0
+LVBatt_Temp	14	0	0
+LVBatt_Curr	15	0	0
+LVBatt_Voltage	16	0	0
+RPi_Temp	17	0	0
+RPi_Proc_Load	18	0	0
+RPi_Mem_Load	19	0	0
+PV_Left_Temp	20	0	0
+PV_Left_Press	21	0	0
+PV_Right_Temp	22	0	0
+PV_Right_Press	23	0	0
+PX2BrakeP	24	0	0
+BMPAmbP	25	0	0
+IMUFrontX	26	0	0
+IMUFrontY	27	0	0
+IMUFrontZ	28	0	0
+IMURearX	29	0	0
+IMURearY	30	0	0
+IMURearZ	31	0	0
+LIDAR	32	0	0
+RadioConn	33	0	0
+LSTLeftD	34	0	0
+LSTRightD	35	0	0
+LSTLeftConn	36	0	0
+LSTRightConn	37	0	0
+BMSCellT	38	0	0
+BMSCellV	39	0	0
+BMSConn	40	0	0
+MotorRes	41	0	0
+SDConn	42	0	0
+SDT	43	0	0
+SDHVC	44	0	0
+LVBattT	45	0	0
+LVBattC	46	0	0
+LVBattV	47	0	0
+RPiOBT	48	0	0
+RPiProc	49	0	0
+RPiMem	50	0	0
+BMELeftT	51	0	0
+BMELeftP	52	0	0
+BMERightT	53	0	0
+BMERightP	54	0	0
+PX2BrakeP	55	0	0
+BMPAmbP	56	0	0
+IMUFrontX	57	0	0
+IMUFrontY	58	0	0
+IMUFrontZ	59	0	0
+IMURearX	60	0	0
+IMURearY	61	0	0
+IMURearZ	62	0	0
+LIDAR	63	0	0
+RadioConn	64	0	0
+LSTLeftD	65	0	0
+LSTRightD	66	0	0
+LSTLeftConn	67	0	0
+LSTRightConn	68	0	0
+BMSCellT	69	0	0
+BMSCellV	70	0	0
+BMSConn	71	0	0
+MotorRes	72	0	0
+SDConn	73	0	0
+SDT	74	0	0
+SDHVC	75	0	0
+LVBattT	76	0	0
+LVBattC	77	0	0
+LVBattV	78	0	0
+RPiOBT	79	0	0
+RPiProc	80	0	0
+RPiMem	81	0	0
+BMELeftT	82	0	0
+BMELeftP	83	0	0
+BMERightT	84	0	0
+BMERightP	85	0	0
+PX2BrakeP	86	0	0
+BMPAmbP	87	0	0
+IMUFrontX	88	0	0
+IMUFrontY	89	0	0
+IMUFrontZ	90	0	0
+IMURearX	91	0	0
+IMURearY	92	0	0
+IMURearZ	93	0	0
+LIDAR	94	0	0
+RadioConn	95	0	0
+LSTLeftD	96	0	0
+LSTRightD	97	0	0
+LSTLeftConn	98	0	0
+LSTRightConn	99	0	0
+BMSCellT	100	0	0
+BMSCellV	101	0	0
+BMSConn	102	0	0
+MotorRes	103	0	0
+SDConn	104	0	0
+SDT	105	0	0
+SDHVC	106	0	0
+LVBattT	107	0	0
+LVBattC	108	0	0
+LVBattV	109	0	0
+RPiOBT	110	0	0
+RPiProc	111	0	0
+RPiMem	112	0	0
+BMELeftT	113	0	0
+BMELeftP	114	0	0
+BMERightT	115	0	0
+BMERightP	116	0	0
+PX2BrakeP	117	0	0
+BMPAmbP	118	0	0
+IMUFrontX	119	0	0
+IMUFrontY	120	0	0
+IMUFrontZ	121	0	0
+IMURearX	122	0	0
+IMURearY	123	0	0
+IMURearZ	124	0	0
+LIDAR	125	0	0
+RadioConn	126	0	0
+LSTLeftD	127	0	0
+LSTRightD	128	0	0
+LSTLeftConn	129	0	0
+LSTRightConn	130	0	0
+BMSCellT	131	0	0
+BMSCellV	132	0	0
+BMSConn	133	0	0
+MotorRes	134	0	0
+SDConn	135	0	0
+SDT	136	0	0
+SDHVC	137	0	0
+LVBattT	138	0	0
+LVBattC	139	0	0
+LVBattV	140	0	0
+RPiOBT	141	0	0
+RPiProc	142	0	0
+RPiMem	143	0	0
+BMELeftT	144	0	0
+BMELeftP	145	0	0
+BMERightT	146	0	0
+BMERightP	147	0	0
+PX2BrakeP	148	0	0
+BMPAmbP	149	0	0
+IMUFrontX	150	0	0
+IMUFrontY	151	0	0
+IMUFrontZ	152	0	0
+IMURearX	153	0	0
+IMURearY	154	0	0
+IMURearZ	155	0	0
+LIDAR	156	0	0
+RadioConn	157	0	0
+LSTLeftD	158	0	0
+LSTRightD	159	0	0
+LSTLeftConn	160	0	0
+LSTRightConn	161	0	0
+BMSCellT	162	0	0
+BMSCellV	163	0	0
+BMSConn	164	0	0
+MotorRes	165	0	0
+SDConn	166	0	0
+SDT	167	0	0
+SDHVC	168	0	0
+LVBattT	169	0	0
+LVBattC	170	0	0
+LVBattV	171	0	0
+RPiOBT	172	0	0
+RPiProc	173	0	0
+RPiMem	174	0	0
+BMELeftT	175	0	0
+BMELeftP	176	0	0
+BMERightT	177	0	0
+BMERightP	178	0	0
+PX2BrakeP	179	0	0
+BMPAmbP	180	0	0
+IMUFrontX	181	0	0
+IMUFrontY	182	0	0
+IMUFrontZ	183	0	0
+IMURearX	184	0	0
+IMURearY	185	0	0
+IMURearZ	186	0	0
+LIDAR	187	0	0
+RadioConn	188	0	0
+LSTLeftD	189	0	0
+LSTRightD	190	0	0
+LSTLeftConn	191	0	0
+LSTRightConn	192	0	0
+BMSCellT	193	0	0
+BMSCellV	194	0	0
+BMSConn	195	0	0
+MotorRes	196	0	0
+SDConn	197	0	0
+SDT	198	0	0
+SDHVC	199	0	0
+LVBattT	200	0	0
+LVBattC	201	0	0
+LVBattV	202	0	0
+RPiOBT	203	0	0
+RPiProc	204	0	0
+RPiMem	205	0	0
+BMELeftT	206	0	0
+BMELeftP	207	0	0
+BMERightT	208	0	0
+BMERightP	209	0	0
+PX2BrakeP	210	0	0
+BMPAmbP	211	0	0
+IMUFrontX	212	0	0
+IMUFrontY	213	0	0
+IMUFrontZ	214	0	0
+IMURearX	215	0	0
+IMURearY	216	0	0
+IMURearZ	217	0	0
+LIDAR	218	0	0
+RadioConn	219	0	0
+LSTLeftD	220	0	0
+LSTRightD	221	0	0
+LSTLeftConn	222	0	0
+LSTRightConn	223	1	0
+Launch	224	0	0

@@ -1,8 +1,8 @@
-Command	ID#	Init State
-Abort	0	1
-Launch	1	0
-HV	2	0
-Vent_Sol	3	0
-Res1_Sol	4	0
-Res2_Sol	5	0
-MC_Pump	6	0
+Command	ID#	Init State	Time Changed
+Abort	0	1	0
+Launch	1	0	0
+HV	2	0	0
+Vent_Sol	3	0	0
+Res1_Sol	4	0	0
+Res2_Sol	5	0	0
+MC_Pump	6	0	0
