@@ -53,7 +53,7 @@
    1 Uno
 
    WhoToBlame:
-   John Brenner
+   John Brenner & Jeff Stanek
 '''
 
 #Trying to get changes correct
@@ -97,7 +97,7 @@ class Status():
         self.MC_Pump = False
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
-        self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1,4))
+        self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 4))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
         print("Pod init complete, State: " + str(self.state))
 
