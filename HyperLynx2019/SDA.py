@@ -103,7 +103,6 @@ class Status():
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 4))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
-        print(self.sensor_data)
         date = datetime.datetime.today()
         new_number = str(date.year) + str(date.month) + str(date.day) \
                      + str(date.hour) + str(date.minute) + str(date.second)
@@ -559,7 +558,7 @@ if __name__ == "__main__":
         poll_sensors()
         run_state()
         eval_abort()
-        #rec_data()
+        rec_data()
         send_data()
         spacex_data()
 
