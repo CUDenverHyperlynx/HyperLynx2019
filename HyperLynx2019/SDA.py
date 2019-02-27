@@ -542,7 +542,7 @@ def abort():
 
 def write_file():
     # SLOW THIS THE FUCK DOWN
-    
+
     file = open(os.path.join('logs/', PodStatus.file_name), 'a')
     with file:
         for i in PodStatus.sensor_data:
