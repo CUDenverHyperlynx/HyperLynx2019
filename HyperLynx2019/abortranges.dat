@@ -1,42 +1,42 @@
 Sensor	ID#	    Low	     High	1 - S2A	2 - FC2L	3 - Launch	5 - Brake1	Postflight	6 - Crawling	7 - Brake2	Trigger	Fault (INIT TO ZERO)	NOTES (not read by SDA)
-BMS_Cell_Temp	0	0	45	1	0	1	0	0	0	0	0	0	Pre-launch max temp
+BMS_Cell_Temp	0	0	45	1	0	0	0	0	0	0	0	0	Pre-launch max temp
 BMS_Cell_Temp	1	0	55	0	0	1	1	1	1	1	1	0	Post-flight max temp
-BMS_Cell_Voltage_Leader	2	3.8	4.3	0	1	1	1	1	1	1	1	0	Highest cell voltage
-BMS_Cell_Voltage_Laggard	3	3.8	4.3	0	1	1	0	1	1	1	1	0	Lowest cell voltage
-BMSConn	4	0.9	1.1	0	1	1	1	1	1	1	1	0	
+BMS_Cell_Voltage_Leader	2	3.8	4.3	1	1	1	1	1	1	1	1	0	Highest cell voltage
+BMS_Cell_Voltage_Laggard	3	3.8	4.3	1	1	1	0	1	1	1	1	0	Lowest cell voltage
+BMSConn	4	0.9	1.1	1	1	1	1	1	1	1	1	0	
 MotorRes	5	0	1	1	1	0	0	0	0	0	0	0	
 MotorRes	6	0	1	0	0	0	1	0	0	1	0	0	
 MotorRes	7	0	400	0	0	1	0	0	0	0	0	0	Sets pod max speed
 MotorRes	8	0	35	0	0	0	0	0	1	0	0	0	Sets pod max crawling speed
 SD_Conn	9	0.9	1.1	1	1	1	0	1	1	0	0	0	
 SD_Temp	10	0	70	1	0	1	1	1	1	0	0	0	Max controller temp postflight
-SD_Temp	11	0	35	0	1	0	0	0	0	0	0	0	Max controller temp preflight
-SD_HV_Curr	12	0	1	1	1	0	1	0	0	1	0	0	Max controller HV current while not moving
+SD_Temp	11	0	35	1	1	0	0	0	0	0	0	0	Max controller temp preflight
+SD_HV_Curr	12	0	5	1	1	0	1	0	0	1	0	0	Max controller HV current while not moving
 SD_HV_Curr	13	0	340	0	0	1	0	0	1	1	0	0	Max controller HV current in motion
 LVBatt_Temp	14	0	10	1	0	1	1	1		0	0	0	
 LVBatt_Curr	15	0	10	1	0	1	1	1		0	0	0	
-LVBatt_Voltage	16	0	10	1	0	1	1	1		0	0	0	
+LVBatt_Voltage	16	10.8	13.5	1	0	1	1	1	1	0	1	0	
 RPi_Temp	17	0	60	1	1	1	0	1		0	0	0	
 RPi_Proc_Load	18	0	80	1	1	1	0	1		0	0	0	
 RPi_Mem_Load	19	0	80	1	1	1	0	1		0	0	0	
-PV_Left_Temp	20	0	10	1	0	1	1	1		0	0	0	
-PV_Left_Press	21	0	10	1	0	1	1	1		0	0	0	
-PV_Right_Temp	22	0	10	1	0	1	1	1		0	0	0	
-PV_Right_Press	23	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	24	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	25	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	26	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	27	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	28	0	10	1	0	1	1	1		0	0	0	
-IMURearX	29	0	10	1	0	1	1	1		0	0	0	
-IMURearY	30	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	31	0	10	1	0	1	1	1		0	0	0	
-LIDAR	32	0	10	1	0	1	1	1		0	0	0	
-RadioConn	33	0	10	1	0	1	1	1		0	0	0	
+PV_Left_Temp	20	0	50	1	0	1	1	1		0	0	0	
+PV_Left_Press	21	9	15	1	0	1	1	1		0	0	0	
+PV_Right_Temp	22	0	50	1	0	1	1	1		0	0	0	
+PV_Right_Press	23	9	15	1	0	1	1	1		0	0	0	
+PX2BrakeP	24	0	10	0	0	1	1	1		0	0	0	
+BMPAmbP	25	0	15	1	0	1	1	1		0	0	0	
+IMUFrontX	26	-0.05	0.05	1	0	1	1	1		0	0	0	
+IMUFrontY	27	-1.1	-0.9	1	0	1	1	1		0	0	0	
+IMUFrontZ	28	-0.05	0.05	1	0	1	1	1		0	0	0	
+IMURearX	29	-0.05	0.05	1	0	1	1	1		0	0	0	
+IMURearY	30	-1.1	-0.9	1	0	1	1	1		0	0	0	
+IMURearZ	31	-0.05	0.05	1	0	1	1	1		0	0	0	
+LIDAR	32	90	400	0	0	0	0	1	1	0	1	0	
+RadioConn	33	0.9	1.1	1	0	1	1	1		0	0	0	
 LSTLeftD	34	0	10	1	0	1	1	1		0	0	0	
 LSTRightD	35	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	36	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	37	0	10	1	0	1	1	1		0	0	0	
+LSTLeftConn	36	0.9	1.1	1	0	1	1	1		0	0	0	
+LSTRightConn	37	0.9	1.1	1	0	1	1	1		0	0	0	
 BMSCellT	38	0	10	1	0	1	1	1		0	0	0	
 BMSCellV	39	0	10	1	0	1	1	1		0	0	0	
 BMSConn	40	0	10	1	0	1	1	1		0	0	0	
