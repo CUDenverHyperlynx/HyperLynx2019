@@ -524,7 +524,7 @@ def abort():
 
 def write_file(output_filename):
 
-    column_separator = " "
+    column_separator = "\t"
     file = open(output_filename, "a")
     columns = [
         "State",
