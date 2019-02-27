@@ -522,9 +522,24 @@ def abort():
     else:
         PodStatus.state = 1
 
+def write_file(self, output_filename):
+
+    column_separator = ","
+    self.file = open(output_filename, "a")
+    columns = [
+        "State",
+        "Sensor",
+        "Value"
+    ]
+    self.file.write(self.column_separator.join(map(lambda column_title: "\""+column_title+"\"", columns)))
+    self.file.write("\n")
+
+
 if __name__ == "__main__":
 
     PodStatus = Status()
+    output_filename = "output"
+    write_file(output_filename)
 
     while PodStatus.Quit == False:
         #print("Begin State: " + str(PodStatus.state))
