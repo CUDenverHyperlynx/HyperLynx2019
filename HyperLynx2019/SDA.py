@@ -71,6 +71,7 @@ import socket
 # import ctypes
 # import struct
 import numpy
+import datetime
 
 class Status():
     # DEBUG init for script:
@@ -101,6 +102,22 @@ class Status():
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 4))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
+
+        date = datetime.datetime.today()
+        new_number = str(date.year) + str(date.month) + str(date.day) \
+                     + str(date.hour) + str(date.minute) + str(date.second)
+        self.file_name = 'log_' + new_number
+        file = open(self.file_name, 'a')
+        columns = [
+            "Label",
+            "Value",
+            "Time"
+        ]
+        with file:
+            file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
+            file.write("\n")
+        file.close()
+
         print("Pod init complete, State: " + str(self.state))
 
     def toggle_res1(self):
@@ -522,28 +539,18 @@ def abort():
     else:
         PodStatus.state = 1
 
-def write_file(output_filename):
-
-    column_separator = "\t"
-    file = open(output_filename, "a")
-    columns = [
-        "State",
-        "Sensor",
-        "Value"
-    ]
-    file.write(column_separator.join(map(lambda column_title: "\""+column_title+"\"", columns)))
-    file.write("\n")
-
+def write_file():
+    file = open(PodStatus.file_name, 'a')
+    with file:
+        file.write('Words\tHello\t2019123123')
 
 if __name__ == "__main__":
 
     PodStatus = Status()
-    output_filename = "output"
-    write_file(output_filename)
+
 
     while PodStatus.Quit == False:
-        #print("Begin State: " + str(PodStatus.state))
-        #print("Begin Fault: " + str(PodStatus.Fault))
+        write_file()
         poll_sensors()
         run_state()
         eval_abort()
@@ -551,8 +558,6 @@ if __name__ == "__main__":
         send_data()
         spacex_data()
 
-        #print("End State: " + str(PodStatus.state))
-        #print("End Fault: " + str(PodStatus.Fault))
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
 
