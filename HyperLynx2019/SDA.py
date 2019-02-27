@@ -58,6 +58,8 @@
 
 #Trying to get changes correct
 
+# This is my change.
+
 from argparse import ArgumentParser
 from time import sleep, clock
 # import sys
@@ -283,7 +285,7 @@ def rec_data():     # This function parses received data into useable commands b
     print("* Pod Clock Time: " + str(round(clock(),3)) + "\t*")
     if PodStatus.Fault == True:
         print("* Fault:         " + "TRUE" + "\t*")
-    else: print("* Fault:         " + "TRUE" + "\t*")
+    else: print("* Fault:         " + "FALSE" + "\t*")
     if PodStatus.HV == True:    print("* HV System:     " + "ON" + "\t\t*")
     else: print("* HV System:     " + "OFF" + "\t*")
     print("* Brakes:        " + str(PodStatus.Brakes) + "\t*\n"
