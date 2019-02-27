@@ -62,14 +62,7 @@
 
 from argparse import ArgumentParser
 from time import sleep, clock
-# import sys
-# import math
-# import cmath
-# import serial
 import socket
-# import pickle
-# import ctypes
-# import struct
 import numpy
 import datetime
 import os
@@ -117,6 +110,7 @@ class Status():
             file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
             file.write("\n")
         file.close()
+        # file.readline for reading line by line
 
         print("Pod init complete, State: " + str(self.state))
 
