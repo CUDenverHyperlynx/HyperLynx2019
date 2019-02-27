@@ -72,6 +72,7 @@ import socket
 # import struct
 import numpy
 import datetime
+import os
 
 class Status():
     # DEBUG init for script:
@@ -102,12 +103,12 @@ class Status():
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 4))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
-
+        print(self.sensor_data)
         date = datetime.datetime.today()
         new_number = str(date.year) + str(date.month) + str(date.day) \
                      + str(date.hour) + str(date.minute) + str(date.second)
         self.file_name = 'log_' + new_number
-        file = open(self.file_name, 'a')
+        file = open(os.path.join('logs/', self.file_name), 'a')
         columns = [
             "Label",
             "Value",
@@ -540,9 +541,13 @@ def abort():
         PodStatus.state = 1
 
 def write_file():
-    file = open(PodStatus.file_name, 'a')
+    # SLOW THIS THE FUCK DOWN
+    
+    file = open(os.path.join('logs/', PodStatus.file_name), 'a')
     with file:
-        file.write('Words\tHello\t2019123123')
+        for i in PodStatus.sensor_data:
+            line = str(i[0]) + '\t' + str(i[1]) + '\t' + str(clock()) + '\n'
+            file.write(line)
 
 if __name__ == "__main__":
 
@@ -554,7 +559,7 @@ if __name__ == "__main__":
         poll_sensors()
         run_state()
         eval_abort()
-        rec_data()
+        #rec_data()
         send_data()
         spacex_data()
 
