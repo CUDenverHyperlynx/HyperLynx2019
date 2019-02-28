@@ -81,6 +81,7 @@ class Status():
     BBP = 3150          # ft
 
     MET = 0
+    MET_starttime = 0
 
     speed = 0
     distance = 0
@@ -167,7 +168,8 @@ def poll_sensors():
     PodStatus.speed = PodStatus.sensor_data[5,1]
     PodStatus.accel = PodStatus.sensor_data[57,1]
 
-
+    if PodStatus.MET > 0:
+        PodStatus.MET = clock()-PodStatus.MET_starttime
 def eval_abort():
     # temp_range column values
         #   0 - Sensor ID
@@ -321,7 +323,7 @@ def rec_data():     # This function parses received data into useable commands b
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
         "* State:         " + str(PodStatus.state) + "\t\t*")
-    print("* Pod Clock Time: " + str(round(clock(),3)) + "\t*")
+    print("* Pod Clock Time: " + str(round(PodStatus.MET,3)) + "\t*")
     if PodStatus.Fault == True:
         print("* Fault:         " + "TRUE" + "\t*")
     else: print("* Fault:         " + "FALSE" + "\t*")
@@ -632,7 +634,7 @@ if __name__ == "__main__":
         run_state()
         do_commands()
         eval_abort()
-        #rec_data()
+        rec_data()
         send_data()
         spacex_data()
         #print(clock())
