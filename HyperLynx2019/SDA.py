@@ -75,6 +75,17 @@ class Status():
     Crawling = 6
     BrakingLow = 7
 
+    max_accel = 0.7     # [G]
+    max_speed = 400     # ft/s
+    max_time = 12       # sec
+    BBP = 3150          # ft
+
+    MET = 0
+
+    speed = 0
+    distance = 0
+    accel = 0
+
     def __init__(self):
         # BOOT FUNCTIONS
         self.StartTime = clock()
@@ -98,6 +109,10 @@ class Status():
         #INITIATE LOG RATE INFO
         self.log_lastwrite = clock()            # Saves last time of file write
         self.log_rate = 10                      # Hz
+
+        # INIT SPACEX DATA
+        self.spacex_lastsend = 0  # init
+        self.spacex_rate = 40  # Hz
 
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
@@ -147,6 +162,12 @@ def poll_sensors():
         PodStatus.Brakes = False
     else:
         PodStatus.Brakes = True
+    # GET PodStatus.distance, PodStatus.speed, PodStatus.accel
+
+    #PodStatus.distance = NEED TO KNOW HOW DISTANCE CALC WORKS
+    PodStatus.speed = PodStatus.sensor_data[5,1]
+    PodStatus.accel = PodStatus.sensor_data[57,1]
+
 
 def eval_abort():
     # temp_range column values
@@ -436,12 +457,14 @@ def spacex_data():
 
         seconds = 0
 
+        PodStatus.spacex_lastsend = clock()
+
 def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
 
     ### Send to CAN ###
 
     ### Send to UDP ###
-    
+
     pass
 
 def run_state():
@@ -495,10 +518,10 @@ def run_state():
         if PodStatus.throttle > 0:          # SET THROTTLE TO 0
             PodStatus.throttle = 0
 
+        # DO NOTHING ELSE UNTIL STOPPED
+
         # RECONFIGURE FOR CRAWLING
         if PodStatus.speed < 0.5:
-            reconfig = 1
-        if reconfig == 1:
             PodStatus.commands[3,1] = 1     # CLOSE BRAKE VENT SOLENOID
             sleep(1)
             PodStatus.commands[4,1] = 1     # OPEN RES#1 SOLENOID
