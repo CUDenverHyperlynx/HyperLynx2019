@@ -113,6 +113,7 @@ class Status():
         # file.readline for reading line by line
 
         print("Pod init complete, State: " + str(self.state))
+        print("Log file created: " + str(self.file_name))
 
     def toggle_res1(self):
         if self.Res1_Sol == 0:
