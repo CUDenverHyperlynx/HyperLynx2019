@@ -68,13 +68,6 @@ import datetime
 import os
 
 class Status():
-    # DEBUG init for script:
-    Quit = False
-
-    # Pod Abort conditions init:
-    Fault = False
-    Trigger = False
-
     # States
     SafeToApproach = 1
     Launching = 3
@@ -85,13 +78,27 @@ class Status():
     def __init__(self):
         # BOOT FUNCTIONS
         self.StartTime = clock()
-        self.state = self.SafeToApproach
         self.HV = False
         self.Brakes = True
         self.Vent_Sol = True
         self.Res1_Sol = 0
         self.Res2_Sol = 0
         self.MC_Pump = False
+
+        # DEBUG init for script:
+        self.Quit = False
+
+        # Pod Abort conditions init:
+        self.Fault = False
+        self.Trigger = False
+
+        # INITIATE STATE TO S2A
+        self.state = self.SafeToApproach
+
+        #INITIATE 
+        self.log_lastwrite = clock()            # Saves last time of file write
+        self.log_rate = 10                      # Hz
+
         self.abort_labels = numpy.genfromtxt('abortranges.dat', dtype=str, skip_header=1, usecols=0, delimiter='\t')
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 4))
@@ -536,12 +543,15 @@ def abort():
 
 def write_file():
     # SLOW THIS THE FUCK DOWN
-
-    file = open(os.path.join('logs/', PodStatus.file_name), 'a')
-    with file:
-        for i in PodStatus.sensor_data:
-            line = str(i[0]) + '\t' + str(i[1]) + '\t' + str(clock()) + '\n'
-            file.write(line)
+    if (clock() - PodStatus.log_lastwrite) < (1/PodStatus.log_rate):
+        pass
+    else:
+        file = open(os.path.join('logs/', PodStatus.file_name), 'a')
+        with file:
+            for i in PodStatus.sensor_data:
+                line = str(i[0]) + '\t' + str(i[1]) + '\t' + str(clock()) + '\n'
+                file.write(line)
+        PodStatus.log_lastwrite = clock()
 
 if __name__ == "__main__":
 
@@ -553,9 +563,10 @@ if __name__ == "__main__":
         poll_sensors()
         run_state()
         eval_abort()
-        rec_data()
+        #rec_data()
         send_data()
         spacex_data()
+        print(clock())
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
