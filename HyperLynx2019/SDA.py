@@ -467,8 +467,23 @@ def run_state():
 
     # LAUNCHING STATE
     elif PodStatus.state == 3:
-        if PodStatus.sensor_data[10,1] < PodStatus.max_accel:
+
+        # Start the flight clock
+        if PodStatus.MET_starttime == 0:
+            PodStatus.MET_starttime = clock()
+
+        # ACCEL UP TO MAX G within 2%
+        if PodStatus.sensor_data[26,1] < (0.98 * PodStatus.max_accel):
             PodStatus.throttle = PodStatus.throttle * 1.01
+        elif PodStatus.sensor_data[26,1] > (1.02*PodStatus.max_accel):
+            PodStatus.throttle = PodStatus.throttle * 0.99
+
+        if PodStatus.distance > PodStatus.BBP:
+            transition()
+        if PodStatus.speed > PodStatus.max_speed:
+            transition()
+        if PodStatus.MET > PodStatus.max_time:
+            transition()
 
 
     # COAST (NOT USED)
