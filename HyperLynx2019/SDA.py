@@ -95,7 +95,7 @@ class Status():
         # INITIATE STATE TO S2A
         self.state = self.SafeToApproach
 
-        #INITIATE 
+        #INITIATE LOG RATE INFO
         self.log_lastwrite = clock()            # Saves last time of file write
         self.log_rate = 10                      # Hz
 
@@ -395,43 +395,46 @@ def do_commands():
         PodStatus.toggle_res2()
 
 def spacex_data():
-    parser = ArgumentParser(description="Hyperlynx POD Run")
-    parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
-    parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
-    parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send packets to")
-    parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
-    parser.add_argument("--tube_length", type=int, default=4150, help="Total length of the tube(ft)")
-    parser.add_argument("--bbp", type=int, default=3228, help="Begin Braking Point(ft)")
-    parser.add_argument("--cbp", type=int, default=4060, help="Crawling Brake Point(ft)")
-    parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
-    parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
-    parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
+    if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
+        pass
+    else:
+        parser = ArgumentParser(description="Hyperlynx POD Run")
+        parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
+        parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
+        parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send packets to")
+        parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
+        parser.add_argument("--tube_length", type=int, default=4150, help="Total length of the tube(ft)")
+        parser.add_argument("--bbp", type=int, default=3228, help="Begin Braking Point(ft)")
+        parser.add_argument("--cbp", type=int, default=4060, help="Crawling Brake Point(ft)")
+        parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
+        parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
+        parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
 
-    args = parser.parse_args()
+        args = parser.parse_args()
 
-    if args.frequency < 10:
-        print("Send frequency should be higher than 10Hz")
-    if args.frequency > 50:
-        print("Send frequency should be lower than 50Hz")
+        if args.frequency < 10:
+            print("Send frequency should be higher than 10Hz")
+        if args.frequency > 50:
+            print("Send frequency should be lower than 50Hz")
 
-    team_id = args.team_id
-    wait_time = (1 / args.frequency)
-    server = (args.server_ip, args.server_port)
+        team_id = args.team_id
+        wait_time = (1 / args.frequency)
+        server = (args.server_ip, args.server_port)
 
-    tube_length = args.tube_length
-    time_run_highspeed = args.time_run_highspeed
+        tube_length = args.tube_length
+        time_run_highspeed = args.time_run_highspeed
 
-    top_speed = args.topspeed
-    BBP = args.bbp
+        top_speed = args.topspeed
+        BBP = args.bbp
 
-    crawl_speed = args.crawlspeed
-    CBP = args.cbp
+        crawl_speed = args.crawlspeed
+        CBP = args.cbp
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    status = Status.SafeToApproach
+        status = Status.SafeToApproach
 
-    seconds = 0
+        seconds = 0
 
 def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
 
@@ -464,7 +467,9 @@ def run_state():
 
     # LAUNCHING STATE
     elif PodStatus.state == 3:
-        pass
+        if PodStatus.sensor_data[10,1] < PodStatus.max_accel:
+            PodStatus.throttle = PodStatus.throttle * 1.01
+
 
     # COAST (NOT USED)
     elif PodStatus.state == 4:
