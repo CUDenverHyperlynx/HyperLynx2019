@@ -132,7 +132,6 @@ class Status():
             file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
             file.write("\n")
         file.close()
-        # file.readline for reading line by line
 
         print("Pod init complete, State: " + str(self.state))
         print("Log file created: " + str(self.file_name))
@@ -473,7 +472,7 @@ def run_state():
     if PodStatus.state == 1:
         do_commands()
 
-        #TRANSITIONS
+        # TRANSITIONS
         if PodStatus.Fault == True:
             print("Cannot launch, pod in fault state.")
         else:
