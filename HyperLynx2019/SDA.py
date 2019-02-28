@@ -438,13 +438,10 @@ def spacex_data():
 
 def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
 
-    ### Test CAN comms ###
+    ### Send to CAN ###
 
-    ### End Test CAN comms ###
-
-    ### Test UDP comms ###
-
-    ### End Test UDP comms ###
+    ### Send to UDP ###
+    
     pass
 
 def run_state():
@@ -478,6 +475,7 @@ def run_state():
         elif PodStatus.sensor_data[26,1] > (1.02*PodStatus.max_accel):
             PodStatus.throttle = PodStatus.throttle * 0.99
 
+        # TRANSITIONS
         if PodStatus.distance > PodStatus.BBP:
             transition()
         if PodStatus.speed > PodStatus.max_speed:
@@ -492,8 +490,28 @@ def run_state():
 
     # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
-        pass
-        # DO STUFF
+        if PodStatus.commands[3,1] == 1:    # OPEN BRAKE VENT SOLENOID
+            PodStatus.commands[3,1] = 0
+        if PodStatus.throttle > 0:          # SET THROTTLE TO 0
+            PodStatus.throttle = 0
+
+        # RECONFIGURE FOR CRAWLING
+        if PodStatus.speed < 0.5:
+            reconfig = 1
+        if reconfig == 1:
+            PodStatus.commands[3,1] = 1     # CLOSE BRAKE VENT SOLENOID
+            sleep(1)
+            PodStatus.commands[4,1] = 1     # OPEN RES#1 SOLENOID
+            brake_repressurize_time = clock()
+            while PodStatus.sensor_data[24,1] < 177:        # WAIT FOR BRAKES TO PRESSURIZE
+                bg_loop()
+                if clock() - brake_repressurize_time > 60:
+                    print("60s repressurization failed, aborting.")
+                    PodStatus.commands[4,1] = 1
+                    abort()
+                    break
+            PodStatus.commands[4,1] = 0     # CLOSE RES#1 SOLENOID
+            transition()
 
     # CRAWLING
     elif PodStatus.state == 6:
@@ -573,6 +591,14 @@ def write_file():
                 file.write(line)
         PodStatus.log_lastwrite = clock()
 
+def bg_loop():
+    write_file()
+    poll_sensors()
+    do_commands()
+    eval_abort()
+    send_data()
+    spacex_data()
+
 if __name__ == "__main__":
 
     PodStatus = Status()
@@ -582,11 +608,12 @@ if __name__ == "__main__":
         write_file()
         poll_sensors()
         run_state()
+        do_commands()
         eval_abort()
         #rec_data()
         send_data()
         spacex_data()
-        print(clock())
+        #print(clock())
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
