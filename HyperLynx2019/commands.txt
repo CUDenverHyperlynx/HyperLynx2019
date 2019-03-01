@@ -6,3 +6,7 @@ Vent_Sol	0
 Res1_Sol	0
 Res2_Sol	0
 MC_Pump	0
+para_BBP	0
+para_max_speed	0
+para_max_accel	0
+para_max_time	0

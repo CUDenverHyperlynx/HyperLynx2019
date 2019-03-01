@@ -621,6 +621,16 @@ def do_commands():
             else:
                 PodStatus.MC_Pump = 0
 
+        # Load parameters
+        if PodStatus.commands['para_BBP'] != PodStatus.para_BBP:
+            PodStatus.para_BBP = PodStatus.commands['para_BBP']
+        if PodStatus.commands['para_max_speed'] != PodStatus.para_max_speed:
+            PodStatus.para_max_speed = PodStatus.commands['para_max_speed']
+        if PodStatus.commands['para_max_accel'] != PodStatus.para_max_accel:
+            PodStatus.para_max_accel = PodStatus.commands['para_max_accel']
+        if PodStatus.commands['para_max_time'] != PodStatus.para_max_time:
+            PodStatus.para_max_time = PodStatus.commands['para_max_time']
+
     else:
         # Load ONLY abort command
         if PodStatus.commands['Abort'] == True:
@@ -856,7 +866,6 @@ if __name__ == "__main__":
 
     PodStatus = Status()
 
-
     while PodStatus.Quit == False:
         write_file()
         poll_sensors()
@@ -866,7 +875,6 @@ if __name__ == "__main__":
         rec_data()
         send_data()
         spacex_data()
-        #print(clock())
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
