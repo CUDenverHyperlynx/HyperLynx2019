@@ -23,7 +23,7 @@ PV_Left_Temp	0	50	1	0	1	1	1		0	0	0
 PV_Left_Pressure	9	15	1	0	1	1	1		0	0	0	
 PV_Right_Temp	0	50	1	0	1	1	1		0	0	0	
 PV_Right_Pressure	9	15	1	0	1	1	1		0	0	0	
-Brake_Pressure	0	177	1	0	0	0	0	0	0	0	0	
+Brake_Pressure	0	177	0	0	0	0	0	0	0	0	0	
 Brake_Pressure	177	225	0	0	1	0	0	1	0	1	0	
 Ambient_Pressure	0	15	1	0	1	1	1		0	0	0	
 IMU1_X	-0.05	0.05	1	0	1	1	1		0	0	0	
