@@ -71,40 +71,14 @@ class Status():
     Crawling = 6
     BrakingLow = 7
 
-    para_max_accel = 0     # [G]
-    para_max_speed = 0     # ft/s
-    para_max_time = 0       # sec
-    para_BBP = 0          # ft
-
-    MET = 0
-    MET_starttime = 0
-    stopped_time = 0
-
-    speed = 0
-    distance = 0
-    accel = 0
-
-    # SPACEX CONFIG DATA
-    spacex_state = 0
-    spacex_team_id = 69
-    spacex_server_ip = '192.168.0.1'
-    spacex_server_port = 3000
-    spacex_rate = 40                # Hz
-    spacex_lastsend = 0
-
     abort_ranges = {}
     abort_ranges[SafeToApproach] = {}
     abort_ranges[Launching] = {}
     abort_ranges[BrakingHigh] = {}
     abort_ranges[Crawling] = {}
-    total_faults = 0
-
-    throttle = 0
-
+    abort_ranges[BrakingLow] = {}
     commands = {}
-
     sensor_data = {}
-    #sensor_data['Brake_Pressure'] = 200
 
     def __init__(self):
         # BOOT FUNCTIONS
@@ -115,6 +89,26 @@ class Status():
         self.Res1_Sol = 0
         self.Res2_Sol = 0
         self.MC_Pump = 0
+        self.total_faults = 0
+        self.throttle = 0
+        self.speed = -1
+        self.distance = -1
+        self.accel = -1
+        self.MET = 0
+        self.MET_starttime = -1
+        self.stopped_time = -1
+        self.para_max_accel = 0  # [G]
+        self.para_max_speed = 0  # ft/s
+        self.para_max_time = 0  # sec
+        self.para_BBP = 0  # ft
+
+        # SPACEX CONFIG DATA
+        self.spacex_state = 0
+        self.spacex_team_id = 69
+        self.spacex_server_ip = '192.168.0.1'
+        self.spacex_server_port = 3000
+        self.spacex_rate = 40               # Hz
+        self.spacex_lastsend = 0
 
         # DEBUG init for script:
         self.Quit = False
@@ -154,12 +148,18 @@ class Status():
                                                        'Trigger': abort_vals[i, 9],
                                                        'Fault': abort_vals[i, 10]
                                                        }
-            if abort_vals[i, 6] == 1:
+            if abort_vals[i, 7] == 1:
                 self.abort_ranges[self.Crawling][abort_names[i]] = {'Low': abort_vals[i, 0],
                                                          'High': abort_vals[i, 1],
                                                          'Trigger': abort_vals[i, 9],
                                                          'Fault': abort_vals[i, 10]
                                                          }
+            if abort_vals[i, 8] == 1:
+                self.abort_ranges[self.BrakingLow][abort_names[i]] = {'Low': abort_vals[i, 0],
+                                                                    'High': abort_vals[i, 1],
+                                                                    'Trigger': abort_vals[i, 9],
+                                                                    'Fault': abort_vals[i, 10]
+                                                                    }
 
 
         # Create Commands Dictionary
@@ -169,7 +169,6 @@ class Status():
                                       dtype=int)
         for i in range(0, len(cmd_names)):
             self.commands[cmd_names[i]] = cmd_vals[i]
-        print(self.commands)
 
         ### Create log file ###
         date = datetime.datetime.today()
@@ -192,21 +191,8 @@ class Status():
         print("Pod init complete, State: " + str(self.state))
         print("Log file created: " + str(self.file_name))
 
-    def toggle_res1(self):
-        if self.Res1_Sol == 0:
-            ### SET RESERVOIR SOLENOID TO CLOSE
-            ## DEBUG:
-            self.Res1_Sol = 1
-        else:
-            ### SET RESERVOIR SOLENOID TO OPEN
-            ## DEBUG:
-            self.Res1_Sol = 0
-
-    def toggle_res2(self):
-        if self.Res2_Sol == 0:
-            self.Res2_Sol = 1
-        else:
-            self.Res2_Sol = 0
+    #debug
+    sensor_data['Brake_Pressure'] = 178
 
 def poll_sensors():
     ### CAN DATA ###
@@ -237,7 +223,7 @@ def poll_sensors():
     PodStatus.sensor_data['IMU2_Y'] = -1.02
     PodStatus.sensor_data['IMU2_Z'] = 0
     PodStatus.sensor_data['LIDAR'] = 0
-    PodStatus.sensor_data['Brake_Pressure'] = 178
+    #PodStatus.sensor_data['Brake_Pressure'] = 178
     PodStatus.sensor_data['LST_Left'] = 0
     PodStatus.sensor_data['LST_Right'] = 0
 
@@ -541,7 +527,7 @@ def rec_data():     # This function parses received data into useable commands b
             pass
 
     elif PodStatus.state == PodStatus.Launching:
-        print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
+        print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
         a = input('Enter choice: ')
         if a == '1':
             PodStatus.commands['Abort'] = 1
@@ -599,6 +585,7 @@ def do_commands():
                 PodStatus.Vent_Sol = 1
             else:
                 PodStatus.Vent_Sol = 0
+                PodStatus.sensor_data['Brake_Pressure'] = 0
 
         # Change Reservoir #1 Solenoid
         if PodStatus.commands['Res1_Sol'] != PodStatus.Res1_Sol:  # If command does not equal current state
@@ -637,53 +624,17 @@ def spacex_data():
         #print("No packet sent.")
         pass
     else:
-        print("SpaceX packet sent at " + str(clock()))
+        PodStatus.spacex_lastsend = clock()
+        #print("SpaceX packet sent at " + str(PodStatus.spacex_lastsend))
+
+        ### SpaceX-provided code
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         server = (PodStatus.spacex_server_ip, PodStatus.spacex_server_port)
-
         packet = struct.pack(">BB7iI", PodStatus.spacex_team_id, PodStatus.spacex_state, int(PodStatus.accel),
                              int(PodStatus.distance), int(PodStatus.speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
         sock.sendto(packet, server)
 
-        # parser = ArgumentParser(description="Hyperlynx POD Run")
-        # parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
-        # parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
-        # parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send packets to")
-        # parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
-        # parser.add_argument("--tube_length", type=int, default=4150, help="Total length of the tube(ft)")
-        # parser.add_argument("--bbp", type=int, default=3228, help="Begin Braking Point(ft)")
-        # parser.add_argument("--cbp", type=int, default=4060, help="Crawling Brake Point(ft)")
-        # parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
-        # parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
-        # parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
-        #
-        # args = parser.parse_args()
-        #
-        # if args.frequency < 10:
-        #     print("Send frequency should be higher than 10Hz")
-        # if args.frequency > 50:
-        #     print("Send frequency should be lower than 50Hz")
-        #
-        # team_id = args.team_id
-        # wait_time = (1 / args.frequency)
-        # server = (args.server_ip, args.server_port)
-        #
-        # tube_length = args.tube_length
-        # time_run_highspeed = args.time_run_highspeed
-        #
-        # top_speed = args.topspeed
-        # BBP = args.bbp
-        #
-        # crawl_speed = args.crawlspeed
-        # CBP = args.cbp
-        #
-        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        #
-        # status = Status.SafeToApproach
-        #
-        # seconds = 0
 
-        PodStatus.spacex_lastsend = clock()
 
 def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
 
@@ -722,8 +673,11 @@ def run_state():
         PodStatus.commands['Launch'] = 0        # Resets launch command once successfully launched
 
         # Start the flight clock
-        if PodStatus.MET_starttime == 0:
+        if PodStatus.MET_starttime == -1:
+            print("The clock has started.")
             PodStatus.MET_starttime = clock()
+        else:
+            PodStatus.MET = clock()-PodStatus.MET_starttime
 
         # ACCEL UP TO MAX G within 2%
         if PodStatus.sensor_data['IMU1_X'] < (0.98 * PodStatus.para_max_accel):
@@ -750,35 +704,42 @@ def run_state():
 
     # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
+        PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
 
+        # if PodStatus.speed > 0.5:
+        #     PodStatus.stopped_time = 0
         if PodStatus.speed > 0.5:
-            PodStatus.stopped_time = 0
-
-        if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
-            PodStatus.commands['Vent_Sol'] = 0
-        if PodStatus.throttle > 0:          # SET THROTTLE TO 0
-            PodStatus.throttle = 0
+            if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
+                print("Opening Vent Sol")
+                PodStatus.commands['Vent_Sol'] = 0
+            if PodStatus.throttle > 0:          # SET THROTTLE TO 0
+                PodStatus.throttle = 0
 
         # DO NOTHING ELSE UNTIL STOPPED
 
         # RECONFIGURE FOR CRAWLING
         if PodStatus.speed < 0.5:
-            if PodStatus.stopped_time == 0:
-                PodStatus.stoppped_time = clock()
-                print("Stopped at " + str(round(PodStatus.stopped_time, 2)) + " seconds; Holding for 10 seconds.")
-            PodStatus.stopped_time = clock() - PodStatus.stopped_time
-            if clock() - PodStatus.stopped_time > 10:
+            if PodStatus.stopped_time == -1:
+                timer = 0
+                PodStatus.stopped_time = clock()
+                PodStatus.commands['Vent_Sol'] = 0
+                print("Stopped at " + str(round(PodStatus.stopped_time, 2)) + " seconds; Holding for 2 seconds.")
+            else:
+                timer = clock() - PodStatus.stopped_time
+
+            if timer > 2:
                 if PodStatus.commands['Vent_Sol'] == 0:
+                    PodStatus.sensor_data['Brake_Pressure'] = 0
                     PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
+                    print("Closing Vent Sol")
                 if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
                     PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
                     print("Opening Res#1, pausing for 2 seconds.")
                     sleep(2)
                     PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
+                    transition()
 
-            if PodStatus.Brakes == False and PodStatus.Res1_Sol == 0:       # TRANSITION TO CRAWLING
-                transition()
 
     # CRAWLING
     elif PodStatus.state == 6:
@@ -888,7 +849,7 @@ if __name__ == "__main__":
         run_state()
         do_commands()
         eval_abort()
-        #rec_data()
+        rec_data()
         send_data()
         spacex_data()
         #print(clock())
