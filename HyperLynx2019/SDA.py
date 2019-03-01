@@ -80,8 +80,13 @@ class Status():
     commands = {}
     sensor_data = {}
 
+    poll_oldtime = 0
+    poll_newtime = 0
+    poll_interval = 0
+
     def __init__(self):
         # BOOT FUNCTIONS
+        self.wheel_diameter = 17.4 / 12 # feet
         self.StartTime = clock()
         self.HV = 0
         self.Brakes = 1
@@ -94,6 +99,7 @@ class Status():
         self.speed = -1
         self.distance = -1
         self.accel = -1
+        self.stripe_count = 0
         self.MET = 0
         self.MET_starttime = -1
         self.stopped_time = -1
@@ -195,17 +201,14 @@ class Status():
     sensor_data['Brake_Pressure'] = 178
 
 def poll_sensors():
+
+    PodStatus.poll_oldtime = PodStatus.poll_newtime
+    PodStatus.poll_newtime = clock()
+    PodStatus.poll_interval = PodStatus.poll_newtime-PodStatus.poll_oldtime
+
     ### CAN DATA ###
-    PodStatus.sensor_data['BMS_Conn'] = 1                           # Determines if BMS is responding
-    PodStatus.sensor_data['BMS_Cell_Temp_Leader'] = max([35])       # Finds maximum cell temp value
-    PodStatus.sensor_data['BMS_Cell_Voltage_Leader'] = max([4.2])   # Finds maximum cell voltage value
-    PodStatus.sensor_data['BMS_Cell_Voltage_Laggard'] = min([4.2])  # Finds min cell voltage value
-    PodStatus.sensor_data['BMS_Pack_Voltage'] = 600                 # Finds total pack voltage (adds all cells up)
-    PodStatus.sensor_data['SD_Conn'] = 1
-    PodStatus.sensor_data['SD_Temp'] = 30
-    PodStatus.sensor_data['SD_HV_Current'] = 0
-    PodStatus.sensor_data['Motor_Speed'] = 0
-    PodStatus.sensor_data['Motor_Distance'] = 0
+    PodStatus.sensor_data['SD_MotorData_MotorRPM'] = 0
+
 
     ### I2C DATA ###
     PodStatus.sensor_data['LVBatt_Temp'] = 20
@@ -237,14 +240,18 @@ def poll_sensors():
     ### SPACEX DATA ###
     PodStatus.stripe_count = numpy.mean([PodStatus.sensor_data['LST_Left'], PodStatus.sensor_data['LST_Right']])
 
+    ### CONVERT DATA ###
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
     else:
         PodStatus.Brakes = True
 
-    PodStatus.speed = PodStatus.sensor_data['Motor_Speed']
-    PodStatus.accel = PodStatus.sensor_data['IMU1_X']
-    #PodStatus.distance = PodStatus.sensor_data['Motor_Distance']
+    old_speed = PodStatus.speed
+    PodStatus.speed = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2*numpy.pi*PodStatus.wheel_diameter
+    PodStatus.accel = numpy.mean([PodStatus.sensor_data['IMU1_X'], PodStatus.sensor_data['IMU2_X']])
+
+    if PodStatus.poll_oldtime != 0:         # Update distance (but skip init loop @ old_time = 0
+        PodStatus.distance += PodStatus.speed * PodStatus.poll_interval
 
     if PodStatus.MET > 0:
         PodStatus.MET = clock()-PodStatus.MET_starttime
@@ -288,7 +295,8 @@ def eval_abort():
             if PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Fault'] == 1:
                 PodStatus.total_faults += 1
         if PodStatus.total_faults > 0:
-            print("Faults: \n" + str(PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Fault']))
+            PodStatus.Fault = True
+            print("Faults: \n" + str(int(PodStatus.total_faults)))
         else:
             PodStatus.Fault = False
 
@@ -310,7 +318,8 @@ def eval_abort():
             if PodStatus.abort_ranges[PodStatus.Launching][str(key)]['Fault'] == 1:
                 PodStatus.total_faults += 1
         if PodStatus.total_faults > 0:
-            print("Faults: \n" + str(PodStatus.abort_ranges[PodStatus.Launching][str(key)]['Fault']))
+            PodStatus.Fault = True
+            print("Faults: \n" + str(int(PodStatus.total_faults)))
         else:
             PodStatus.Fault = False
 
@@ -805,7 +814,7 @@ def abort():
     elif PodStatus.state == 6:
         PodStatus.state = 7
     elif PodStatus.state == 7:
-        if PodStatus.speed > 0:
+        if PodStatus.speed > 0.1:
             print("Waiting for pod to stop.")
         else:
             PodStatus.state = 1
@@ -831,10 +840,15 @@ def write_file():
             for key in PodStatus.commands:
                 line = str(key) + '\t' + str(PodStatus.commands[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
-            line = 'Pod State' + '\t' + str(PodStatus.state) + '\t\t' + str(round(clock(),2)) + '\n'
+            line = 'state' + '\t' + str(PodStatus.state) + '\t\t' + str(round(clock(),2)) + '\n' \
+                    + 'spacex_state' + '\t' + str(PodStatus.spacex_state) + '\t\t' + str(round(clock(),2)) + '\n' \
+                    + 'total_faults' + '\t' + str(PodStatus.total_faults) + '\t\t' + str(round(clock(),2)) + '\n' \
+                    + 'throttle' + '\t' + str(PodStatus.throttle) + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'distance' + '\t' + str(PodStatus.distance) + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'speed' + '\t' + str(PodStatus.speed) + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'accel' + '\t' + str(PodStatus.accel) + '\t\t' + str(round(clock(), 2)) + '\n'
             file.write(line)
-            line = 'SpaceX state' + '\t' + str(PodStatus.spacex_state) + '\t\t' + str(round(clock(),2)) + '\n'
-            file.write(line)
+
         PodStatus.log_lastwrite = clock()
 
 
