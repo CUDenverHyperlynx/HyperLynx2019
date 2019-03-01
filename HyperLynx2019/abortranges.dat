@@ -1,224 +1,38 @@
 Sensor	    Low	     High	1 - S2A	2 - FC2L	3 - Launch	5 - Brake1	Postflight	6 - Crawling	7 - Brake2	Trigger	Fault (INIT TO ZERO)	NOTES (not read by SDA)
-BMS_Cell_Temp	0	45	1	1	1	1	1	1	1	3	4	Pre-launch max temp
+BMS_Cell_Temp_Leader	5	45	1	1	1	1	1	1	1	1	0	Pre-launch max temp
 BMS_Cell_Voltage_Leader	3.8	4.3	1	1	1	1	1	1	1	1	0	Highest cell voltage
 BMS_Cell_Voltage_Laggard	3.8	4.3	1	1	1	0	1	1	1	1	0	Lowest cell voltage
-BMSConn	0.9	1.1	1	1	1	1	1	1	1	1	0	
-MotorRes	0	1	1	1	0	0	0	0	0	0	0	
-MotorRes	0	1	0	0	0	1	0	0	1	0	0	
-MotorRes	0	400	0	0	1	0	0	0	0	0	0	Sets pod max speed
-MotorRes	0	35	0	0	0	0	0	1	0	0	0	Sets pod max crawling speed
+BMS_Conn	0.9	1.1	1	1	1	1	1	1	1	1	0	
+Motor_Speed	0	1	1	1	0	0	0	0	0	0	0	
+Motor_Speed	0	1	0	0	0	1	0	0	1	0	0	
+Motor_Speed	0	400	0	0	1	0	0	0	0	0	0	Sets pod max speed
+Motor_Speed	0	35	0	0	0	0	0	1	0	0	0	Sets pod max crawling speed
 SD_Conn	0.9	1.1	1	1	1	0	1	1	0	0	0	
 SD_Temp	0	70	1	0	1	1	1	1	0	0	0	Max controller temp postflight
 SD_Temp	0	35	1	1	0	0	0	0	0	0	0	Max controller temp preflight
-SD_HV_Curr	0	5	1	1	0	1	0	0	1	0	0	Max controller HV current while not moving
-SD_HV_Curr	0	340	0	0	1	0	0	1	1	0	0	Max controller HV current in motion
+SD_HV_Current	0	5	1	1	0	1	0	0	1	0	0	Max controller HV current while not moving
+SD_HV_Current	0	340	0	0	1	0	0	1	1	0	0	Max controller HV current in motion
 LVBatt_Temp	0	35	1	0	1	1	1		0	0	0	
-LVBatt_Curr	0	10	1	0	1	1	1		0	0	0	
+LVBatt_Current	0	10	1	0	1	1	1		0	0	0	
 LVBatt_Voltage	10.8	13.5	1	0	1	1	1	1	0	1	0	
 RPi_Temp	0	60	1	1	1	0	1		0	0	0	
 RPi_Proc_Load	0	80	1	1	1	0	1		0	0	0	
+RPi_Disk_Space	500	32000	1	1	1	1	1	1	1	0	0	megabytes
 RPi_Mem_Load	0	80	1	1	1	0	1		0	0	0	
 PV_Left_Temp	0	50	1	0	1	1	1		0	0	0	
-PV_Left_Press	9	15	1	0	1	1	1		0	0	0	
+PV_Left_Pressure	9	15	1	0	1	1	1		0	0	0	
 PV_Right_Temp	0	50	1	0	1	1	1		0	0	0	
-PV_Right_Press	9	15	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	0	0	1	1	1		0	0	0	
-BMPAmbP	0	15	1	0	1	1	1		0	0	0	
-IMUFrontX	-0.05	0.05	1	0	1	1	1		0	0	0	
-IMUFrontY	-1.1	-0.9	1	0	1	1	1		0	0	0	
-IMUFrontZ	-0.05	0.05	1	0	1	1	1		0	0	0	
-IMURearX	-0.05	0.05	1	0	1	1	1		0	0	0	
-IMURearY	-1.1	-0.9	1	0	1	1	1		0	0	0	
-IMURearZ	-0.05	0.05	1	0	1	1	1		0	0	0	
+PV_Right_Pressure	9	15	1	0	1	1	1		0	0	0	
+Brake_Pressure	0	177	1	0	0	0	0	0	0	0	0	
+Brake_Pressure	177	225	0	0	1	0	0	1	0	1	0	
+Ambient_Pressure	0	15	1	0	1	1	1		0	0	0	
+IMU1_X	-0.05	0.05	1	0	1	1	1		0	0	0	
+IMU1_Y	-1.1	-0.9	1	0	1	1	1		0	0	0	
+IMU1_Z	-0.05	0.05	1	0	1	1	1		0	0	0	
+IMU2_X	-0.05	0.05	1	0	1	1	1		0	0	0	
+IMU2_Y	-1.1	-0.9	1	0	1	1	1		0	0	0	
+IMU2_Z	-0.05	0.05	1	0	1	1	1		0	0	0	
 LIDAR	90	400	0	0	0	0	1	1	0	1	0	
-RadioConn	0.9	1.1	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0.9	1.1	1	0	1	1	1		0	0	0	
-LSTRightConn	0.9	1.1	1	0	1	1	1		0	0	0	
-BMSCellT	0	10	1	0	1	1	1		0	0	0	
-BMSCellV	0	10	1	0	1	1	1		0	0	0	
-BMSConn	0	10	1	0	1	1	1		0	0	0	
-MotorRes	0	10	1	0	1	1	1		0	0	0	
-SDConn	0	10	1	0	1	1	1		0	0	0	
-SDT	0	10	1	0	1	1	1		0	0	0	
-SDHVC	0	10	1	0	1	1	1		0	0	0	
-LVBattT	0	10	1	0	1	1	1		0	0	0	
-LVBattC	0	10	1	0	1	1	1		0	0	0	
-LVBattV	0	10	1	0	1	1	1		0	0	0	
-RPiOBT	0	10	1	0	1	1	1		0	0	0	
-RPiProc	0	10	1	0	1	1	1		0	0	0	
-RPiMem	0	10	1	0	1	1	1		0	0	0	
-BMELeftT	0	10	1	0	1	1	1		0	0	0	
-BMELeftP	0	10	1	0	1	1	1		0	0	0	
-BMERightT	0	10	1	0	1	1	1		0	0	0	
-BMERightP	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	0	10	1	0	1	1	1		0	0	0	
-IMURearX	0	10	1	0	1	1	1		0	0	0	
-IMURearY	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	0	10	1	0	1	1	1		0	0	0	
-LIDAR	0	10	1	0	1	1	1		0	0	0	
-RadioConn	0	10	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	0	10	1	0	1	1	1		0	0	0	
-BMSCellT	0	10	1	0	1	1	1		0	0	0	
-BMSCellV	0	10	1	0	1	1	1		0	0	0	
-BMSConn	0	10	1	0	1	1	1		0	0	0	
-MotorRes	0	10	1	0	1	1	1		0	0	0	
-SDConn	0	10	1	0	1	1	1		0	0	0	
-SDT	0	10	1	0	1	1	1		0	0	0	
-SDHVC	0	10	1	0	1	1	1		0	0	0	
-LVBattT	0	10	1	0	1	1	1		0	0	0	
-LVBattC	0	10	1	0	1	1	1		0	0	0	
-LVBattV	0	10	1	0	1	1	1		0	0	0	
-RPiOBT	0	10	1	0	1	1	1		0	0	0	
-RPiProc	0	10	1	0	1	1	1		0	0	0	
-RPiMem	0	10	1	0	1	1	1		0	0	0	
-BMELeftT	0	10	1	0	1	1	1		0	0	0	
-BMELeftP	0	10	1	0	1	1	1		0	0	0	
-BMERightT	0	10	1	0	1	1	1		0	0	0	
-BMERightP	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	0	10	1	0	1	1	1		0	0	0	
-IMURearX	0	10	1	0	1	1	1		0	0	0	
-IMURearY	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	0	10	1	0	1	1	1		0	0	0	
-LIDAR	0	10	1	0	1	1	1		0	0	0	
-RadioConn	0	10	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	0	10	1	0	1	1	1		0	0	0	
-BMSCellT	0	10	1	0	1	1	1		0	0	0	
-BMSCellV	0	10	1	0	1	1	1		0	0	0	
-BMSConn	0	10	1	0	1	1	1		0	0	0	
-MotorRes	0	10	1	0	1	1	1		0	0	0	
-SDConn	0	10	1	0	1	1	1		0	0	0	
-SDT	0	10	1	0	1	1	1		0	0	0	
-SDHVC	0	10	1	0	1	1	1		0	0	0	
-LVBattT	0	10	1	0	1	1	1		0	0	0	
-LVBattC	0	10	1	0	1	1	1		0	0	0	
-LVBattV	0	10	1	0	1	1	1		0	0	0	
-RPiOBT	0	10	1	0	1	1	1		0	0	0	
-RPiProc	0	10	1	0	1	1	1		0	0	0	
-RPiMem	0	10	1	0	1	1	1		0	0	0	
-BMELeftT	0	10	1	0	1	1	1		0	0	0	
-BMELeftP	0	10	1	0	1	1	1		0	0	0	
-BMERightT	0	10	1	0	1	1	1		0	0	0	
-BMERightP	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	0	10	1	0	1	1	1		0	0	0	
-IMURearX	0	10	1	0	1	1	1		0	0	0	
-IMURearY	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	0	10	1	0	1	1	1		0	0	0	
-LIDAR	0	10	1	0	1	1	1		0	0	0	
-RadioConn	0	10	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	0	10	1	0	1	1	1		0	0	0	
-BMSCellT	0	10	1	0	1	1	1		0	0	0	
-BMSCellV	0	10	1	0	1	1	1		0	0	0	
-BMSConn	0	10	1	0	1	1	1		0	0	0	
-MotorRes	0	10	1	0	1	1	1		0	0	0	
-SDConn	0	10	1	0	1	1	1		0	0	0	
-SDT	0	10	1	0	1	1	1		0	0	0	
-SDHVC	0	10	1	0	1	1	1		0	0	0	
-LVBattT	0	10	1	0	1	1	1		0	0	0	
-LVBattC	0	10	1	0	1	1	1		0	0	0	
-LVBattV	0	10	1	0	1	1	1		0	0	0	
-RPiOBT	0	10	1	0	1	1	1		0	0	0	
-RPiProc	0	10	1	0	1	1	1		0	0	0	
-RPiMem	0	10	1	0	1	1	1		0	0	0	
-BMELeftT	0	10	1	0	1	1	1		0	0	0	
-BMELeftP	0	10	1	0	1	1	1		0	0	0	
-BMERightT	0	10	1	0	1	1	1		0	0	0	
-BMERightP	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	0	10	1	0	1	1	1		0	0	0	
-IMURearX	0	10	1	0	1	1	1		0	0	0	
-IMURearY	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	0	10	1	0	1	1	1		0	0	0	
-LIDAR	0	10	1	0	1	1	1		0	0	0	
-RadioConn	0	10	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	0	10	1	0	1	1	1		0	0	0	
-BMSCellT	0	10	1	0	1	1	1		0	0	0	
-BMSCellV	0	10	1	0	1	1	1		0	0	0	
-BMSConn	0	10	1	0	1	1	1		0	0	0	
-MotorRes	0	10	1	0	1	1	1		0	0	0	
-SDConn	0	10	1	0	1	1	1		0	0	0	
-SDT	0	10	1	0	1	1	1		0	0	0	
-SDHVC	0	10	1	0	1	1	1		0	0	0	
-LVBattT	0	10	1	0	1	1	1		0	0	0	
-LVBattC	0	10	1	0	1	1	1		0	0	0	
-LVBattV	0	10	1	0	1	1	1		0	0	0	
-RPiOBT	0	10	1	0	1	1	1		0	0	0	
-RPiProc	0	10	1	0	1	1	1		0	0	0	
-RPiMem	0	10	1	0	1	1	1		0	0	0	
-BMELeftT	0	10	1	0	1	1	1		0	0	0	
-BMELeftP	0	10	1	0	1	1	1		0	0	0	
-BMERightT	0	10	1	0	1	1	1		0	0	0	
-BMERightP	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	0	10	1	0	1	1	1		0	0	0	
-IMURearX	0	10	1	0	1	1	1		0	0	0	
-IMURearY	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	0	10	1	0	1	1	1		0	0	0	
-LIDAR	0	10	1	0	1	1	1		0	0	0	
-RadioConn	0	10	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	0	10	1	0	1	1	1		0	0	0	
-BMSCellT	0	10	1	0	1	1	1		0	0	0	
-BMSCellV	0	10	1	0	1	1	1		0	0	0	
-BMSConn	0	10	1	0	1	1	1		0	0	0	
-MotorRes	0	10	1	0	1	1	1		0	0	0	
-SDConn	0	10	1	0	1	1	1		0	0	0	
-SDT	0	10	1	0	1	1	1		0	0	0	
-SDHVC	0	10	1	0	1	1	1		0	0	0	
-LVBattT	0	10	1	0	1	1	1		0	0	0	
-LVBattC	0	10	1	0	1	1	1		0	0	0	
-LVBattV	0	10	1	0	1	1	1		0	0	0	
-RPiOBT	0	10	1	0	1	1	1		0	0	0	
-RPiProc	0	10	1	0	1	1	1		0	0	0	
-RPiMem	0	10	1	0	1	1	1		0	0	0	
-BMELeftT	0	10	1	0	1	1	1		0	0	0	
-BMELeftP	0	10	1	0	1	1	1		0	0	0	
-BMERightT	0	10	1	0	1	1	1		0	0	0	
-BMERightP	0	10	1	0	1	1	1		0	0	0	
-PX2BrakeP	0	10	1	0	1	1	1		0	0	0	
-BMPAmbP	0	10	1	0	1	1	1		0	0	0	
-IMUFrontX	0	10	1	0	1	1	1		0	0	0	
-IMUFrontY	0	10	1	0	1	1	1		0	0	0	
-IMUFrontZ	0	10	1	0	1	1	1		0	0	0	
-IMURearX	0	10	1	0	1	1	1		0	0	0	
-IMURearY	0	10	1	0	1	1	1		0	0	0	
-IMURearZ	0	10	1	0	1	1	1		0	0	0	
-LIDAR	0	10	1	0	1	1	1		0	0	0	
-RadioConn	0	10	1	0	1	1	1		0	0	0	
-LSTLeftD	0	10	1	0	1	1	1		0	0	0	
-LSTRightD	0	10	1	0	1	1	1		0	0	0	
-LSTLeftConn	0	10	1	0	1	1	1		0	0	0	
-LSTRightConn	1	10	1	0	1	1	1		0	0	0	
+GUI_Conn	0.9	1.1	1	0	1	1	1		0	0	0	
+LST_Left	0	10	1	0	1	1	1		0	0	0	
+LST_Right	0	10	1	0	1	1	1		0	0	0	
