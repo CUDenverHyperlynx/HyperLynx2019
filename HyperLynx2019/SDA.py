@@ -62,7 +62,7 @@
 
 from argparse import ArgumentParser
 from time import sleep, clock
-import socket
+import socket, struct
 import numpy
 import datetime
 import os
@@ -75,10 +75,10 @@ class Status():
     Crawling = 6
     BrakingLow = 7
 
-    max_accel = 0.7     # [G]
-    max_speed = 400     # ft/s
-    max_time = 12       # sec
-    BBP = 3150          # ft
+    para_max_accel = 0     # [G]
+    para_max_speed = 0     # ft/s
+    para_max_time = 0       # sec
+    para_BBP = 0          # ft
 
     MET = 0
     MET_starttime = 0
@@ -86,6 +86,8 @@ class Status():
     speed = 0
     distance = 0
     accel = 0
+
+    spacex_team_id = 69
 
     def __init__(self):
         # BOOT FUNCTIONS
@@ -119,6 +121,7 @@ class Status():
         self.abort_ranges = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 13))
         self.commands = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 4))
         self.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
+
         date = datetime.datetime.today()
         new_number = str(date.year) + str(date.month) + str(date.day) \
                      + str(date.hour) + str(date.minute) + str(date.second)
@@ -154,10 +157,13 @@ class Status():
             self.Res2_Sol = 0
 
 
-
+#def search_for_data:
+    #for loop for search
+    #return(index)
 
 def poll_sensors():
     PodStatus.sensor_data = numpy.genfromtxt('fake_sensor_data.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 3))
+
     if PodStatus.sensor_data[24,1] > 30:
         PodStatus.Brakes = False
     else:
@@ -411,6 +417,13 @@ def rec_data():     # This function parses received data into useable commands b
     ### END TEST SCRIPT
 
 def do_commands():
+    if PodStatus.state == 1:
+        # Load all commands
+        pass
+    else:
+        # Load ONLY abort command
+        pass
+
     if PodStatus.commands[4,1] != PodStatus.Res1_Sol:
         PodStatus.toggle_res1()
     if PodStatus.commands[5,1] != PodStatus.Res2_Sol:
@@ -420,43 +433,50 @@ def spacex_data():
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
         pass
     else:
-        parser = ArgumentParser(description="Hyperlynx POD Run")
-        parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
-        parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
-        parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send packets to")
-        parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
-        parser.add_argument("--tube_length", type=int, default=4150, help="Total length of the tube(ft)")
-        parser.add_argument("--bbp", type=int, default=3228, help="Begin Braking Point(ft)")
-        parser.add_argument("--cbp", type=int, default=4060, help="Crawling Brake Point(ft)")
-        parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
-        parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
-        parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
-
-        args = parser.parse_args()
-
-        if args.frequency < 10:
-            print("Send frequency should be higher than 10Hz")
-        if args.frequency > 50:
-            print("Send frequency should be lower than 50Hz")
-
-        team_id = args.team_id
-        wait_time = (1 / args.frequency)
-        server = (args.server_ip, args.server_port)
-
-        tube_length = args.tube_length
-        time_run_highspeed = args.time_run_highspeed
-
-        top_speed = args.topspeed
-        BBP = args.bbp
-
-        crawl_speed = args.crawlspeed
-        CBP = args.cbp
-
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        server = (PodStatus.spacex_server_ip, PodStatus.spacex_server_port)
 
-        status = Status.SafeToApproach
+        packet = struct.pack(">BB7iI", PodStatus.spacex_team_id, PodStatus.spacex_state, int(PodStatus.accel),
+                             int(PodStatus.distance), int(PodStatus.speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
+        sock.sendto(packet, server)
 
-        seconds = 0
+        # parser = ArgumentParser(description="Hyperlynx POD Run")
+        # parser.add_argument("--team_id", type=int, default=0, help="HyperLynx id to send")
+        # parser.add_argument("--frequency", type=int, default=30, help="The frequency for sending packets")
+        # parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send packets to")
+        # parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
+        # parser.add_argument("--tube_length", type=int, default=4150, help="Total length of the tube(ft)")
+        # parser.add_argument("--bbp", type=int, default=3228, help="Begin Braking Point(ft)")
+        # parser.add_argument("--cbp", type=int, default=4060, help="Crawling Brake Point(ft)")
+        # parser.add_argument("--topspeed", type=int, default=396, help="Top Speed in ft/s")
+        # parser.add_argument("--crawlspeed", type=int, default=30, help="Crawl Speed in ft/s")
+        # parser.add_argument("--time_run_highspeed", type=int, default=15, help="Run Time in seconds")
+        #
+        # args = parser.parse_args()
+        #
+        # if args.frequency < 10:
+        #     print("Send frequency should be higher than 10Hz")
+        # if args.frequency > 50:
+        #     print("Send frequency should be lower than 50Hz")
+        #
+        # team_id = args.team_id
+        # wait_time = (1 / args.frequency)
+        # server = (args.server_ip, args.server_port)
+        #
+        # tube_length = args.tube_length
+        # time_run_highspeed = args.time_run_highspeed
+        #
+        # top_speed = args.topspeed
+        # BBP = args.bbp
+        #
+        # crawl_speed = args.crawlspeed
+        # CBP = args.cbp
+        #
+        # sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        #
+        # status = Status.SafeToApproach
+        #
+        # seconds = 0
 
         PodStatus.spacex_lastsend = clock()
 
@@ -472,7 +492,19 @@ def run_state():
 
     # S2A STATE
     if PodStatus.state == 1:
-        do_commands()
+
+        # Determine if SpaceX state = 1 (S2A) or 2 (Ready to Launch)
+        if (
+            PodStatus.Fault == False and
+            PodStatus.HV == True and
+            PodStatus.Brakes == False and
+            PodStatus.para_BBP > 0 and
+            PodStatus.para_max_accel > 0 and
+            PodStatus.para_max_speed > 0 and
+            PodStatus.para_max_time > 0):
+            PodStatus.spacex_state = 2
+        else:
+            PodStatus.spacex_state = 1
 
         # TRANSITIONS
         if PodStatus.Fault == True:
@@ -488,23 +520,24 @@ def run_state():
 
     # LAUNCHING STATE
     elif PodStatus.state == 3:
+        PodStatus.spacex_state = 3
 
         # Start the flight clock
         if PodStatus.MET_starttime == 0:
             PodStatus.MET_starttime = clock()
 
         # ACCEL UP TO MAX G within 2%
-        if PodStatus.sensor_data[26,1] < (0.98 * PodStatus.max_accel):
+        if PodStatus.sensor_data[26,1] < (0.98 * PodStatus.para_max_accel):
             PodStatus.throttle = PodStatus.throttle * 1.01
-        elif PodStatus.sensor_data[26,1] > (1.02*PodStatus.max_accel):
+        elif PodStatus.sensor_data[26,1] > (1.02*PodStatus.para_max_accel):
             PodStatus.throttle = PodStatus.throttle * 0.99
 
         # TRANSITIONS
-        if PodStatus.distance > PodStatus.BBP:
+        if PodStatus.distance > PodStatus.para_BBP:
             transition()
-        if PodStatus.speed > PodStatus.max_speed:
+        if PodStatus.speed > PodStatus.para_max_speed:
             transition()
-        if PodStatus.MET > PodStatus.max_time:
+        if PodStatus.MET > PodStatus.para_max_time:
             transition()
 
 
@@ -634,7 +667,7 @@ if __name__ == "__main__":
         run_state()
         do_commands()
         eval_abort()
-        rec_data()
+        #rec_data()
         send_data()
         spacex_data()
         #print(clock())
