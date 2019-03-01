@@ -4,6 +4,7 @@ class State():
     data = {}
     sensor_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1), dtype=str)
     sensor_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1,12), dtype=int)
+    print(sensor_vals[0,2])
     for i in range(0,len(sensor_names)):
         data[sensor_names[i]] = {'Low': { sensor_vals[i,0]},
                                  'High': { sensor_vals[i,1]},
@@ -20,4 +21,4 @@ class State():
                                  }
 
 PodStatus = State()
-print(PodStatus.data['BMS_Cell_Temp'])
+print(PodStatus.data['BMS_Cell_Temp']['States'])
