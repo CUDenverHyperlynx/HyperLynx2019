@@ -763,17 +763,53 @@ def run_state():
     # CRAWLING
     elif PodStatus.state == 6:
         PodStatus.spacex_state = 6
-        pass
-        # DO STUFF
+
+        # ACCEL UP TO MAX G within 2%
+        if PodStatus.sensor_data['IMU1_X'] < (0.98 * PodStatus.para_max_accel):
+            PodStatus.throttle = PodStatus.throttle * 1.01
+        elif PodStatus.sensor_data['IMU1_X'] > (1.02*PodStatus.para_max_accel):
+            PodStatus.throttle = PodStatus.throttle * 0.99
+
+        if PodStatus.sensor_data['LIDAR'] < 90:
+            print("LIDAR is less than 90 feet")
+            transition()
 
     # BRAKE, FINAL
     elif PodStatus.state == 7:
         PodStatus.spacex_state = 5
         print("Braking, Final")
-        if PodStatus.speed < 1:
-            print("Pod stopped")
-            transition()
-        # DO STUFF
+
+        #     PodStatus.stopped_time = 0
+        if PodStatus.speed > 0.5:
+            if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
+                print("Opening Vent Sol")
+                PodStatus.commands['Vent_Sol'] = 0
+            if PodStatus.throttle > 0:          # SET THROTTLE TO 0
+                PodStatus.throttle = 0
+
+        # DO NOTHING ELSE UNTIL STOPPED
+
+        # RECONFIGURE FOR CRAWLING
+        if PodStatus.speed < 0.5:
+            if PodStatus.stopped_time == -1:
+                timer = 0
+                PodStatus.stopped_time = clock()
+                PodStatus.commands['Vent_Sol'] = 0
+                print("Stopped at " + str(round(PodStatus.stopped_time, 2)) + " seconds; Holding for 2 seconds.")
+            else:
+                timer = clock() - PodStatus.stopped_time
+
+            if timer > 2:
+                if PodStatus.commands['Vent_Sol'] == 0:
+                    PodStatus.sensor_data['Brake_Pressure'] = 0
+                    PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
+                    print("Closing Vent Sol")
+                if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
+                    PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
+                    print("Opening Res#1, pausing for 2 seconds.")
+                    sleep(2)
+                    PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
+                    transition()
 
     else:
         print("Invalid pod state found: " + str(PodStatus.state))
