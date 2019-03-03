@@ -207,6 +207,7 @@ def poll_sensors():
     """
     Runs all polling functions for the I2C & CAN buses.
     Converts raw data to pod state variables
+    Q: Should this be in a different thread?
     """
 
     PodStatus.poll_oldtime = PodStatus.poll_newtime
@@ -317,14 +318,14 @@ def eval_abort():
 
     PodStatus.total_triggers = 0    # Reset total_triggers count to 0 for each loop
     # Sum total number of faults that will trigger an abort for this state
-    for key in PodStatus.abort_Ranges[PodStatus.state]:
+    for key in PodStatus.abort_ranges[PodStatus.state]:
         if PodStatus.abort_ranges[PodStatus.state][str(key)]['Trigger'] == 1:
             PodStatus.total_triggers += 1
     if PodStatus.total_triggers > 0:
         ### DEBUG PRINT TRIGGERS
         print("ABORT TRIGGERS FOUND: \n" + str(int(PodStatus.total_triggers)))
         print("FLAGGING ABORT == TRUE")
-        PodStatus.Abort == True         # This is the ONLY location an abort can be reached during this function
+        PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
 
     if PodStatus.Abort == True:
         abort()
@@ -674,7 +675,7 @@ def run_state():
                     print("Brake Pressure: " + str(PodStatus.sensor_data['Brake_Pressure']))
                     x = input("1 to Abort, 2 to continue")
                     if x == '1':
-                        PodStatus.Abort
+                        PodStatus.Abort = True
 
 
     # CRAWLING
@@ -721,6 +722,9 @@ def run_state():
         else: PodStatus.state = PodStatus.BrakingLow
 
 def transition():
+    """
+    This functions defines the ONLY way to perform a state transition (not including aborts).
+    """
     if PodStatus.state == 1:          # S2A trans
         PodStatus.state = 3
         print("TRANS: S2A(1) to LAUNCH(3)")
@@ -743,13 +747,19 @@ def transition():
 
     else:
         print("POD IN INVALID STATE: " + str(PodStatus.state))
-        PodStatus.state = 1
+        PodStatus.state = 7
         PodStatus.Fault = True
         PodStatus.Quit = True
 
 def abort():
+    """
+    Determines how the pod will abort from each specific state.  Generally, the pod will be
+    sent to the final braking state (7), skipping the state (6) crawling reconfigurations and
+    sending the pod back to S2A as soon as it comes to a stop.
+    """
     if PodStatus.state == 1:          # S2A STATE FUNCTIONS
-        print("Abort attempted in S2A")
+        print("Abort attempted in S2A.")
+        print("No action performed.")
 
     elif PodStatus.state == 3:          # LAUNCH STATE FUNCTIONS
         print("ABORTING from 3 to 7")
@@ -772,12 +782,17 @@ def abort():
         PodStatus.state = 1
 
 def write_file():
-    # SLOW THIS THE FUCK DOWN
+    """
+    Stores sensor_data and commands dicts to onboard SD card at the specified rate (10Hz)
+    """
+
     if (clock() - PodStatus.log_lastwrite) < (1/PodStatus.log_rate):
         pass
+
     else:
         file = open(os.path.join('logs/', PodStatus.file_name), 'a')
         with file:
+            ### Log sensor_data
             for key in PodStatus.sensor_data:
                 if str(key) in PodStatus.abort_ranges[PodStatus.state]:
                     fault_code = PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault']
@@ -787,9 +802,11 @@ def write_file():
                 line = str(key) + '\t' + str(PodStatus.sensor_data[str(key)]) + '\t' \
                        + str(int(fault_code)) + '\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
+            ### Log commands
             for key in PodStatus.commands:
                 line = str(key) + '\t' + str(PodStatus.commands[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
+            ### Log pod state variables
             line = 'state' + '\t' + str(PodStatus.state) + '\t\t' + str(round(clock(),2)) + '\n' \
                     + 'spacex_state' + '\t' + str(PodStatus.spacex_state) + '\t\t' + str(round(clock(),2)) + '\n' \
                     + 'total_faults' + '\t' + str(PodStatus.total_faults) + '\t\t' + str(round(clock(),2)) + '\n' \
@@ -800,7 +817,6 @@ def write_file():
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
-
 
 if __name__ == "__main__":
 
