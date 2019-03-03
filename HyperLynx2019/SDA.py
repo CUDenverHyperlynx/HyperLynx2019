@@ -326,6 +326,7 @@ def eval_abort():
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
 
     if PodStatus.Abort == True:
+        PodStatus.commands['Abort'] = 1
         abort()
 
 def rec_data():
@@ -339,27 +340,28 @@ def rec_data():
         "\tState:               " + str(PodStatus.state) + "\t\t")
     print("\tPod Clock Time:    " + str(round(PodStatus.MET,3)) + "\t")
     print("\tFault:             " + str(PodStatus.Fault) + "\t\t")
-    print("\tHV System:         " + str(PodStatus.HV) + "\t\t")
+    print("\tAbort Flag         " + str(PodStatus.Abort) + "\t\t")
+    print("\t2. HV System       " + str(PodStatus.HV) + "\t\t")
     print("\tBrakes:            " + str(PodStatus.Brakes) + "\t\n"
-        "\tVent Solenoid:       " + str(PodStatus.Vent_Sol) + "\t\n"
-        "\tRes1 Solenoid:       " + str(PodStatus.Res1_Sol) + "\t\n"
-        "\tRes2 Solenoid:       " + str(PodStatus.Res2_Sol) + "\t\n"
-        "\tMC Pump:             " + str(PodStatus.MC_Pump) + "\t\n"
-        "\tFlight BBP:          " + str(PodStatus.para_BBP) + "\t\n"
-        "\tFlight Speed:        " + str(PodStatus.para_max_speed) + "\t\n"
-        "\tFlight Accel:        " + str(PodStatus.para_max_accel) + "\t\n"
-        "\tFlight Time:         " + str(PodStatus.para_max_time) + "\t\n"
+        "\t3. Vent Solenoid:    " + str(PodStatus.Vent_Sol) + "\t\n"
+        "\t4. Res1 Solenoid:    " + str(PodStatus.Res1_Sol) + "\t\n"
+        "\t5. Res2 Solenoid:    " + str(PodStatus.Res2_Sol) + "\t\n"
+        "\t6. MC Pump:          " + str(PodStatus.MC_Pump) + "\t\n"
+        "\t7. Flight BBP:       " + str(PodStatus.para_BBP) + "\t\n"
+        "\t8. Flight Speed:     " + str(PodStatus.para_max_speed) + "\t\n"
+        "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
+        "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
+        "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
         "*************************")
 
     if PodStatus.state == PodStatus.SafeToApproach:
-        print("\n*** MENU ***\n\t1. Launch\n\t2. HV On/Off\n\t3. Vent Solenoid Open/Close"
-              "\n\t4. Brake Res #1 Open/Close\n\t5. Brake Res #2 Open/Close"
-              "\n\t6. MC Coolant Pump On/Off\n\t7. Quit\n\t8. Set BBP\n\t9. Set Speed\n\t10. Set Accel\n\t11. Set Time\n\t"
-              "12. Reset Abort Flag\n\t")
+        print("\n*** MENU ***\n"
+              "\t(L) Launch\n"
+              "\t(R) Reset Abort Flag\n"
+              "\t(Q) Quit\n"
+              "\t\tType line number or letter command to change values.\n")
         a = input('Enter choice: ')
-        if a == '1':
-            PodStatus.commands['Launch'] = 1
-        elif a == '2':
+        if a == '2':
             if PodStatus.HV == 0:
                 PodStatus.commands['HV'] = 1
                 PodStatus.HV = 1
@@ -394,17 +396,21 @@ def rec_data():
                 PodStatus.commands['MC_Pump'] = 0
                 PodStatus.MC_Pump = 0
         elif a == '7':
-            PodStatus.Quit = True
+            PodStatus.commands['para_BBP'] = float(input("Enter BBP Distance in feet: "))
         elif a == '8':
-            PodStatus.para_BBP = float(input("Enter BBP Distance in feet"))
+            PodStatus.commands['para_max_speed'] = float(input("Enter max speed in ft/s: "))
         elif a == '9':
-            PodStatus.para_max_speed = float(input("Enter max speed in ft/s"))
+            PodStatus.commands['para_max_accel'] = float(input("Enter max accel in g: "))
         elif a == '10':
-            PodStatus.para_max_accel = float(input("Enter max accel in G"))
+            PodStatus.commands['para_max_time'] = float(input("Enter max time in s: "))
         elif a == '11':
-            PodStatus.para_max_time = float(input("Enter max time in s"))
-        elif a == '12':
+            PodStatus.commands['para_max_crawl_speed'] = float(input("Enter max crawl speed in ft/s: "))
+        elif a == 'L':
+            PodStatus.commands['Launch'] = 1
+        elif a == 'R':
             PodStatus.commands['Abort'] = 0
+        elif a == 'Q':
+            PodStatus.Quit = True
         else:
             pass
 
@@ -523,6 +529,8 @@ def do_commands():
             PodStatus.para_max_accel = PodStatus.commands['para_max_accel']
         if PodStatus.commands['para_max_time'] != PodStatus.para_max_time:
             PodStatus.para_max_time = PodStatus.commands['para_max_time']
+        if PodStatus.commands['para_max_crawl_speed'] != PodStatus.para_max_crawl_speed:
+            PodStatus.para_max_crawl_speed = PodStatus.commands['para_max_crawl_speed']
 
     else:
         # Load ONLY abort command
@@ -537,6 +545,7 @@ def spacex_data():
     accel = PodStatus.accel * 3217.4        # g (unitless) to cm/s2
     speed = PodStatus.speed * 30.48         # ft/s to cm/s
     distance = PodStatus.distance * 30.48   # ft to cm
+
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
         #print("No packet sent.")
         pass
@@ -649,9 +658,10 @@ def run_state():
                 timer = 0
                 PodStatus.stopped_time = clock()
                 PodStatus.commands['Vent_Sol'] = 0
-                print("Stopped at " + str(round(PodStatus.stopped_time, 2)) + " seconds; Holding for 2 seconds.")
+                print("Stopped at " + str(round(PodStatus.MET, 2)) + " MET; Holding for 2 seconds.")
             else:
                 timer = clock() - PodStatus.stopped_time
+                print("Timer:\t" + str(round(timer,2))) # DEBUG PRINT LINE
 
             if timer > 2:
                 if PodStatus.commands['Vent_Sol'] == 0:
@@ -665,7 +675,7 @@ def run_state():
                     if PodStatus.sensor_data['Brake_Pressure'] < 177:
                         print("Unable to achieve brake retraction pressure.")
                         print("Sending Abort signal.")
-                        PodStatus.Abort = True
+                        PodStatus.commands['Abort'] = 1
                     else:
                         print("Brakes retracted, closing Res1 solenoid.")
                         PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
