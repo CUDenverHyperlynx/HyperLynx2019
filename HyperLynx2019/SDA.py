@@ -409,6 +409,8 @@ def rec_data():
             PodStatus.commands['Launch'] = 1
         elif a == 'R':
             PodStatus.commands['Abort'] = 0
+            PodStatus.stopped_time = -1
+            PodStatus.MET_startime = -1
         elif a == 'Q':
             PodStatus.Quit = True
         else:
