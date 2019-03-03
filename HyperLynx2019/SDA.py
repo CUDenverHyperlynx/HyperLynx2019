@@ -303,12 +303,15 @@ def eval_abort():
                   " to " + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['High']))
             PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] = 1
 
-
+    PodStatus.total_triggers = 0
     PodStatus.total_faults = 0      # Reset total_fault count to 0 each loop
     # Sum total number of faults for this state
     for key in PodStatus.abort_ranges[PodStatus.state]:
         if PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] == 1:
             PodStatus.total_faults += 1
+            if PodStatus.abort_ranges[PodStatus.state][str(key)]['Trigger'] == 1:
+                PodStatus.total_triggers += 1
+
     if PodStatus.total_faults > 0:
         PodStatus.Fault = True
         ### DEBUG PRINT
@@ -316,11 +319,6 @@ def eval_abort():
     else:
         PodStatus.Fault = False
 
-    PodStatus.total_triggers = 0    # Reset total_triggers count to 0 for each loop
-    # Sum total number of faults that will trigger an abort for this state
-    for key in PodStatus.abort_ranges[PodStatus.state]:
-        if PodStatus.abort_ranges[PodStatus.state][str(key)]['Trigger'] == 1:
-            PodStatus.total_triggers += 1
     if PodStatus.total_triggers > 0:
         ### DEBUG PRINT TRIGGERS
         print("ABORT TRIGGERS FOUND: \n" + str(int(PodStatus.total_triggers)))
@@ -338,19 +336,19 @@ def rec_data():
 
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
-        "* State:         " + str(PodStatus.state) + "\t\t*")
-    print("* Pod Clock Time: " + str(round(PodStatus.MET,3)) + "\t*")
-    print("* Fault:         " + str(PodStatus.Fault) + "\t\t*")
-    print("* HV System:     " + str(PodStatus.HV) + "\t\t*")
-    print("* Brakes:        " + str(PodStatus.Brakes) + "\t*\n"
-        "* Vent Solenoid: " + str(PodStatus.Vent_Sol) + "\t*\n"
-        "* Res1 Solenoid: " + str(PodStatus.Res1_Sol) + "\t*\n"
-        "* Res2 Solenoid: " + str(PodStatus.Res2_Sol) + "\t*\n"
-        "* MC Pump:       " + str(PodStatus.MC_Pump) + "\t*\n"
-        "* Flight BBP:       " + str(PodStatus.para_BBP) + "\t*\n"
-        "* Flight Speed:       " + str(PodStatus.para_max_speed) + "\t*\n"
-        "* Flight Accel:       " + str(PodStatus.para_max_accel) + "\t*\n"
-        "* Flight Time:       " + str(PodStatus.para_max_time) + "\t*\n"
+        "\tState:               " + str(PodStatus.state) + "\t\t")
+    print("\tPod Clock Time:    " + str(round(PodStatus.MET,3)) + "\t")
+    print("\tFault:             " + str(PodStatus.Fault) + "\t\t")
+    print("\tHV System:         " + str(PodStatus.HV) + "\t\t")
+    print("\tBrakes:            " + str(PodStatus.Brakes) + "\t\n"
+        "\tVent Solenoid:       " + str(PodStatus.Vent_Sol) + "\t\n"
+        "\tRes1 Solenoid:       " + str(PodStatus.Res1_Sol) + "\t\n"
+        "\tRes2 Solenoid:       " + str(PodStatus.Res2_Sol) + "\t\n"
+        "\tMC Pump:             " + str(PodStatus.MC_Pump) + "\t\n"
+        "\tFlight BBP:          " + str(PodStatus.para_BBP) + "\t\n"
+        "\tFlight Speed:        " + str(PodStatus.para_max_speed) + "\t\n"
+        "\tFlight Accel:        " + str(PodStatus.para_max_accel) + "\t\n"
+        "\tFlight Time:         " + str(PodStatus.para_max_time) + "\t\n"
         "*************************")
 
     if PodStatus.state == PodStatus.SafeToApproach:
@@ -464,7 +462,7 @@ def do_commands():
             abort()
 
         # Allows crew to reset Abort flag.  ONLY way to reset Abort flag.  Cannot be changed in-flight.
-        elif PodStatus.commands['Abort'] == 0:
+        elif PodStatus.commands['Abort'] == 0 and PodStatus.Abort == True:
             PodStatus.Abort = False
             print("Resetting Abort flag to False")
 
@@ -535,7 +533,10 @@ def spacex_data():
     """
     This function passes the required SpaceX data packet at the defined rate.
     """
-
+    ### CONVERT DATA TO SPACEX SPECIFIED UNIT
+    accel = PodStatus.accel * 3217.4        # g (unitless) to cm/s2
+    speed = PodStatus.speed * 30.48         # ft/s to cm/s
+    distance = PodStatus.distance * 30.48   # ft to cm
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
         #print("No packet sent.")
         pass
@@ -546,8 +547,8 @@ def spacex_data():
         ### SpaceX-provided code
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         server = (PodStatus.spacex_server_ip, PodStatus.spacex_server_port)
-        packet = struct.pack(">BB7iI", PodStatus.spacex_team_id, PodStatus.spacex_state, int(PodStatus.accel),
-                             int(PodStatus.distance), int(PodStatus.speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
+        packet = struct.pack(">BB7iI", PodStatus.spacex_team_id, PodStatus.spacex_state, int(accel),
+                             int(distance), int(speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
         sock.sendto(packet, server)
 
 def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
