@@ -1,5 +1,9 @@
 SDA:
 
+How it works:
+
+    - Code is HEAVILY commented, including docstring metadata in each function.  Read that.
+
   -30Hz
   -Read cmd inputs
   -Read sensor data

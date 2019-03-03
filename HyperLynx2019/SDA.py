@@ -64,56 +64,59 @@ import datetime
 import os
 
 class Status():
-    # States
+    # Definition of State Numbers
     SafeToApproach = 1
     Launching = 3
     BrakingHigh = 5
     Crawling = 6
     BrakingLow = 7
 
-    abort_ranges = {}
+    # Init dictionaries
+    abort_ranges = {}           # Dict of dicts (below)
     abort_ranges[SafeToApproach] = {}
     abort_ranges[Launching] = {}
     abort_ranges[BrakingHigh] = {}
     abort_ranges[Crawling] = {}
     abort_ranges[BrakingLow] = {}
-    commands = {}
-    sensor_data = {}
+    commands = {}               # Contains all possible inputs from GUI
+    sensor_data = {}            # Contains all inputs from I2C/CAN buses
 
-    poll_oldtime = 0
+    poll_oldtime = 0    # Vars for poll_sensors for integrating distance from speed
     poll_newtime = 0
     poll_interval = 0
 
-    def __init__(self):
-        # BOOT FUNCTIONS
-        self.wheel_diameter = 17.4 / 12 # feet
+    def __init__(self):        # BOOT INIT
+
+        self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
         self.StartTime = clock()
-        self.HV = 0
-        self.Brakes = 1
-        self.Vent_Sol = 1
-        self.Res1_Sol = 0
-        self.Res2_Sol = 0
-        self.MC_Pump = 0
-        self.total_faults = 0
-        self.throttle = 0
-        self.speed = -1
-        self.distance = -1
-        self.accel = -1
-        self.stripe_count = 0
-        self.MET = 0
+        self.HV = 0                     # Current state of HV system (1 or 0)
+        self.Brakes = 1                 # Current state of brakes (1 = >177psi, 0 = <177psi)
+        self.Vent_Sol = 1               # state of vent solenoid (1 = closed, 0 = open)
+        self.Res1_Sol = 0               # state of reservoir #1 solenoid (1 = open, 0 = closed)
+        self.Res2_Sol = 0               # state of reservoir #2 solenoid (1 = open, 0 = closed)
+        self.MC_Pump = 0                # state of coolant pump (1 = on, 0 = off)
+        self.total_faults = 0           # total number of active faults detected
+        self.throttle = 0               # current throttle setting to send to SD100 controller
+        self.speed = -1                 # [ft/s] init pod speed
+        self.distance = -1              # [ft] init pod distance traveled
+        self.accel = -1                 # [g] init pod acceleration
+        self.stripe_count = 0           # total number of stripes counted
+        self.MET = 0                    # Mission Elapsed Time (since launch)
         self.MET_starttime = -1
-        self.stopped_time = -1
-        self.para_max_accel = 0  # [G]
-        self.para_max_speed = 0  # ft/s
-        self.para_max_time = 0  # sec
-        self.para_BBP = 0  # ft
+        self.stopped_time = -1          # Time since coming to a stop
+        self.para_max_accel = 0         # [g] Maximum pod acceleration for control loop
+        self.para_max_speed = 0         # [ft/s] Maximum pod speed for braking point
+        self.para_max_time = 0          # [s] Maximum time of flight for braking point
+        self.para_BBP = 0               # [ft] Maximum distance traveled for braking point
+        self.para_max_crawl_speed = -1  # [ft/s] Maximum crawling speed.  Init to -1 to allow
+                                        # crew to set 0 speed for crawling state
 
         # SPACEX CONFIG DATA
         self.spacex_state = 0
         self.spacex_team_id = 69
         self.spacex_server_ip = '192.168.0.1'
         self.spacex_server_port = 3000
-        self.spacex_rate = 40               # Hz
+        self.spacex_rate = 40               # [Hz] rate of spacex data burst
         self.spacex_lastsend = 0
 
         # DEBUG init for script:
@@ -121,16 +124,16 @@ class Status():
 
         # Pod Abort conditions init:
         self.Fault = False
-        self.Trigger = False
+        self.Abort = False
 
         # INITIATE STATE TO S2A
         self.state = self.SafeToApproach
 
         #INITIATE LOG RATE INFO
-        self.log_lastwrite = clock()            # Saves last time of file write
+        self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
-        # Create Abort Range Dictionary
+        # Create Abort Range Dictionary from template file
         abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                        dtype=str)
         abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12),
@@ -168,7 +171,7 @@ class Status():
                                                                     }
 
 
-        # Create Commands Dictionary
+        # Create Commands Dictionary from template file
         cmd_names = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                        dtype=str)
         cmd_vals = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
@@ -193,7 +196,7 @@ class Status():
             file.write("\n")
         file.close()
 
-
+        ## Confirm boot info ##
         print("Pod init complete, State: " + str(self.state))
         print("Log file created: " + str(self.file_name))
 
@@ -201,6 +204,10 @@ class Status():
     sensor_data['Brake_Pressure'] = 178
 
 def poll_sensors():
+    """
+    Runs all polling functions for the I2C & CAN buses.
+    Converts raw data to pod state variables
+    """
 
     PodStatus.poll_oldtime = PodStatus.poll_newtime
     PodStatus.poll_newtime = clock()
@@ -238,228 +245,95 @@ def poll_sensors():
     PodStatus.sensor_data['RPi_Disk_Space'] = 14000
 
     ### SPACEX DATA ###
-    PodStatus.stripe_count = numpy.mean([PodStatus.sensor_data['LST_Left'], PodStatus.sensor_data['LST_Right']])
+    # Sets the highest of the two LST data sets to the pod state variable (most conservative)
+    PodStatus.stripe_count = numpy.maximum(PodStatus.sensor_data['LST_Left'], PodStatus.sensor_data['LST_Right'])
 
     ### CONVERT DATA ###
+    # Set pod state variable for brakes
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
     else:
         PodStatus.Brakes = True
 
+    # Set pod state variable for speed and acceleration
     old_speed = PodStatus.speed
     PodStatus.speed = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2*numpy.pi*PodStatus.wheel_diameter
     PodStatus.accel = numpy.mean([PodStatus.sensor_data['IMU1_X'], PodStatus.sensor_data['IMU2_X']])
 
+    # Integrate distance.  At 1.4GHz clock speeds, integration can be numerically
+    # approximated as constant speed over the time step.
     if PodStatus.poll_oldtime != 0:         # Update distance (but skip init loop @ old_time = 0
         PodStatus.distance += PodStatus.speed * PodStatus.poll_interval
 
+    # Update MET
     if PodStatus.MET > 0:
         PodStatus.MET = clock()-PodStatus.MET_starttime
 
 def eval_abort():
-    # temp_range column values
-        #   0 - Sensor ID
-        #   1 - Low Value
-        #   2 - High Value
-        #   3 - Safe To Approach bool
-        #   4 - FC2L bool
-        #   5 - Launch bool
-        #   6 - Brake1 bool
-        #   7 - Postflight bool
-        #   8 - Crawling bool
-        #   9 - Brake2 bool
-        #   10 - Trigger bool
-        #   11 - Fault bool
+    """
+    Determines if any received commands or sensor data places the pod into an abort condition.
+    Abort conditions are unique to each state- what may cause an abort in the Launching state may not
+    cause an abort in the Braking states.  Each state has a unique dictionary of abort conditions,
+    all contained in the abort_ranges template file.
 
-    if PodStatus.Fault == True:
+    This data is stored in a dict for easy access.
+
+    For Example:  to find the highest allowable HV battery cell temperature during the Launching state,
+     you would query:
+    PodStatus.sensor_data[PodStatus.Launching]['BMS_HighestTemp']['High']
+     To find the actual value, you would simply query:
+    PodStatus.sensor_data[PodStatus.Launching]['BMS_HighestTemp']
+
+    If the 'Trigger' value is flagged as a '1' value, this means the abort condition would trigger
+    an abort for the pod.  There are many data points which may cause a fault, but not cause a direct
+    internal pod abort.  These data points are left to the crew to adjudicate, and are generally
+    non-critical.
+
+    """
+
+    for key in PodStatus.abort_ranges[PodStatus.state]:     # Search abort_ranges dict for current state
+        # if out of range, log 'Fault' key as 1
+        if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.state][str(key)]['Low'] \
+                or PodStatus.sensor_data[key] > PodStatus.abort_ranges[PodStatus.state][str(key)]['High']:
+            ### DEBUG PRINT
+            print("Pod Fault!\tSensor: " + str(key))
+            print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
+            print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['Low']) +
+                  " to " + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['High']))
+            PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] = 1
+
+
+    PodStatus.total_faults = 0      # Reset total_fault count to 0 each loop
+    # Sum total number of faults for this state
+    for key in PodStatus.abort_ranges[PodStatus.state]:
+        if PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] == 1:
+            PodStatus.total_faults += 1
+    if PodStatus.total_faults > 0:
+        PodStatus.Fault = True
+        ### DEBUG PRINT
+        print("Number of Faults: \n" + str(int(PodStatus.total_faults)))
+    else:
+        PodStatus.Fault = False
+
+    PodStatus.total_triggers = 0    # Reset total_triggers count to 0 for each loop
+    # Sum total number of faults that will trigger an abort for this state
+    for key in PodStatus.abort_Ranges[PodStatus.state]:
+        if PodStatus.abort_ranges[PodStatus.state][str(key)]['Trigger'] == 1:
+            PodStatus.total_triggers += 1
+    if PodStatus.total_triggers > 0:
+        ### DEBUG PRINT TRIGGERS
+        print("ABORT TRIGGERS FOUND: \n" + str(int(PodStatus.total_triggers)))
+        print("FLAGGING ABORT == TRUE")
+        PodStatus.Abort == True         # This is the ONLY location an abort can be reached during this function
+
+    if PodStatus.Abort == True:
         abort()
 
-    #a = numpy.shape(PodStatus.abort_ranges) # Load abort_ranges size into tuple, so we can iterate any array size
-
-    if PodStatus.state == PodStatus.SafeToApproach:   # Evaluates abort criteria for Safe To Approach state
-        for key in PodStatus.abort_ranges[PodStatus.SafeToApproach]:
-            if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Low'] \
-                    or PodStatus.sensor_data[key] > PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['High']:
-                print("Pod Fault!\tSensor: " + str(key))
-                print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
-                print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Low']) +
-                      " to " + str(PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['High']))
-                PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Fault'] = 1
-                if PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Trigger'] == 1:
-                    print("Aborting for " + str(PodStatus.sensor_data[str(key)]))
-                    abort()
-                    break
-
-        PodStatus.total_faults = 0
-        for key in PodStatus.abort_ranges[PodStatus.SafeToApproach]:
-            if PodStatus.abort_ranges[PodStatus.SafeToApproach][str(key)]['Fault'] == 1:
-                PodStatus.total_faults += 1
-        if PodStatus.total_faults > 0:
-            PodStatus.Fault = True
-            print("Faults: \n" + str(int(PodStatus.total_faults)))
-        else:
-            PodStatus.Fault = False
-
-    if PodStatus.state == PodStatus.Launching:   # Evaluates abort criteria for Safe To Approach state
-        for key in PodStatus.abort_ranges[PodStatus.Launching]:
-            if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.Launching][str(key)]['Low'] \
-                    or PodStatus.sensor_data[key] > PodStatus.abort_ranges[PodStatus.Launching][str(key)]['High']:
-                print("Pod Fault!\tSensor: " + str(key))
-                print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
-                print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.Launching][str(key)]['Low']) + " to " + str(PodStatus.abort_ranges[PodStatus.Launching][str(key)]['High']))
-                PodStatus.total_faults += 1
-                if PodStatus.abort_ranges[PodStatus.Launching][str(key)]['Trigger'] == 1:
-                    print("Aborting for " + str(PodStatus.sensor_data[str(key)]))
-                    abort()
-                    break
-
-        PodStatus.total_faults = 0
-        for key in PodStatus.abort_ranges[PodStatus.Launching]:
-            if PodStatus.abort_ranges[PodStatus.Launching][str(key)]['Fault'] == 1:
-                PodStatus.total_faults += 1
-        if PodStatus.total_faults > 0:
-            PodStatus.Fault = True
-            print("Faults: \n" + str(int(PodStatus.total_faults)))
-        else:
-            PodStatus.Fault = False
-
-    if PodStatus.state == PodStatus.BrakingHigh:   # Evaluates abort criteria for Safe To Approach state
-        for key in PodStatus.abort_ranges[PodStatus.BrakingHigh]:
-            if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.BrakingHigh][str(key)]['Low'] \
-                    or PodStatus.sensor_data[key] > PodStatus.abort_ranges[PodStatus.BrakingHigh][str(key)]['High']:
-                print("Pod Fault!\tSensor: " + str(key))
-                print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
-                print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.BrakingHigh][str(key)]['Low']) + " to "
-                      + str(PodStatus.abort_ranges[PodStatus.BrakingHigh][str(key)]['High']))
-                PodStatus.total_faults += 1
-                if PodStatus.abort_ranges[PodStatus.BrakingHigh][str(key)]['Trigger'] == 1:
-                    abort()
-
-    if PodStatus.state == PodStatus.Crawling:   # Evaluates abort criteria for Safe To Approach state
-        for key in PodStatus.abort_ranges[PodStatus.Crawling]:
-            if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.Crawling][str(key)]['Low'] \
-                    or PodStatus.sensor_data[key] > PodStatus.abort_ranges[PodStatus.Crawling][str(key)]['High']:
-                print("Pod Fault!\tSensor: " + str(key))
-                print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
-                print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.Crawling][str(key)]['Low']) + " to "
-                      + str(PodStatus.abort_ranges[PodStatus.Crawling][str(key)]['High']))
-                PodStatus.total_faults += 1
-                if PodStatus.abort_ranges[PodStatus.Crawling][str(key)]['Trigger'] == 1:
-                    abort()
-
-    #print("Total Faults: " + str(PodStatus.total_faults))
-    if PodStatus.total_faults > 0: PodStatus.Fault = True
-
-    #     # DEPRECATED
-    #     # for i in range(a[0]):
-    #     #     temp_range = PodStatus.abort_ranges[i]    # Loads current abort range
-    #     #     temp_sensor = PodStatus.sensor_data[i,:]    # Loads current sensor data
-    #     #     if temp_range[3] == 1:                    # Evaluates the S2A column value
-    #     #         if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
-    #     #             PodStatus.abort_ranges[i,11] = 1
-    #     #             # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #     #             print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #     #                   "\tValue: " + str(temp_sensor[1]) +
-    #     #                   "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #     #             if temp_range[10] == 1:    # IF FAULT IS A TRIGGER, ABORT()
-    #     #                 abort()
-    #     #         elif temp_sensor[1] > temp_range[2]:    # Evaluates "HIGH" values
-    #     #             PodStatus.abort_ranges[i,11] = 1
-    #     #             # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #     #             print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #     #                   "\tValue: " + str(temp_sensor[1]) +
-    #     #                   "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #     #             if temp_range[10] == 1:    # IF FAULT IS A TRIGGER, ABORT()
-    #     #                 abort()
-    #     #         else:
-    #     #             PodStatus.abort_ranges[i,11] = 0
-    #
-    # if PodStatus.state == PodStatus.Launching:        # Evaluates abort criteria for FC2L state
-    #     for i in range(a[0]):
-    #         temp_range = PodStatus.abort_ranges[i]    # Loads current sensor range to temp
-    #         temp_sensor = PodStatus.sensor_data[i,:]
-    #         if temp_range[5] == 1:                    # Evaluates the FC2L column value
-    #             if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #             elif (temp_sensor[1] > temp_range[2]):    # Evaluates "HIGH" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #             else:
-    #                 PodStatus.abort_ranges[i,11] = 0
-    #
-    # if PodStatus.state == PodStatus.BrakingHigh:   # Evaluates abort criteria for Safe To Approach state
-    #     for i in range(a[0]):
-    #         temp_range = PodStatus.abort_ranges[i]    # Loads current abort range
-    #         temp_sensor = PodStatus.sensor_data[i,:]    # Loads current sensor data
-    #         if temp_range[6] == 1:                    # Evaluates the S2A column value
-    #             if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #             elif temp_sensor[1] > temp_range[2]:    # Evaluates "HIGH" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #             else:
-    #                 PodStatus.abort_ranges[i,11] = 0
-    #
-    # if PodStatus.state == PodStatus.Crawling:        # Evaluates abort criteria for FC2L state
-    #     for i in range(a[0]):
-    #         temp_range = PodStatus.abort_ranges[i]    # Loads current sensor range to temp
-    #         temp_sensor = PodStatus.sensor_data[i,:]
-    #         if temp_range[8] == 1:                    # Evaluates the FC2L column value
-    #             if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #             elif (temp_sensor[1] > temp_range[2]):    # Evaluates "HIGH" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #             else:
-    #                 PodStatus.abort_ranges[i,11] = 0
-    #
-    # if PodStatus.state == PodStatus.BrakingLow:   # Evaluates abort criteria for Safe To Approach state
-    #     for i in range(a[0]):
-    #         temp_range = PodStatus.abort_ranges[i]    # Loads current abort range
-    #         temp_sensor = PodStatus.sensor_data[i,:]    # Loads current sensor data
-    #         if temp_range[9] == 1:                    # Evaluates the S2A column value
-    #             if temp_sensor[1] < temp_range[1]:    # Evaluates "LOW" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #                 if temp_sensor[10] == 1:    # IF FAULT IS A TRIGGER, ABORT()
-    #                     abort()
-    #             elif temp_sensor[1] > temp_range[2]:    # Evaluates "HIGH" values
-    #                 PodStatus.abort_ranges[i,11] = 1
-    #                 # NEED "STORE FAULTS" FUNCTION HERE TO RECORD TIME OF FAULT
-    #                 print("Pod Fault!\tSensor: " + str(PodStatus.abort_labels[i]) +
-    #                       "\tValue: " + str(temp_sensor[1]) +
-    #                       "\t Range: "+ str(temp_range[1]) + " to " + str(temp_range[2]))
-    #                 if temp_sensor[10] == 1:    # IF FAULT IS A TRIGGER, ABORT()
-    #                     abort()
-    #             else:
-    #                 PodStatus.abort_ranges[i,11] = 0
-
-
-def rec_data():     # This function parses received data into useable commands by SDA.
+def rec_data():
+    """
+    This function receives data from the GUI, primarily commands[]
+    During DEBUG, this function is a mock GUI for testing SDA.
+    """
 
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
@@ -566,15 +440,35 @@ def rec_data():     # This function parses received data into useable commands b
         pass
     ### END TEST SCRIPT
 
-
 def do_commands():
+    """
+    This function ensures all current commands[] are run each loop.  The GUI will show the last
+    sent command as well as the current state of the commands[] dict to ensure proper operation.
+
+    During the S2A state, all commands are available to the crew through the GUI.  This allows
+    easy testing and preflight.  All flight parameters are received through this function.
+
+    This is the ONLY function that will allow the pod to transition from S2A to Launching.
+
+    During flight, the ONLY command that the SDA will listen to is the Abort signal.
+
+    If an abort takes place, the pod will eventually arrive back to the S2A state, giving full
+    control back to the crew.
+    """
+
     if PodStatus.state == 1:    # Load ALL commands for full GUI control
         if PodStatus.commands['Abort'] == 1:
-            PodStatus.Fault = True
+            PodStatus.Abort = True
             print("*** ABORT COMMAND RECEIVED ***")
             abort()
 
-        # Launch pod if conditions in run_state() for spacex_state are met
+        # Allows crew to reset Abort flag.  ONLY way to reset Abort flag.  Cannot be changed in-flight.
+        elif PodStatus.commands['Abort'] == 0:
+            PodStatus.Abort = False
+            print("Resetting Abort flag to False")
+
+        ### POD WILL LAUNCH WITH THIS SECTION ###
+        # Launch pod ONLY if conditions in run_state() for spacex_state are met
         if PodStatus.commands['Launch'] == 1 and PodStatus.spacex_state == 2:
             transition()
         elif PodStatus.commands['Launch'] == 1 and PodStatus.spacex_state != 2:
@@ -636,9 +530,11 @@ def do_commands():
         if PodStatus.commands['Abort'] == True:
             abort()
 
-
-
 def spacex_data():
+    """
+    This function passes the required SpaceX data packet at the defined rate.
+    """
+
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
         #print("No packet sent.")
         pass
@@ -653,8 +549,6 @@ def spacex_data():
                              int(PodStatus.distance), int(PodStatus.speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
         sock.sendto(packet, server)
 
-
-
 def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
 
     ### Send to CAN ###
@@ -664,21 +558,24 @@ def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
     pass
 
 def run_state():
+    """
+    This is the primary "run" function for each state.
+    """
 
     # S2A STATE
     if PodStatus.state == 1:
-
         # Determine if SpaceX state = 1 (S2A) or 2 (Ready to Launch)
-        if (
-            PodStatus.Fault == False and
+        if (PodStatus.Fault == False and
+            PodStatus.Abort == False and
             PodStatus.HV == True and
             PodStatus.Brakes == False and
             PodStatus.para_BBP > 0 and
             PodStatus.para_max_accel > 0 and
             PodStatus.para_max_speed > 0 and
-            PodStatus.para_max_time > 0):
-            PodStatus.spacex_state = 2
-            print("Pod is Ready for Launch (SpaceX State 2)")
+            PodStatus.para_max_time > 0 and
+            PodStatus.para_max_crawl_speed > -1):
+                PodStatus.spacex_state = 2
+                print("Pod is Ready for Launch (SpaceX State 2)")
         else:
             PodStatus.spacex_state = 1
 
@@ -689,19 +586,21 @@ def run_state():
     # LAUNCHING STATE
     elif PodStatus.state == 3:
         PodStatus.spacex_state = 3
+        # print("Resetting Launch command to 0")
         PodStatus.commands['Launch'] = 0        # Resets launch command once successfully launched
 
         # Start the flight clock
         if PodStatus.MET_starttime == -1:
-            print("The clock has started.")
+            print("The MET clock has started.")
             PodStatus.MET_starttime = clock()
         else:
             PodStatus.MET = clock()-PodStatus.MET_starttime
 
         # ACCEL UP TO MAX G within 2%
-        if PodStatus.sensor_data['IMU1_X'] < (0.98 * PodStatus.para_max_accel):
+        # Linear inputs; MC has a built-in throttle damper
+        if PodStatus.accel < (0.98 * PodStatus.para_max_accel):
             PodStatus.throttle = PodStatus.throttle * 1.01
-        elif PodStatus.sensor_data['IMU1_X'] > (1.02*PodStatus.para_max_accel):
+        elif PodStatus.accel > (1.02*PodStatus.para_max_accel):
             PodStatus.throttle = PodStatus.throttle * 0.99
 
         # TRANSITIONS
@@ -719,6 +618,10 @@ def run_state():
     # COAST (NOT USED)
     elif PodStatus.state == 4:
         PodStatus.spacex_state = 4
+
+        # GET OUT OF THIS STATE
+        PodStatus.state = PodStatus.BrakingLow
+        PodStatus.Abort = True
         pass
 
     # BRAKE, HIGH SPEED
@@ -726,9 +629,11 @@ def run_state():
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
 
-        # if PodStatus.speed > 0.5:
-        #     PodStatus.stopped_time = 0
-        if PodStatus.speed > 0.5:
+        if PodStatus.speed > 0.5:       # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
+                                        # IF ERRANT SPEED VALUES > 0.5 WHILE ACTUALLY
+                                        # STOPPED, COULD CAUSE EXCESSIVE DISCHARGE
+                                        # OF RESERVOIRS AND LOSS OF BRAKE RETRACTION
+                                        # ABILITY
             if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
                 print("Opening Vent Sol")
                 PodStatus.commands['Vent_Sol'] = 0
@@ -736,7 +641,6 @@ def run_state():
                 PodStatus.throttle = 0
 
         # DO NOTHING ELSE UNTIL STOPPED
-
         # RECONFIGURE FOR CRAWLING
         if PodStatus.speed < 0.5:
             if PodStatus.stopped_time == -1:
@@ -749,25 +653,41 @@ def run_state():
 
             if timer > 2:
                 if PodStatus.commands['Vent_Sol'] == 0:
-                    PodStatus.sensor_data['Brake_Pressure'] = 0
+                    PodStatus.sensor_data['Brake_Pressure'] = 0 # DEBUG LINE
                     PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
                     print("Closing Vent Sol")
                 if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
                     PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
                     print("Opening Res#1, pausing for 2 seconds.")
                     sleep(2)
-                    PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
-                    transition()
+                    if PodStatus.sensor_data['Brake_Pressure'] < 177:
+                        print("Unable to achieve brake retraction pressure.")
+                        print("Sending Abort signal.")
+                        PodStatus.Abort = True
+                    else:
+                        print("Brakes retracted, closing Res1 solenoid.")
+                        PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
+                        transition()
+                else:
+                    print("Why are you here?")
+                    print("Vent_Sol: " + str(PodStatus.Vent_Sol))
+                    print("Brake Pressure: " + str(PodStatus.sensor_data['Brake_Pressure']))
+                    x = input("1 to Abort, 2 to continue")
+                    if x == '1':
+                        PodStatus.Abort
 
 
     # CRAWLING
+    # ONLY way to transition() is if LIDAR < 90ft.  Probably needs a 2nd/3rd stop point (time/dist)
     elif PodStatus.state == 6:
         PodStatus.spacex_state = 6
 
         # ACCEL UP TO MAX G within 2%
-        if PodStatus.sensor_data['IMU1_X'] < (0.98 * PodStatus.para_max_accel):
+        if PodStatus.accel < (0.98 * PodStatus.para_max_accel)\
+                and PodStatus.speed < PodStatus.para_max_crawl_speed:
             PodStatus.throttle = PodStatus.throttle * 1.01
-        elif PodStatus.sensor_data['IMU1_X'] > (1.02*PodStatus.para_max_accel):
+        elif PodStatus.accel > (1.02*PodStatus.para_max_accel)\
+                or PodStatus.speed > PodStatus.para_max_crawl_speed:
             PodStatus.throttle = PodStatus.throttle * 0.99
 
         if PodStatus.sensor_data['LIDAR'] < 90:
@@ -777,46 +697,28 @@ def run_state():
     # BRAKE, FINAL
     elif PodStatus.state == 7:
         PodStatus.spacex_state = 5
-        print("Braking, Final")
+        print("Entering final braking state.")
+
+        PodStatus.throttle = 0
 
         #     PodStatus.stopped_time = 0
         if PodStatus.speed > 0.5:
             if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
                 print("Opening Vent Sol")
                 PodStatus.commands['Vent_Sol'] = 0
-            if PodStatus.throttle > 0:          # SET THROTTLE TO 0
-                PodStatus.throttle = 0
 
-        # DO NOTHING ELSE UNTIL STOPPED
-
-        # RECONFIGURE FOR CRAWLING
-        if PodStatus.speed < 0.5:
-            if PodStatus.stopped_time == -1:
-                timer = 0
-                PodStatus.stopped_time = clock()
-                PodStatus.commands['Vent_Sol'] = 0
-                print("Stopped at " + str(round(PodStatus.stopped_time, 2)) + " seconds; Holding for 2 seconds.")
-            else:
-                timer = clock() - PodStatus.stopped_time
-
-            if timer > 2:
-                if PodStatus.commands['Vent_Sol'] == 0:
-                    PodStatus.sensor_data['Brake_Pressure'] = 0
-                    PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
-                    print("Closing Vent Sol")
-                if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
-                    PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
-                    print("Opening Res#1, pausing for 2 seconds.")
-                    sleep(2)
-                    PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
-                    transition()
+        # TRANSITION TO S2A
+        else:
+            transition()
 
     else:
         print("Invalid pod state found: " + str(PodStatus.state))
         print("Quitting")
         PodStatus.Fault = True
-        PodStatus.Quit = True
-
+        x = input("1 to Quit, 2 to reset to S2A, 3 to reset to BrakingLow(7) ")
+        if x == '1': PodStatus.Quit = True
+        elif x == '2': PodStatus.state = PodStatus.SafeToApproach
+        else: PodStatus.state = PodStatus.BrakingLow
 
 def transition():
     if PodStatus.state == 1:          # S2A trans
@@ -858,7 +760,9 @@ def abort():
         PodStatus.state = 7
 
     elif PodStatus.state == 6:
+        print("ABORTING FROM 6 to 7")
         PodStatus.state = 7
+
     elif PodStatus.state == 7:
         if PodStatus.speed > 0.1:
             print("Waiting for pod to stop.")
