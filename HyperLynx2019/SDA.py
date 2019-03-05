@@ -274,8 +274,8 @@ def poll_sensors():
     rpi_data = psutil.disk_usage('\\')
     PodStatus.sensor_data['RPi_Disk_Space_Free'] = rpi_data.free / (1024 ** 2)
     PodStatus.sensor_data['RPi_Disk_Space_Used'] = rpi_data.used / (1024 ** 2)
-    PodStatus.sensor_data['RPi_Proc_Load'] = round((psutil.cpu_percent()*100),1)
-    rpi_data2 = psutil.phymem_usage()
+    PodStatus.sensor_data['RPi_Proc_Load'] = round(psutil.cpu_percent(),1)
+    rpi_data2 = psutil.virtual_memory()
     PodStatus.sensor_data['RPi_Mem_Load'] = rpi_data2.percent
     PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
     PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
