@@ -826,7 +826,8 @@ def write_file():
                     + 'throttle' + '\t' + str(PodStatus.throttle) + '\t\t' + str(round(clock(), 2)) + '\n' \
                     + 'distance' + '\t' + str(PodStatus.distance) + '\t\t' + str(round(clock(), 2)) + '\n' \
                     + 'speed' + '\t' + str(PodStatus.speed) + '\t\t' + str(round(clock(), 2)) + '\n' \
-                    + 'accel' + '\t' + str(PodStatus.accel) + '\t\t' + str(round(clock(), 2)) + '\n'
+                    + 'accel' + '\t' + str(PodStatus.accel) + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'wheel_diameter' + '\t' + str(PodStatus.wheel_diameter) + '\t\t' + str(round(clock(),2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
