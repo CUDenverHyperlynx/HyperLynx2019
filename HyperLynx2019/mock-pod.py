@@ -39,7 +39,7 @@ if __name__ == "__main__":
     parser.add_argument("--team_id", type=int, default=0, help="The team id to send")
     parser.add_argument("--frequency", type=int, default=25, help="The frequency to send packets at")
     parser.add_argument("--server_ip", default="192.168.0.1", help="The ip to send the packets to")
-    parser.add_argument("--server_port", type=int, default=3000, help="The UDP port to send packets to")
+    parser.add_argument("--server_port", type=int, default=1028, help="The UDP port to send packets to")
     parser.add_argument("--tube_length", type=int, default=125000, help="The length of the tube in centimeters")
 
     args = parser.parse_args()
