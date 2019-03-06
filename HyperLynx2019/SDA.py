@@ -279,6 +279,9 @@ def poll_sensors():
     PodStatus.sensor_data['RPi_Mem_Load'] = rpi_data2.percent
     PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
     PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
+    # temp = os.popen("vcgencmd measure_temp").readline()
+    # PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
+
 
 
 def eval_abort():
@@ -306,7 +309,7 @@ def eval_abort():
     for key in PodStatus.abort_ranges[PodStatus.state]:     # Search abort_ranges dict for current state
         # if out of range, log 'Fault' key as 1
         if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.state][str(key)]['Low'] \
-                or PodStatus.sensor_data[key] > PodStatus.abort_ranges[PodStatus.state][str(key)]['High']:
+                or PodStatus.sensor_data[str(key)] > PodStatus.abort_ranges[PodStatus.state][str(key)]['High']:
             ### DEBUG PRINT
             print("Pod Fault!\tSensor: " + str(key))
             print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
@@ -853,7 +856,7 @@ if __name__ == "__main__":
         run_state()
         do_commands()
         eval_abort()
-        rec_data()
+        #rec_data()
         send_data()
         spacex_data()
 
