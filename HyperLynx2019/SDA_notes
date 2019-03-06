@@ -1,5 +1,9 @@
 SDA:
 
+Resolvers:
+    
+    - Secondary sensor for checking that resolver is working correctly
+    
 Position Algorithm:
 
     - Use multiple sensors to determine a rough position of where the POD is.
