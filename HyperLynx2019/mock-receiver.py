@@ -197,8 +197,8 @@ class MockServer:
 if __name__ == "__main__":
     # Parse some arguments
     parser = ArgumentParser(description="Mock the receiving server for the Hyperloop competition")
-    parser.add_argument("--host", default="", help="The host to accept packets from, if set to localhost the server only accepts packets from localhost. The default option allows packets from all sources.")
-    parser.add_argument("--port", type=int, default=3000, help="The port to list on for packets")
+    parser.add_argument("--host", default=socket.gethostbyname(socket.gethostname()), help="The host to accept packets from, if set to localhost the server only accepts packets from localhost. The default option allows packets from all sources.")
+    parser.add_argument("--port", type=int, default=1028, help="The port to list on for packets")
     parser.add_argument("--tube_length", type=int, default=125000, help="The length of the tube in centimeters")
     parser.add_argument("--output_filename", help="The filename to store received data in")
     parser.add_argument("--print_header", action="store_true", help="If at the start of the file a header should be added explaining the columns")
