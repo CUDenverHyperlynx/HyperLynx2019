@@ -3,7 +3,6 @@ Author:       Patrick Tafoya
 Purpose:      Test sensors for pod control systems
               The loop reads and prints all pertinent
               data at a rate of 30Hz
-
               Sensors connected via RPi I2C Bus
               RPi pin 1     3.3V
               RPi pin 3     SDA
@@ -13,9 +12,7 @@ Purpose:      Test sensors for pod control systems
               IR THERM
               A5 is SCL
               A4 is SDA
-
               BNO055_ADDRESS_2 requires additional 3.3V to ADR
-
 """
 
 import smbus
@@ -53,7 +50,6 @@ PV2 = BME280(address=BME280_ADDRESS_B)
 #initializes an attribute required for all other readings
 t1 = PV1.read_temperature()
 t2 = PV2.read_temperature()
-
 #BNO055 LIBRARY REQUIRES self.begin
 IMU_Nose.begin()
 IMU_Tail.begin()
@@ -86,18 +82,18 @@ def sensorSetup():
     try:
         bus.write_quick(BME280_ADDRESS_A)
         print("BME280 PV1 Ready")
-        time.sleep(0.05)
+        sleep(0.05)
     except IOError:
         print("ERROR CONNECTING TO BME280 AT 0x77")
         return False
     try:
         bus.write_quick(BME280_ADDRESS_B)
         print("BME280 PV2 Ready")
-        time.sleep(0.05)
+        sleep(0.05)
     except IOError:
         print("ERROR CONNECTING TO BME280 AT 0x76")
         return False
-    PV1.read_temperarure()
+    PV1.read_temperature()
     PV2.read_temperature()
     return True
 
@@ -172,13 +168,13 @@ def sensorData():
         try:
             accelerationDataNose = IMU_Nose.read_linear_acceleration()
         except IOError:
-            accelerationDataNose = 0
+            accelerationDataNose = [0, 0, 0]
             fault+=1
         accel_1.append(accelerationDataNose[0])
         try:
             accelerationDataTail = IMU_Tail.read_linear_acceleration()
         except IOError:
-            accelerationDataTail = 0
+            accelerationDataTail = [0, 0, 0]
             fault+=1
         accel_2.append(accelerationDataTail[0])
         try:
@@ -239,7 +235,6 @@ if __name__ == '__main__':
             print("Tail:\tAcceleration:\t%.2f ft/s^2" % data[4])
             print("X:\t%.2f\t" % data[6][0], "Y:\t%.2f\t" % data[6][1], "Z:\t%.2f" % data[6][2])
             print("Run Time:\t%.2f" % data[9])
-            print("Current Poll Success:\t%.2%" % ((error/readings)*100))
-            print("Overall Success Rate:\t%.2f%" % ((error/attempts)*100))
+            print("Current Poll Success:\t%.2f" % (((readings - data[10])/readings)*100))
+            print("Overall Success Rate:\t%.2f" % (((attempts -error)/attempts)*100))
             print("\n")
-              
