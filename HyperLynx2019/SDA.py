@@ -856,7 +856,7 @@ if __name__ == "__main__":
         run_state()
         do_commands()
         eval_abort()
-        #rec_data()
+        rec_data()
         send_data()
         spacex_data()
 
