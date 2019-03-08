@@ -1,5 +1,49 @@
 SDA:
 
+States:
+1 - Safe To Approach
+3 - Launching
+5 - Braking High
+6 - Crawling
+7 - Braking Low
+
+Position / Velocity / Acceleration calculations:
+Raw data is read from the resolvers, stripe counters, and IMU’s
+General rule: integration results in cleaner data than derivation (go up, not down)
+Resolver:  direct velocity, integrated position
+2x LST: direct position
+2x Accelerometer: direct acceleration, integrated velocity
+
+This results in:
+2 direct position measurements + 1 indirect
+1 direct velocity measurement + 2 indirect
+2 direct acceleration measurements
+
+Filter func:
+	Take a moving average of the last _ data points
+	Calculate individual datapoint standard deviation from the moving average
+	Eliminate datapoint that exceeds std dev setting
+	Re-calculate moving average without bad datapoint
+	Pass this average as the blended result
+
+To do this, we need to:
+Be able to pass 2 or 3 arguments to the function (there’s a way to do this in python)
+Return the moving average set and the blended result
+HERE:
+def manyArgs(*arg):
+print "I was called with", len(arg), "arguments:", arg
+>>> manyArgs(1) I was called with 1 arguments: (1,)
+>>> manyArgs(1, 2,3) I was called with 3 arguments: (1, 2, 3)
+
+
+How do we know if pod has launched?
+Blended result of accelerometer >= 0.1 & speed >= 1
+
+How do we know if pod has stopped?
+Blended result of accelerometer < 0.1 & speed < 1
+
+How do we blend data on a single sensor?  Moving average
+
 Resolvers:
     
     - Secondary sensor for checking that resolver is working correctly
