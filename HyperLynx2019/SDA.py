@@ -62,6 +62,8 @@ import socket, struct
 import numpy
 import datetime
 import os, psutil
+import smbus
+from Adafruit_BNO055 import BNO055
 
 class Status():
     # Definition of State Numbers
@@ -118,6 +120,11 @@ class Status():
         self.spacex_server_port = 3000
         self.spacex_rate = 40               # [Hz] rate of spacex data burst
         self.spacex_lastsend = 0
+
+        # I2C init
+        self.IMU1_addr = 0x28
+        self.IMU1 = BNO055.BNO055(None, IMU1_addr)
+        self.IMU1.begin()
 
         # DEBUG init for script:
         self.Quit = False
@@ -220,6 +227,18 @@ def poll_sensors():
     ### CAN DATA ###
 
     ### I2C DATA ###
+    try:
+        PodStatus.orientation = PodStatus.IMU1.read_euler()
+    except IOError:
+        PodStatus.orientation = [0,0,0]
+    try:
+        tempIMU = PodStatus.IMU1.read_linear_acceleration()
+        PodStatus.sensor_data['IMU1_X'] = tempIMU[0]
+    except IOError:
+        PodStatus.sensor_data['IMU1_X']['Fault'] = 1
+        PodStatus.sensor_data['IMU1_X'] = 0
+    
+
 
     ### RPI DATA ###
     rpi_data = psutil.disk_usage('/')

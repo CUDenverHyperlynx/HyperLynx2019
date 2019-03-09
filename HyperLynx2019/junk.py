@@ -1,17 +1,17 @@
 ## test out the sensor polling
-# HI
+
 import numpy as np
 import time
 class Status:
     poll_raw = {'Brake_Pressure' : 0}
     poll_raw_q = {'Brake_Pressure' : []}
-    poll_filter = {'Brake_Pressure' : 0}
+    poll_filter = {'Brake_Pressure' : []}
     moving_avg_count = 20
-    loop_speed = 0.000010
+    loop_speed = 0.000020
 
 def poll_sensors():
 
-    PodStatus.poll_raw['Brake_Pressure'] += (0+(np.random.rand()))*(time.clock()-timer)
+    PodStatus.poll_raw['Brake_Pressure'] = 1000 + np.random.randint(-10,21)
 
     for key in PodStatus.poll_raw_q:
         #print(str(len(PodStatus.poll_raw_q[str(key)])))
@@ -23,7 +23,7 @@ def poll_sensors():
             for i in range(0, (len(PodStatus.poll_raw_q[str(key)])-1)):
                 PodStatus.poll_raw_q[str(key)][i] = PodStatus.poll_raw_q[str(key)][i+1];
             PodStatus.poll_raw_q[str(key)][(PodStatus.moving_avg_count-1)] = PodStatus.poll_raw[str(key)];
-            PodStatus.poll_filter[str(key)] = np.average(PodStatus.poll_raw_q[str(key)])
+            np.append(PodStatus.poll_filter[str(key)], np.average(PodStatus.poll_raw_q[str(key)]))
 
 
 if __name__ == '__main__':
@@ -31,12 +31,12 @@ if __name__ == '__main__':
     timer = time.clock()
     while True:
         poll_sensors()
-        time.sleep(PodStatus.loop_speed)
-        if time.clock()-timer > 2:
-            print(PodStatus.poll_raw_q['Brake_Pressure'])
-            print(str(round(PodStatus.poll_filter['Brake_Pressure'],2)))
-            std_dev = np.std(PodStatus.poll_raw_q['Brake_Pressure'])
-            error = std_dev / PodStatus.poll_filter['Brake_Pressure']
-            print("Std dev: " + str(round(std_dev,3)))
-            print("% error: " + str(round(100*error,3)))
-            break
+        print(PodStatus.poll_raw_q['Brake_Pressure'])
+        length = len(PodStatus.poll_filter['Brake_Pressure'])
+        if length == PodStatus.moving_avg_count:
+            print(str(round(PodStatus.poll_filter['Brake_Pressure'][length],3)))
+        std_dev = np.std(PodStatus.poll_raw_q['Brake_Pressure'])
+        error = std_dev / PodStatus.poll_filter['Brake_Pressure']
+        #print("Std dev: " + str(round(std_dev,3)))
+        print("% error: " + str(round(100*error,3)))
+        print("Total Time: " + str(time.clock()-timer))
