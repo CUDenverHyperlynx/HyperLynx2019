@@ -281,6 +281,7 @@ def poll_sensors():
     PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
     temp = os.popen("vcgencmd measure_temp").readline()
     PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
+    print(PodStatus.sensor_data['RPi_Temp'])
 
 
 
