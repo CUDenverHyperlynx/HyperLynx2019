@@ -42,30 +42,30 @@ BMS_HighCellVoltageID	0	0	0	0	0	0	0	0	0	0	0
 BMS_PowerInputVoltage	0	0	0	0	0	0	0	0	0	0	0	
 BMS_DTCStatus1	0	0	0	0	0	0	0	0	0	0	0	
 BMS_DTCStatus2	0	0	0	0	0	0	0	0	0	0	0	
-LVBatt_Temp	0	35	1	0	1	1	1	0	0	0	0	
-LVBatt_Current	0	10	1	0	1	1	1	0	0	0	0	
-LVBatt_Voltage	10.8	13.5	1	0	1	1	1	1	0	1	0	
-RPi_Temp	0	60	1	1	1	0	1	0	0	0	0	
-RPi_Proc_Load	0	100	1	1	1	0	1	0	0	0	0	
+LVBatt_Temp	0	35	0	0	1	1	1	0	0	0	0	
+LVBatt_Current	0	10	0	0	1	1	1	0	0	0	0	
+LVBatt_Voltage	10.8	13.5	0	0	1	1	1	1	0	1	0	
+RPi_Temp	0	60	0	1	1	0	1	0	0	0	0	
+RPi_Proc_Load	0	100	0	1	1	0	1	0	0	0	0	
 RPi_Disk_Space_Used	0	0	0	0	0	0	0	0	0	0	0	MB
-RPi_Disk_Space_Free	1000	200000	1	1	1	1	1	1	1	0	0	MB
+RPi_Disk_Space_Free	1000	200000	0	1	1	1	1	1	1	0	0	MB
 RPi_Mem_Free	0	0	0	0	0	0	0	0	0	0	0	
 RPi_Mem_Used	0	0	0	0	0	0	0	0	0	0	0	
-RPi_Mem_Load	0	80	1	1	1	0	1	0	0	0	0	
-PV_Left_Temp	0	50	1	0	1	1	1	0	0	0	0	
-PV_Left_Pressure	9	15	1	0	1	1	1	0	0	0	0	
-PV_Right_Temp	0	50	1	0	1	1	1	0	0	0	0	
-PV_Right_Pressure	9	15	1	0	1	1	1	0	0	0	0	
+RPi_Mem_Load	0	80	0	1	1	0	1	0	0	0	0	
+PV_Left_Temp	0	50	0	0	1	1	1	0	0	0	0	
+PV_Left_Pressure	9	15	0	0	1	1	1	0	0	0	0	
+PV_Right_Temp	0	50	0	0	1	1	1	0	0	0	0	
+PV_Right_Pressure	9	15	0	0	1	1	1	0	0	0	0	
 Brake_Pressure	0	177	0	0	0	0	0	0	0	0	0	
 Brake_Pressure	177	225	0	0	1	0	0	1	0	1	0	
-Ambient_Pressure	0	15	1	0	1	1	1	0	0	0	0	
-IMU1_X	-0.05	0.05	1	0	1	1	1	0	0	0	0	
-IMU1_Y	-1.1	-0.9	1	0	1	1	1	0	0	0	0	
-IMU1_Z	-0.05	0.05	1	0	1	1	1	0	0	0	0	
-IMU2_X	-0.05	0.05	1	0	1	1	1	0	0	0	0	
-IMU2_Y	-1.1	-0.9	1	0	1	1	1	0	0	0	0	
-IMU2_Z	-0.05	0.05	1	0	1	1	1	0	0	0	0	
+Ambient_Pressure	0	15	0	0	1	1	1	0	0	0	0	
+IMU1_X	-0.05	0.05	0	0	1	1	1	0	0	0	0	
+IMU1_Y	-1.1	-0.9	0	0	1	1	1	0	0	0	0	
+IMU1_Z	-0.05	0.05	0	0	1	1	1	0	0	0	0	
+IMU2_X	-0.05	0.05	0	0	1	1	1	0	0	0	0	
+IMU2_Y	-1.1	-0.9	0	0	1	1	1	0	0	0	0	
+IMU2_Z	-0.05	0.05	0	0	1	1	1	0	0	0	0	
 LIDAR	90	400	0	0	0	0	1	1	0	1	0	
-GUI_Conn	0.9	1.1	1	0	1	1	1		0	0	0	
-LST_Left	0	10	1	0	1	1	1		0	0	0	
-LST_Right	0	10	1	0	1	1	1		0	0	0	
+GUI_Conn	0.9	1.1	0	0	1	1	1		0	0	0	
+LST_Left	0	10	0	0	1	1	1		0	0	0	
+LST_Right	0	10	0	0	1	1	1		0	0	0	
