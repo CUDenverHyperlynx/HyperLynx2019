@@ -1,38 +1,35 @@
-import numpy
+## test out the sensor polling
+import numpy as np
+import time
+class Status:
+    poll_raw = {'Brake_Pressure' : 0}
+    poll_raw_q = {'Brake_Pressure' : []}
+    poll_filter = {'Brake_Pressure' : 0}
+    moving_avg_count = 20
 
-class State():
-    abort_ranges_S2A = {}
-    abort_ranges_Launching = {}
-    abort_ranges_Brake1 = {}
-    abort_ranges_Crawling = {}
+def poll_sensors():
 
-    abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1), dtype=str)
-    abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1,12), dtype=int)
-    for i in range(0,len(abort_names)):
-        if abort_vals[i,2] == 1:
-            abort_ranges_S2A[abort_names[i]] = {'Low': { abort_vals[i,0]},
-                                 'High': { abort_vals[i,1]},
-                                 'Trigger': { abort_vals[i,9] },
-                                 'Fault': {abort_vals[i, 10]}
-                                 }
-        if abort_vals[i,4] == 1:
-            abort_ranges_Launching[abort_names[i]] = {'Low': { abort_vals[i,0]},
-                                 'High': { abort_vals[i,1]},
-                                 'Trigger': { abort_vals[i,9] },
-                                 'Fault': {abort_vals[i, 10]}
-                                 }
-        if abort_vals[i,5] == 1:
-            abort_ranges_Brake1[abort_names[i]] = {'Low': { abort_vals[i,0]},
-                                 'High': { abort_vals[i,1]},
-                                 'Trigger': { abort_vals[i,9] },
-                                 'Fault': {abort_vals[i, 10]}
-                                 }
-        if abort_vals[i,6] == 1:
-            abort_ranges_Crawling[abort_names[i]] = {'Low': { abort_vals[i,0]},
-                                 'High': { abort_vals[i,1]},
-                                 'Trigger': { abort_vals[i,9] },
-                                 'Fault': {abort_vals[i, 10]}
-                                 }
-PodStatus = State()
-print(PodStatus.abort_ranges_Launching)
+    PodStatus.poll_raw['Brake_Pressure'] = np.random.rand()
 
+    for key in PodStatus.poll_raw_q:
+        print(str(len(PodStatus.poll_raw_q[str(key)])))
+        if len(PodStatus.poll_raw_q[str(key)]) < PodStatus.moving_avg_count:
+            print("Adding to q\n")
+            PodStatus.poll_raw_q[str(key)] = np.append(PodStatus.poll_raw_q[str(key)], PodStatus.poll_raw[str(key)])
+        else:
+            print("Shifting q\n")
+            for i in range(0, (len(PodStatus.poll_raw_q[str(key)])-1)):
+                PodStatus.poll_raw_q[str(key)][i] = PodStatus.poll_raw_q[str(key)][i+1];
+            PodStatus.poll_raw_q[str(key)][(PodStatus.moving_avg_count-1)] = PodStatus.poll_raw[str(key)];
+            PodStatus.poll_filter[str(key)] = np.average(PodStatus.poll_raw_q[str(key)])
+
+
+if __name__ == '__main__':
+    PodStatus = Status()
+    timer = time.clock()
+    while True:
+        poll_sensors()
+        print(PodStatus.poll_filter['Brake_Pressure'])
+        time.sleep(0.05)
+        if time.clock()-timer > 5:
+            break

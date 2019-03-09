@@ -56,7 +56,7 @@
    John Brenner & Jeff Stanek
 '''
 
-#from argparse import ArgumentParser
+# from argparse import ArgumentParser
 from time import sleep, clock
 import socket, struct
 import numpy
