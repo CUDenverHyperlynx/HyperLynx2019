@@ -54,48 +54,50 @@ t2 = PV2.read_temperature()
 IMU_Nose.begin()
 IMU_Tail.begin()
 """
+IMU_Nose.begin()
+IMU_Tail.begin()
 """
 sensorSetup:
     Checks all sensors for connection to I2C bus
     Displays error if no connection
 """
-def sensorSetup():
-    if(not IMU_Nose.begin()):
-        print("ERROR CONNECTING TO BNO055 AT 0x28")
-        return False
-    else:
-        print("BNO055 Nose Ready")
-        sleep(0.05)
-    if(not IMU_Tail.begin()):
-        print("ERROR CONNECTING TO BNO055 AT 0X29")
-        return False
-    else:
-        print("BNO055 Tail Ready")
-        sleep(0.05)
-    try:
-        bus.write_quick(IR_ADDRESS)
-        print("MLX90614 Ready")
-        sleep(0.05)
-    except IOError:
-        print("ERROR CONNECTING TO MLX90614 AT 0X5B")
-        return False
-    # #try:
-    #     bus.write_quick(BME280_ADDRESS_A)
-    #     print("BME280 PV1 Ready")
-    #     sleep(0.05)
-    # #except IOError:
-    #     print("ERROR CONNECTING TO BME280 AT 0x77")
-    #     return False
-    # try:
-    #     bus.write_quick(BME280_ADDRESS_B)
-    #     print("BME280 PV2 Ready")
-    #     sleep(0.05)
-    # except IOError:
-    #     print("ERROR CONNECTING TO BME280 AT 0x76")
-    #     return False
-    #PV1.read_temperature()
-    #PV2.read_temperature()
-    return True
+# def sensorSetup():
+#     if(not IMU_Nose.begin()):
+#         print("ERROR CONNECTING TO BNO055 AT 0x28")
+#         return False
+#     else:
+#         print("BNO055 Nose Ready")
+#         sleep(0.05)
+#     if(not IMU_Tail.begin()):
+#         print("ERROR CONNECTING TO BNO055 AT 0X29")
+#         return False
+#     else:
+#         print("BNO055 Tail Ready")
+#         sleep(0.05)
+#     try:
+#         bus.write_quick(IR_ADDRESS)
+#         print("MLX90614 Ready")
+#         sleep(0.05)
+#     except IOError:
+#         print("ERROR CONNECTING TO MLX90614 AT 0X5B")
+#         return False
+#     # #try:
+#     #     bus.write_quick(BME280_ADDRESS_A)
+#     #     print("BME280 PV1 Ready")
+#     #     sleep(0.05)
+#     # #except IOError:
+#     #     print("ERROR CONNECTING TO BME280 AT 0x77")
+#     #     return False
+#     # try:
+#     #     bus.write_quick(BME280_ADDRESS_B)
+#     #     print("BME280 PV2 Ready")
+#     #     sleep(0.05)
+#     # except IOError:
+#     #     print("ERROR CONNECTING TO BME280 AT 0x76")
+#     #     return False
+#     #PV1.read_temperature()
+#     #PV2.read_temperature()
+#     return True
 
 """
 medainFilter:
@@ -223,8 +225,8 @@ def sensorData():
     return(pressureVessel_1, pressureVessel_2, batteryTemp, noseAcceleration, tailAcceleration, noseOrientation, tailOrientation, PV1TEMP, PV2TEMP, runTime, fault)
 
 if __name__ == '__main__':
-    if(sensorSetup()):
-        #sleep(0.5)
+    #if(sensorSetup()):
+        sleep(0.5)
         error = 0
         attempts = 0
         while True:
