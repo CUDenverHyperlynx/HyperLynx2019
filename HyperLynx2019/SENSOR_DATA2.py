@@ -204,15 +204,19 @@ def sensorData():
         #     fault+=1
         sleep(DATA_READ)
     #Filter each list and store median value to be displayed
-    pressureVessel_1 = medianFilter(pressure_1) / PASC2PSI
-    pressureVessel_2 = medianFilter(pressure_2) / PASC2PSI
+    # pressureVessel_1 = medianFilter(pressure_1) / PASC2PSI
+    # pressureVessel_2 = medianFilter(pressure_2) / PASC2PSI
+    pressureVessel_1 = 0
+    pressureVessel_2 = 0
     batteryTemp = medianFilter(batt_temp)
     noseAcceleration = medianFilter(accel_1) * METER2FEET
     tailAcceleration = medianFilter(accel_2) * METER2FEET
     noseOrientation = (medianFilter(noseX), medianFilter(noseY), medianFilter(noseZ))
     tailOrientation = (medianFilter(tailX), medianFilter(tailY), medianFilter(tailZ))
     # PV1TEMP = medianFilter(PV1_temp)
+    PV1TEMP = 0
     # PV2TEMP = medianFilter(PV2_temp)
+    PV2TEMP = 0
 
     end = clock()
     runTime = start - end
