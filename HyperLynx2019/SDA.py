@@ -133,12 +133,13 @@ class Status():
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
-        # Create Abort Range Dictionary from template file
+        # Create Abort Range and init sensor_data Dictionary from template file
         abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                        dtype=str)
         abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12),
                                       dtype=float)
         for i in range(0, len(abort_names)):
+            self.sensor_data[str(abort_names[i])] = 0
             if abort_vals[i, 2] == 1:
                 self.abort_ranges[self.SafeToApproach][abort_names[i]] = {'Low': abort_vals[i, 0],
                                                     'High': abort_vals[i, 1],
@@ -169,7 +170,7 @@ class Status():
                                                                     'Trigger': abort_vals[i, 9],
                                                                     'Fault': abort_vals[i, 10]
                                                                     }
-
+        print(self.sensor_data)
 
         # Create Commands Dictionary from template file
         cmd_names = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
@@ -215,39 +216,22 @@ def poll_sensors():
     PodStatus.poll_interval = PodStatus.poll_newtime-PodStatus.poll_oldtime
 
     ### CAN DATA ###
-    PodStatus.sensor_data['SD_MotorData_MotorRPM'] = 0
-
 
     ### I2C DATA ###
-    PodStatus.sensor_data['LVBatt_Temp'] = 20
-    PodStatus.sensor_data['LVBatt_Current'] = 5
-    PodStatus.sensor_data['LVBatt_Voltage'] = 11.7
-    PodStatus.sensor_data['PV_Left_Temp'] = 30
-    PodStatus.sensor_data['PV_Left_Pressure'] = 12
-    PodStatus.sensor_data['PV_Right_Temp'] = 30
-    PodStatus.sensor_data['PV_Right_Pressure'] = 12
-    PodStatus.sensor_data['Ambient_Pressure'] = 0.1
-    PodStatus.sensor_data['IMU1_X'] = 0
-    PodStatus.sensor_data['IMU1_Y'] = -1.02
-    PodStatus.sensor_data['IMU1_Z'] = 0
-    PodStatus.sensor_data['IMU2_X'] = 0
-    PodStatus.sensor_data['IMU2_Y'] = -1.02
-    PodStatus.sensor_data['IMU2_Z'] = 0
-    PodStatus.sensor_data['LIDAR'] = 0
-    #PodStatus.sensor_data['Brake_Pressure'] = 178
-    PodStatus.sensor_data['LST_Left'] = 0
-    PodStatus.sensor_data['LST_Right'] = 0
 
-    ### RPi DATA ###
-    PodStatus.sensor_data['GUI_Conn'] = 1
-    PodStatus.sensor_data['RPi_Temp'] = 40
-    PodStatus.sensor_data['RPi_Proc_Load'] = 5
-    PodStatus.sensor_data['RPi_Mem_Load'] = 5
-    PodStatus.sensor_data['RPi_Disk_Space'] = 14000
+    ### RPI DATA ###
+    rpi_data = psutil.disk_usage('/')
+    PodStatus.sensor_data['RPi_Disk_Space_Free'] = rpi_data.free / (1024 ** 2)
+    PodStatus.sensor_data['RPi_Disk_Space_Used'] = rpi_data.used / (1024 ** 2)
+    PodStatus.sensor_data['RPi_Proc_Load'] = round(psutil.cpu_percent(),1)
+    rpi_data2 = psutil.virtual_memory()
+    PodStatus.sensor_data['RPi_Mem_Load'] = rpi_data2.percent
+    PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
+    PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
+    temp = os.popen("vcgencmd measure_temp").readline()
+    PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
 
     ### SPACEX DATA ###
-    # Sets the highest of the two LST data sets to the pod state variable (most conservative)
-    PodStatus.stripe_count = numpy.maximum(PodStatus.sensor_data['LST_Left'], PodStatus.sensor_data['LST_Right'])
 
     ### CONVERT DATA ###
     # Set pod state variable for brakes
@@ -258,7 +242,8 @@ def poll_sensors():
 
     # Set pod state variable for speed and acceleration
     old_speed = PodStatus.speed
-    PodStatus.speed = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2*numpy.pi*PodStatus.wheel_diameter
+    if PodStatus.sensor_data['SD_MotorData_MotorRPM']:
+        PodStatus.speed = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2 * numpy.pi * PodStatus.wheel_diameter
     PodStatus.accel = numpy.mean([PodStatus.sensor_data['IMU1_X'], PodStatus.sensor_data['IMU2_X']])
 
     # Integrate distance.  At 1.4GHz clock speeds, integration can be numerically
@@ -270,18 +255,7 @@ def poll_sensors():
     if PodStatus.MET > 0:
         PodStatus.MET = clock()-PodStatus.MET_starttime
 
-    # RPi Data
-    rpi_data = psutil.disk_usage('/')
-    PodStatus.sensor_data['RPi_Disk_Space_Free'] = rpi_data.free / (1024 ** 2)
-    PodStatus.sensor_data['RPi_Disk_Space_Used'] = rpi_data.used / (1024 ** 2)
-    PodStatus.sensor_data['RPi_Proc_Load'] = round(psutil.cpu_percent(),1)
-    rpi_data2 = psutil.virtual_memory()
-    PodStatus.sensor_data['RPi_Mem_Load'] = rpi_data2.percent
-    PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
-    PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
-    temp = os.popen("vcgencmd measure_temp").readline()
-    PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
-    print(PodStatus.sensor_data['RPi_Temp'])
+
 
 
 
@@ -330,13 +304,13 @@ def eval_abort():
     if PodStatus.total_faults > 0:
         PodStatus.Fault = True
         ### DEBUG PRINT
-        print("Number of Faults: \n" + str(int(PodStatus.total_faults)))
+        print("Number of Faults: \t" + str(int(PodStatus.total_faults)))
     else:
         PodStatus.Fault = False
 
     if PodStatus.total_triggers > 0:
         ### DEBUG PRINT TRIGGERS
-        print("ABORT TRIGGERS FOUND: \n" + str(int(PodStatus.total_triggers)))
+        print("ABORT TRIGGERS FOUND: \t" + str(int(PodStatus.total_triggers)))
         print("FLAGGING ABORT == TRUE")
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
 
@@ -786,8 +760,7 @@ def abort():
     sending the pod back to S2A as soon as it comes to a stop.
     """
     if PodStatus.state == 1:          # S2A STATE FUNCTIONS
-        print("Abort attempted in S2A.")
-        print("No action performed.")
+        print("Abort flagged in S2A.")
 
     elif PodStatus.state == 3:          # LAUNCH STATE FUNCTIONS
         print("ABORTING from 3 to 7")
@@ -857,9 +830,10 @@ if __name__ == "__main__":
         run_state()
         do_commands()
         eval_abort()
-        rec_data()
+        #rec_data()
         send_data()
         spacex_data()
+        print(PodStatus.sensor_data['IMU1_X'])
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
