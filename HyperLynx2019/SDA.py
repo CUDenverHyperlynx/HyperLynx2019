@@ -271,7 +271,7 @@ def poll_sensors():
         PodStatus.MET = clock()-PodStatus.MET_starttime
 
     # RPi Data
-    rpi_data = psutil.disk_usage('\\')
+    rpi_data = psutil.disk_usage('/')
     PodStatus.sensor_data['RPi_Disk_Space_Free'] = rpi_data.free / (1024 ** 2)
     PodStatus.sensor_data['RPi_Disk_Space_Used'] = rpi_data.used / (1024 ** 2)
     PodStatus.sensor_data['RPi_Proc_Load'] = round(psutil.cpu_percent(),1)
@@ -279,8 +279,8 @@ def poll_sensors():
     PodStatus.sensor_data['RPi_Mem_Load'] = rpi_data2.percent
     PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
     PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
-    # temp = os.popen("vcgencmd measure_temp").readline()
-    # PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
+    temp = os.popen("vcgencmd measure_temp").readline()
+    PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
 
 
 
