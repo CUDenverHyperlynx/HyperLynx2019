@@ -233,7 +233,7 @@ def poll_sensors():
         PodStatus.orientation = [0,0,0]
     try:
         tempIMU = PodStatus.IMU1.read_linear_acceleration()
-        PodStatus.sensor_data['IMU1_X'] = tempIMU[0]
+        PodStatus.sensor_data['IMU1_X'] = tempIMU[0] / 32.174
     except IOError:
 
         PodStatus.sensor_data['IMU1_X'] = 99
