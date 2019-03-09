@@ -42,16 +42,11 @@ How to get sensor libraries and such for you Raspbery Pi
     To clone from github, first enter the desired destination in the terminal.
     
     ex:
-        cd /home/pi/HyperLoop
+        cd /home/pi/HyperLoop/HyperLynx2019
     
-    from there enter
-        
-        git clone "github link"
-    ex:
+    from there enter:
+
         git clone https://github.com/CUDenverHyperlynx/Sensor_libraries
-        
-    This would get you everything from our Sensor_libraries repository on your pi.
-    
         git clone https://github.com/CUDenverHyperlynx/Hyperlynx2019
     
     This would get you everything from our Hyperlynx2019 repository.
