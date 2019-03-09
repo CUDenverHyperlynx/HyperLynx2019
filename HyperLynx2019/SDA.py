@@ -139,7 +139,9 @@ class Status():
         abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12),
                                       dtype=float)
         for i in range(0, len(abort_names)):
-            self.sensor_data[str(abort_names[i])] = 0
+            if not str(abort_names[i]) in self.sensor_data:
+                self.sensor_data[abort_names[i]] = 0
+
             if abort_vals[i, 2] == 1:
                 self.abort_ranges[self.SafeToApproach][abort_names[i]] = {'Low': abort_vals[i, 0],
                                                     'High': abort_vals[i, 1],
@@ -170,7 +172,7 @@ class Status():
                                                                     'Trigger': abort_vals[i, 9],
                                                                     'Fault': abort_vals[i, 10]
                                                                     }
-        print(self.sensor_data)
+
 
         # Create Commands Dictionary from template file
         cmd_names = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
