@@ -123,7 +123,7 @@ class Status():
 
         # I2C init
         self.IMU1_addr = 0x28
-        self.IMU1 = BNO055.BNO055(None, IMU1_addr)
+        self.IMU1 = BNO055.BNO055(None, self.IMU1_addr)
         self.IMU1.begin()
 
         # DEBUG init for script:
@@ -237,7 +237,7 @@ def poll_sensors():
     except IOError:
         PodStatus.sensor_data['IMU1_X']['Fault'] = 1
         PodStatus.sensor_data['IMU1_X'] = 0
-    
+
 
 
     ### RPI DATA ###
