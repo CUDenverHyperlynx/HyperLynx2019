@@ -6,6 +6,7 @@ class Status:
     poll_raw_q = {'Brake_Pressure' : []}
     poll_filter = {'Brake_Pressure' : 0}
     moving_avg_count = 10
+    loop_speed = 0.000010
 
 def poll_sensors():
 
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     timer = time.clock()
     while True:
         poll_sensors()
-        time.sleep(0.000015)
+        time.sleep(PodStatus.loop_speed)
         if time.clock()-timer > 2:
             print(PodStatus.poll_raw_q['Brake_Pressure'])
             print(str(round(PodStatus.poll_filter['Brake_Pressure'],2)))
