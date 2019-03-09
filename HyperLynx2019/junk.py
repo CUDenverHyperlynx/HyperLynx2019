@@ -1,16 +1,17 @@
 ## test out the sensor polling
+# HI
 import numpy as np
 import time
 class Status:
     poll_raw = {'Brake_Pressure' : 0}
     poll_raw_q = {'Brake_Pressure' : []}
     poll_filter = {'Brake_Pressure' : 0}
-    moving_avg_count = 10
+    moving_avg_count = 20
     loop_speed = 0.000010
 
 def poll_sensors():
 
-    PodStatus.poll_raw['Brake_Pressure'] += 0.5*0.7*(time.clock()-timer)
+    PodStatus.poll_raw['Brake_Pressure'] += (0+(np.random.rand()))*(time.clock()-timer)
 
     for key in PodStatus.poll_raw_q:
         #print(str(len(PodStatus.poll_raw_q[str(key)])))
