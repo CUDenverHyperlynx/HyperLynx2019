@@ -82,6 +82,7 @@ class Status():
     abort_ranges[BrakingLow] = {}
     commands = {}               # Contains all possible inputs from GUI
     sensor_data = {}            # Contains all inputs from I2C/CAN buses
+    sensor_filter = {}
 
     poll_oldtime = 0    # Vars for poll_sensors for integrating distance from speed
     poll_newtime = 0
@@ -113,6 +114,8 @@ class Status():
         self.para_max_crawl_speed = -1  # [ft/s] Maximum crawling speed.  Init to -1 to allow
                                         # crew to set 0 speed for crawling state
 
+        self.filter_length = 20         # Moving average for sensor data filter
+
         # SPACEX CONFIG DATA
         self.spacex_state = 0
         self.spacex_team_id = 69
@@ -123,8 +126,11 @@ class Status():
 
         # I2C init
         self.IMU1_addr = 0x28
+        self.IMU2_addr = 0x29
         self.IMU1 = BNO055.BNO055(None, self.IMU1_addr)
+        self.IMU2 = BNO055.BNO055(None, self.IMU2_addr)
         self.IMU1.begin()
+        self.IMU2.begin()
 
         # DEBUG init for script:
         self.Quit = False
@@ -148,6 +154,8 @@ class Status():
         for i in range(0, len(abort_names)):
             if not str(abort_names[i]) in self.sensor_data:
                 self.sensor_data[abort_names[i]] = 0
+            if not str(abort_names[i]) in self.sensor_filter:
+                self.sensor_filter[abort_names[i]] = {'q': [], 'val': 0}
 
             if abort_vals[i, 2] == 1:
                 self.abort_ranges[self.SafeToApproach][abort_names[i]] = {'Low': abort_vals[i, 0],
@@ -227,17 +235,27 @@ def poll_sensors():
     ### CAN DATA ###
 
     ### I2C DATA ###
+    # IMU1
     try:
         PodStatus.orientation = PodStatus.IMU1.read_euler()
     except IOError:
         PodStatus.orientation = [0,0,0]
     try:
         tempIMU = PodStatus.IMU1.read_linear_acceleration()
-        PodStatus.sensor_data['IMU1_X'] = tempIMU[0] / 32.174
+        PodStatus.sensor_data['IMU1_X'] = tempIMU[0] / 32.174   # reads in [g]
     except IOError:
-
         PodStatus.sensor_data['IMU1_X'] = 99
 
+    # IMU2
+    try:
+        PodStatus.orientation = PodStatus.IMU2.read_euler()
+    except IOError:
+        PodStatus.orientation = [0,0,0]
+    try:
+        tempIMU = PodStatus.IMU2.read_linear_acceleration()
+        PodStatus.sensor_data['IMU2_X'] = tempIMU[0] / 32.174   # reads in [g]
+    except IOError:
+        PodStatus.sensor_data['IMU2_X'] = 99
 
 
     ### RPI DATA ###
@@ -250,7 +268,9 @@ def poll_sensors():
     PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
     PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
     temp = os.popen("vcgencmd measure_temp").readline()
-    PodStatus.sensor_data['RPi_Temp'] = temp.replace("temp=",'')
+    temp = temp.replace("temp=",'')
+    temp = temp.replace("'C",'')
+    PodStatus.sensor_data['RPi_Temp'] = temp
 
     ### SPACEX DATA ###
 
@@ -276,9 +296,22 @@ def poll_sensors():
     if PodStatus.MET > 0:
         PodStatus.MET = clock()-PodStatus.MET_starttime
 
+def filter_data():
+    """ Filters sensor data based on moving average.
+    """
+    for key in PodStatus.sensor_filter:
+        if len(PodStatus.sensor_filter[str(key)]['q']) < PodStatus.filter_length:
+            PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
+                                                                  PodStatus.sensor_data[str(key)])
+        else:
+            for i in range(0, (len(PodStatus.sensor_filter[str(key)]['q'])-1)):
+                PodStatus.sensor_filter[str(key)]['q'][i] = PodStatus.sensor_filter[str(key)]['q'][i+1];
+            PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)];
+            numpy.append(PodStatus.sensor_filter[str(key)]['val'], numpy.average(PodStatus.sensor_filter[str(key)]['q']))
 
-
-
+def sensor_fusion():
+    """ Combines various filtered sensor data to a common solution."""
+    pass
 
 def eval_abort():
     """
@@ -848,6 +881,8 @@ if __name__ == "__main__":
     while PodStatus.Quit == False:
         write_file()
         poll_sensors()
+        filter_data()
+        sensor_fusion()
         run_state()
         do_commands()
         eval_abort()
