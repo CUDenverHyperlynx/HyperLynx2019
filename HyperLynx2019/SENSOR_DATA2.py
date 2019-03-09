@@ -28,8 +28,8 @@ bus = smbus.SMBus(1)
 IR_ADDRESS = 0x5B
 BNO_ADDRESS_A = 0x28
 BNO_ADDRESS_B = 0x29
-BME280_ADDRESS_A = 0x77
-BME280_ADDRESS_B = 0x76
+#BME280_ADDRESS_A = 0x77
+#BME280_ADDRESS_B = 0x76
 
 PASC2PSI = 6894.757  #TO CONVERT PASCALS TO PSI
 METER2FEET = 3.281  #TO CONVERT METERS TO FEET
@@ -42,8 +42,8 @@ DATA_READ = 0.004 #time between readings, in seconds
 IR_Therm = MLX90614(IR_ADDRESS)
 IMU_Nose = BNO055.BNO055(None, BNO_ADDRESS_A)
 IMU_Tail = BNO055.BNO055(None, BNO_ADDRESS_B)
-PV1 = BME280(address=BME280_ADDRESS_A)
-PV2 = BME280(address=BME280_ADDRESS_B)
+#PV1 = BME280(address=BME280_ADDRESS_A)
+#PV2 = BME280(address=BME280_ADDRESS_B)
 """
 #For some brilliant reason the BME280 python library requires that
 #temp be read before pressure can be read as the read_raw_temp function
@@ -79,22 +79,22 @@ def sensorSetup():
     except IOError:
         print("ERROR CONNECTING TO MLX90614 AT 0X5B")
         return False
-    try:
-        bus.write_quick(BME280_ADDRESS_A)
-        print("BME280 PV1 Ready")
-        sleep(0.05)
-    except IOError:
-        print("ERROR CONNECTING TO BME280 AT 0x77")
-        return False
-    try:
-        bus.write_quick(BME280_ADDRESS_B)
-        print("BME280 PV2 Ready")
-        sleep(0.05)
-    except IOError:
-        print("ERROR CONNECTING TO BME280 AT 0x76")
-        return False
-    PV1.read_temperature()
-    PV2.read_temperature()
+    # #try:
+    #     bus.write_quick(BME280_ADDRESS_A)
+    #     print("BME280 PV1 Ready")
+    #     sleep(0.05)
+    # #except IOError:
+    #     print("ERROR CONNECTING TO BME280 AT 0x77")
+    #     return False
+    # try:
+    #     bus.write_quick(BME280_ADDRESS_B)
+    #     print("BME280 PV2 Ready")
+    #     sleep(0.05)
+    # except IOError:
+    #     print("ERROR CONNECTING TO BME280 AT 0x76")
+    #     return False
+    #PV1.read_temperature()
+    #PV2.read_temperature()
     return True
 
 """
@@ -182,26 +182,26 @@ def sensorData():
         except IOError:
             batt_temp.append(0)
             fault+=1
-        try:
-            pressure_1.append(PV1.read_pressure())
-        except IOError:
-            pressure_1.append(0)
-            fault+=1
-        try:
-            pressure_2.append(PV2.read_pressure())
-        except IOError:
-            pressure_2.append(0)
-            fault+=1
-        try:
-            PV1_temp.append(PV1.read_temperature())
-        except IOError:
-            PV1_temp.append(0)
-            fault+=1
-        try:
-            PV2_temp.append(PV2.read_temperature())
-        except IOError:
-            PV2_temp.append(0)
-            fault+=1
+        # try:
+        #     pressure_1.append(PV1.read_pressure())
+        # except IOError:
+        #     pressure_1.append(0)
+        #     fault+=1
+        # try:
+        #     pressure_2.append(PV2.read_pressure())
+        # except IOError:
+        #     pressure_2.append(0)
+        #     fault+=1
+        # try:
+        #     PV1_temp.append(PV1.read_temperature())
+        # except IOError:
+        #     PV1_temp.append(0)
+        #     fault+=1
+        # try:
+        #     PV2_temp.append(PV2.read_temperature())
+        # except IOError:
+        #     PV2_temp.append(0)
+        #     fault+=1
         sleep(DATA_READ)
     #Filter each list and store median value to be displayed
     pressureVessel_1 = medianFilter(pressure_1) / PASC2PSI
@@ -211,8 +211,8 @@ def sensorData():
     tailAcceleration = medianFilter(accel_2) * METER2FEET
     noseOrientation = (medianFilter(noseX), medianFilter(noseY), medianFilter(noseZ))
     tailOrientation = (medianFilter(tailX), medianFilter(tailY), medianFilter(tailZ))
-    PV1TEMP = medianFilter(PV1_temp)
-    PV2TEMP = medianFilter(PV2_temp)
+    # PV1TEMP = medianFilter(PV1_temp)
+    # PV2TEMP = medianFilter(PV2_temp)
 
     end = clock()
     runTime = start - end
@@ -220,7 +220,7 @@ def sensorData():
 
 if __name__ == '__main__':
     if(sensorSetup()):
-        sleep(0.5)
+        #sleep(0.5)
         error = 0
         attempts = 0
         while True:
@@ -228,8 +228,8 @@ if __name__ == '__main__':
             error += data[10]
             attempts += readings
             print("Battery Temp:\t%.2f C" % data[2])
-            print("PV1:\tPressure:\t%.2f psi\t" % data[0], "Temp:\t%.2f C" % data[7])
-            print("PV2:\tPressure:\t%.2f psi\t" % data[1], "Temp:\t%.2f C" % data[8])
+            # print("PV1:\tPressure:\t%.2f psi\t" % data[0], "Temp:\t%.2f C" % data[7])
+            # print("PV2:\tPressure:\t%.2f psi\t" % data[1], "Temp:\t%.2f C" % data[8])
             print("NOSE:\tAcceleration:\t%.2f ft/s^2" %data[3])
             print("X:\t%.2f\t" % data[5][0], "Y:\t%.2f\t" % data[5][1], "Z:\t%.2f" %data[5][2])
             print("Tail:\tAcceleration:\t%.2f ft/s^2" % data[4])
