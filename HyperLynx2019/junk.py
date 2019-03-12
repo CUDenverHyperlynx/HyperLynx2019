@@ -37,6 +37,6 @@ if __name__ == '__main__':
             print(str(round(PodStatus.poll_filter['Brake_Pressure'][length],3)))
         std_dev = np.std(PodStatus.poll_raw_q['Brake_Pressure'])
         error = std_dev / PodStatus.poll_filter['Brake_Pressure']
-        #print("Std dev: " + str(round(std_dev,3)))
-        print("% error: " + str(round(100*error,3)))
+        print("Std dev: " + str(std_dev))
+        print("% error: " + str(100*error))
         print("Total Time: " + str(time.clock()-timer))
