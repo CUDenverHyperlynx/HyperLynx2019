@@ -685,11 +685,16 @@ def run_state():
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
 
-        if PodStatus.speed > 0.5:       # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
+        if PodStatus.speed <= 0.5 and PodStatus.stopped_time <= 0:
+            PodStatus.stopped_time = clock()
+
+        if PodStatus.speed > 0.5:
+                                        # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
                                         # IF ERRANT SPEED VALUES > 0.5 WHILE ACTUALLY
                                         # STOPPED, COULD CAUSE EXCESSIVE DISCHARGE
                                         # OF RESERVOIRS AND LOSS OF BRAKE RETRACTION
                                         # ABILITY
+            PodStatus.stopped_time = 0              # RESET STOPPED TIME
             if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
                 print("Opening Vent Sol")
                 PodStatus.commands['Vent_Sol'] = 0
@@ -698,40 +703,27 @@ def run_state():
 
         # DO NOTHING ELSE UNTIL STOPPED
         # RECONFIGURE FOR CRAWLING
-        if PodStatus.speed < 0.5:
-            if PodStatus.stopped_time == -1:
-                timer = 0
-                PodStatus.stopped_time = clock()
-                PodStatus.commands['Vent_Sol'] = 0
-                print("Stopped at " + str(round(PodStatus.MET, 2)) + " MET; Holding for 2 seconds.")
-            else:
-                timer = clock() - PodStatus.stopped_time
-                print("Timer:\t" + str(round(timer,2))) # DEBUG PRINT LINE
 
-            if timer > 2:
-                if PodStatus.commands['Vent_Sol'] == 0:
-                    PodStatus.sensor_data['Brake_Pressure'] = 0 # DEBUG LINE
-                    PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
-                    print("Closing Vent Sol")
-                if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
-                    PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
-                    print("Opening Res#1, pausing for 2 seconds.")
-                    sleep(2)
-                    if PodStatus.sensor_data['Brake_Pressure'] < 177:
-                        print("Unable to achieve brake retraction pressure.")
-                        print("Sending Abort signal.")
-                        PodStatus.commands['Abort'] = 1
-                    else:
-                        print("Brakes retracted, closing Res1 solenoid.")
-                        PodStatus.commands['Res1_Sol'] = 0     # CLOSE RES#1 SOLENOID
-                        transition()
-                else:
-                    print("Why are you here?")
-                    print("Vent_Sol: " + str(PodStatus.Vent_Sol))
-                    print("Brake Pressure: " + str(PodStatus.sensor_data['Brake_Pressure']))
-                    x = input("1 to Abort, 2 to continue")
-                    if x == '1':
-                        PodStatus.Abort = True
+        ## RECONFIGURE FOR CRAWLING STATE
+
+        if PodStatus.speed < 0.5 and (clock() - PodStatus.stopped_time) > 5:
+            if PodStatus.commands['Vent_Sol'] == 0:
+                PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
+                print("Closing Vent Sol")
+            if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
+                PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
+                print("Opening Res#1, pausing for 2 seconds.")
+
+            else:
+                print("Waiting for pod to achieve braking pressure")
+                print("Vent_Sol: " + str(PodStatus.Vent_Sol))
+                print("Res1_Sol: " + str(PodStatus.Res1_Sol))
+                print("Brake Pressure: " + str(PodStatus.sensor_data['Brake_Pressure']))
+
+            if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] > 177:
+                print("Brakes retracted, closing Res1 solenoid.")
+                PodStatus.commands['Res1_Sol'] = 0  # CLOSE RES#1 SOLENOID
+                transition()
 
 
     # CRAWLING
