@@ -62,7 +62,7 @@ import socket, struct
 import numpy
 import datetime
 import os, psutil
-import smbus
+#import smbus
 from Adafruit_BNO055 import BNO055
 
 class Status():
@@ -127,7 +127,7 @@ class Status():
         # I2C init
         self.IMU1_addr = 0x28
         self.IMU2_addr = 0x29
-        self.IMU1 = BNO055.BNO055(None, self.IMU1_addr)
+        self.IMU1 = BNO055(None, self.IMU1_addr)
         self.IMU2 = BNO055.BNO055(None, self.IMU2_addr)
         self.IMU1.begin()
         self.IMU2.begin()
