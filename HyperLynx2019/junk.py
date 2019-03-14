@@ -1,42 +1,51 @@
 ## test out the sensor polling
 
-import numpy as np
+import numpy
 import time
 class Status:
-    poll_raw = {'Brake_Pressure' : 0}
-    poll_raw_q = {'Brake_Pressure' : []}
-    poll_filter = {'Brake_Pressure' : []}
-    moving_avg_count = 20
-    loop_speed = 0.000020
+
+    sensor_filter = {'Brake_Pressure': {'q':[]}}
+    sensor_data = {}
+    filter_length = 20
+    std_dev_mult = 1.5
 
 def poll_sensors():
+    for key in PodStatus.sensor_filter:
 
-    PodStatus.poll_raw['Brake_Pressure'] = 1000 + np.random.randint(-10,21)
+        # If queue is not full, fill queue
+        if len(PodStatus.sensor_filter[str(key)]['q']) < PodStatus.filter_length:
+            PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
+                                                                  PodStatus.sensor_data[str(key)])
+        # If queue is full, do this:
+        if len(PodStatus.sensor_filter[str(key)]['q']) == PodStatus.filter_length:
+            PodStatus.sensor_filter[str(key)]['std_dev'] = numpy.std(PodStatus.sensor_filter[str(key)]['q'])
+            PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
-    for key in PodStatus.poll_raw_q:
-        #print(str(len(PodStatus.poll_raw_q[str(key)])))
-        if len(PodStatus.poll_raw_q[str(key)]) < PodStatus.moving_avg_count:
-            #print("Adding to q\n")
-            PodStatus.poll_raw_q[str(key)] = np.append(PodStatus.poll_raw_q[str(key)], PodStatus.poll_raw[str(key)])
-        else:
-            #print("Shifting q\n")
-            for i in range(0, (len(PodStatus.poll_raw_q[str(key)])-1)):
-                PodStatus.poll_raw_q[str(key)][i] = PodStatus.poll_raw_q[str(key)][i+1];
-            PodStatus.poll_raw_q[str(key)][(PodStatus.moving_avg_count-1)] = PodStatus.poll_raw[str(key)];
-            np.append(PodStatus.poll_filter[str(key)], np.average(PodStatus.poll_raw_q[str(key)]))
+            # if new value is inside range of std_dev multiple(hence valid), then add to q
+            if abs(PodStatus.sensor_data[str(key)] - PodStatus.sensor_filter[str(key)]['mean']) <= \
+                    PodStatus.std_dev_mult * PodStatus.sensor_filter[str(key)]['std_dev']:
+                print("\tValid data.")
+                # shift q values over
+                for i in range(0, (len(PodStatus.sensor_filter[str(key)]['q']) - 1)):
+                    PodStatus.sensor_filter[str(key)]['q'][i] = PodStatus.sensor_filter[str(key)]['q'][i + 1]
+                # add new value to end of queue
+                PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length - 1)] = PodStatus.sensor_data[str(key)]
+            else:
+                print("NOT Valid data, skipping.")
+
+        # set the filtered value to the mean of the new queue
+        PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
 
 if __name__ == '__main__':
     PodStatus = Status()
-    timer = time.clock()
+
     while True:
+        PodStatus.sensor_data['Brake_Pressure'] = 1000 + numpy.random.randint(-10, 21)
+        print("\nNew data point: " + str(PodStatus.sensor_data['Brake_Pressure']))
         poll_sensors()
-        print(PodStatus.poll_raw_q['Brake_Pressure'])
-        length = len(PodStatus.poll_filter['Brake_Pressure'])
-        if length == PodStatus.moving_avg_count:
-            print(str(round(PodStatus.poll_filter['Brake_Pressure'][length],3)))
-        std_dev = np.std(PodStatus.poll_raw_q['Brake_Pressure'])
-        error = std_dev / PodStatus.poll_filter['Brake_Pressure']
-        print("Std dev: " + str(std_dev))
-        print("% error: " + str(100*error))
-        print("Total Time: " + str(time.clock()-timer))
+        if len(PodStatus.sensor_filter['Brake_Pressure']['q']) == PodStatus.filter_length:
+            #print("Std dev: " + str(PodStatus.sensor_filter['Brake_Pressure']['std_dev']))
+            print("Q: " + str(PodStatus.sensor_filter['Brake_Pressure']['q']))
+            print("Val: " + str(PodStatus.sensor_filter['Brake_Pressure']['val']))
+            time.sleep(1)

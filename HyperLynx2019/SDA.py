@@ -300,14 +300,26 @@ def filter_data():
     """ Filters sensor data based on moving average.
     """
     for key in PodStatus.sensor_filter:
+
+        # If queue is not full, fill queue
         if len(PodStatus.sensor_filter[str(key)]['q']) < PodStatus.filter_length:
             PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
                                                                   PodStatus.sensor_data[str(key)])
         else:
-            for i in range(0, (len(PodStatus.sensor_filter[str(key)]['q'])-1)):
-                PodStatus.sensor_filter[str(key)]['q'][i] = PodStatus.sensor_filter[str(key)]['q'][i+1];
-            PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)];
-            numpy.append(PodStatus.sensor_filter[str(key)]['val'], numpy.average(PodStatus.sensor_filter[str(key)]['q']))
+            PodStatus.sensor_filter[str(key)]['std_dev'] = numpy.std(PodStatus.sensor_filter[str(key)]['q'])
+            PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
+
+            # if new value is inside range of std_dev (hence valid), then add to q
+            if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['mean']) <= \
+                    PodStatus.sensor_filter[str(key)]['std_dev']:
+
+                # shift q values over
+                for i in range(0, (len(PodStatus.sensor_filter[str(key)]['q'])-1)):
+                    PodStatus.sensor_filter[str(key)]['q'][i] = PodStatus.sensor_filter[str(key)]['q'][i+1]
+                # add new value to end of queue
+                PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)]
+                # set the filtered value to the mean of the new queue
+                PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
 def sensor_fusion():
     """ Combines various filtered sensor data to a common solution."""
