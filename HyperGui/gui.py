@@ -2,17 +2,23 @@
 # For CUDenver HyperLynx Project 2019
 
 import sys
-from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow
+import random
+
+from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow, QTableWidgetItem
 from PyQt5.QtCore import *
+from PyQt5 import QtCore
 
-
-# ******* This is the GUI Class *******
 
 class HyperGui(QMainWindow):
     def __init__(self):
         super().__init__()
 
         self.init_ui()
+
+        # This is creating the thread with an interval that calls the function update_txt
+        self.timer = QtCore.QTimer(self)
+        self.timer.setInterval(100)
+        self.timer.timeout.connect(self.update_txt)
 
     def init_ui(self):
 
@@ -121,11 +127,17 @@ class HyperGui(QMainWindow):
         self.launch_bttn.resize(100, 100)
         self.launch_bttn.move(250, 120)
 
+        # When you click the launch button you start the thread
+        self.launch_bttn.clicked.connect(self.start)
+
         # ******* This is the ABORT button for the program (Need to change design) *******
         self.abort_bttn = QPushButton('ABORT', self)
         self.abort_bttn.setToolTip('This is a <b>ABORT</b> button')
         self.abort_bttn.resize(100, 100)
         self.abort_bttn.move(250, 230)
+
+        # When you click abort button you stop the thread
+        self.abort_bttn.clicked.connect(self.stop)
 
         # ******* This is the pod health table *******
 
@@ -168,6 +180,13 @@ class HyperGui(QMainWindow):
         # Sets the title of the window
         self.setWindowTitle('HyperLynx GUI')
 
+    # This function will start the thread
+    def start(self):
+        self.timer.start()
+
+    # This function will stop the thread
+    def stop(self):
+        self.timer.stop()
 
     # This function will handle when bv close button is clicked
     def bv_close_handler(self):
@@ -178,6 +197,22 @@ class HyperGui(QMainWindow):
     def bv_open_handler(self):
         self.bv_close.setEnabled(True)
         self.bv_open.setEnabled(False)
+
+    # This function is running on the thread separate from initializing the gui
+    def update_txt(self):
+        loop_cnt = 0
+
+        # Its arbitrary but if I did something like while True it breaks the GUI
+        while loop_cnt < 50:
+            # Random number generator
+            test_val = random.uniform(0, 3)
+
+            # Update the items of the environmental table
+            self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
+            self.env_table.setItem(0, 1, QTableWidgetItem(str(test_val)))
+            self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
+
+            loop_cnt += 1
 
 
 # ******* Running the main application *******
