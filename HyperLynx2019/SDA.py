@@ -437,6 +437,32 @@ def sensor_fusion():
     ### END VELOCITY FUSION
 
     ### BEGIN DISTANCE FUSION
+    PodStatus.true_data['D']['val'] = PodStatus.poll_interval * \
+        PodStatus.true_data['V']['val']
+    PodStatus.true_data['stripe_dist'] = numpy.maximum([PodStatus.sensor_data['LST_Left'],
+                                                    PodStatus.sensor_data['LST_Right']])
+
+    PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.true_data['stripe_dist']
+
+    if PodStatus.true_data['D']['val'] > 25:
+        temp_count = PodStatus.true_data['D']['val'] / 100
+        temp_dec = abs(temp_count - numpy.around(temp_count))
+        if temp_dec < 0.2 and PodStatus.D_diff > 20:
+            print("Looking for stripe")
+            if PodStatus.sensor_data['LST_Left'] == temp_count:
+                print("Left stripe counted!")
+                PodStatus.true_data['stripe_dist'] = PodStatus.sensor_data['LST_Left']
+                PodStatus.sensor_data['LST_Right'] = PodStatus.sensor_data['LST_Left']
+            elif PodStatus.sensor_data['LST_Right'] == temp_count:
+                print("Right stripe counted!")
+                PodStatus.true_data['stripe_dist'] = PodStatus.sensor_data['LST_Right']
+                PodStatus.sensor_data['LST_Left'] = PodStatus.sensor_data['LST_Right']
+            else:
+                print("No stripe counted, still waiting.")
+
+        else:
+            pass
+
 
     ### END DISTANCE FUSION
 
