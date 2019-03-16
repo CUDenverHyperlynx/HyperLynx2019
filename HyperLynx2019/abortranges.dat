@@ -65,7 +65,10 @@ IMU1_Z	-0.05	0.05	0	0	0	0	1	0	0	0	0
 IMU2_X	-0.05	0.05	0	0	0	0	1	0	0	0	0	
 IMU2_Y	-0.05	0.05	0	0	0	0	1	0	0	0	0	
 IMU2_Z	-0.05	0.05	0	0	0	0	1	0	0	0	0	
+IMU_bad_time_elapsed	-1	1	0	0	1	0	0	0	0	0	0	
+V_bad_time_elapsed	-1	1	0	0	1	0	0	1	0	0	0	
+LST_missed_stripe_count	-1	2	0	0	1	0	0	1	0	0	0	
 LIDAR	90	400	0	0	0	0	1	1	0	1	0	
-GUI_Conn	0.9	1.1	0	0	0	0	1		0	0	0	
-LST_Left	0	10	0	0	0	0	1		0	0	0	
-LST_Right	0	10	0	0	0	0	1		0	0	0	
+GUI_Conn	0.9	1.1	0	0	0	0	1	0	0	0	0	
+LST_Left	0	10	0	0	0	0	1	0	0	0	0	
+LST_Right	0	10	0	0	0	0	1	0	0	0	0	

@@ -83,13 +83,14 @@ class Status():
     commands = {}               # Contains all possible inputs from GUI
     sensor_data = {}            # Contains all inputs from I2C/CAN buses
     sensor_filter = {}
+    true_data = {}
 
     poll_oldtime = 0    # Vars for poll_sensors for integrating distance from speed
     poll_newtime = 0
     poll_interval = 0
 
     def __init__(self):        # BOOT INIT
-
+        self.init = False
         self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
         self.StartTime = clock()
         self.HV = 0                     # Current state of HV system (1 or 0)
@@ -125,15 +126,25 @@ class Status():
         self.spacex_lastsend = 0
 
         # I2C init
-        self.IMU1_addr = 0x28
-        self.IMU2_addr = 0x29
-        self.IMU1 = BNO055(None, self.IMU1_addr)
-        self.IMU2 = BNO055.BNO055(None, self.IMU2_addr)
-        self.IMU1.begin()
-        self.IMU2.begin()
+        self.IMU_init_range = 0.001
+        # self.IMU1_addr = 0x28
+        # self.IMU2_addr = 0x29
+        # self.IMU1 = BNO055(None, self.IMU1_addr)
+        # self.IMU2 = BNO055.BNO055(None, self.IMU2_addr)
+        # self.IMU1.begin()
+        # self.IMU2.begin()
 
         # DEBUG init for script:
         self.Quit = False
+        # Set filter on priority data:
+        self.filter_items = ['IMU1_X', 'IMU1_Y', 'IMU1_Z', 'IMU2_X', 'IMU2_Y',
+                             'IMU2_Z', 'LIDAR', 'Brake_Pressure',
+                             'SD_MotorData_MotorRPM']
+
+        # init True values for Distance, Velocity, and Acceleration, with moving average queue, true value, and dev
+        self.true_data = {'D': {'q': [], 'val': 0, 'std_dev': 0},
+                          'V': {'q': [], 'val': 0, 'std_dev': 0},
+                          'A': {'q': [], 'val': 0, 'std_dev': 0}}
 
         # Pod Abort conditions init:
         self.Fault = False
@@ -146,80 +157,89 @@ class Status():
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
-        # Create Abort Range and init sensor_data Dictionary from template file
-        abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
-                                       dtype=str)
-        abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12),
-                                      dtype=float)
-        for i in range(0, len(abort_names)):
-            if not str(abort_names[i]) in self.sensor_data:
-                self.sensor_data[abort_names[i]] = 0
-            if not str(abort_names[i]) in self.sensor_filter:
-                self.sensor_filter[abort_names[i]] = {'q': [], 'val': 0}
 
-            if abort_vals[i, 2] == 1:
-                self.abort_ranges[self.SafeToApproach][abort_names[i]] = {'Low': abort_vals[i, 0],
-                                                    'High': abort_vals[i, 1],
-                                                    'Trigger': abort_vals[i, 9],
-                                                    'Fault': abort_vals[i, 10]
-                                                    }
-            if abort_vals[i, 4] == 1:
-                self.abort_ranges[self.Launching][abort_names[i]] = {'Low': abort_vals[i, 0],
-                                                          'High': abort_vals[i, 1],
-                                                          'Trigger': abort_vals[i, 9],
-                                                          'Fault': abort_vals[i, 10]
-                                                          }
-            if abort_vals[i, 5] == 1:
-                self.abort_ranges[self.BrakingHigh][abort_names[i]] = {'Low': abort_vals[i, 0],
-                                                       'High': abort_vals[i, 1],
-                                                       'Trigger': abort_vals[i, 9],
-                                                       'Fault': abort_vals[i, 10]
-                                                       }
-            if abort_vals[i, 7] == 1:
-                self.abort_ranges[self.Crawling][abort_names[i]] = {'Low': abort_vals[i, 0],
-                                                         'High': abort_vals[i, 1],
-                                                         'Trigger': abort_vals[i, 9],
-                                                         'Fault': abort_vals[i, 10]
-                                                         }
-            if abort_vals[i, 8] == 1:
-                self.abort_ranges[self.BrakingLow][abort_names[i]] = {'Low': abort_vals[i, 0],
-                                                                    'High': abort_vals[i, 1],
-                                                                    'Trigger': abort_vals[i, 9],
-                                                                    'Fault': abort_vals[i, 10]
-                                                                    }
-
-
-        # Create Commands Dictionary from template file
-        cmd_names = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
-                                       dtype=str)
-        cmd_vals = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
-                                      dtype=int)
-        for i in range(0, len(cmd_names)):
-            self.commands[cmd_names[i]] = cmd_vals[i]
-
-        ### Create log file ###
-        date = datetime.datetime.today()
-        new_number = str(date.year) + str(date.month) + str(date.day) \
-                     + str(date.hour) + str(date.minute) + str(date.second)
-        self.file_name = 'log_' + new_number
-        file = open(os.path.join('logs/', self.file_name), 'a')
-        columns = [
-            'Label',
-            'Value',
-            'Fault',
-            'Time'
-        ]
-        with file:
-            file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
-            file.write("\n")
-        file.close()
-
-        ## Confirm boot info ##
-        print("Pod init complete, State: " + str(self.state))
-        print("Log file created: " + str(self.file_name))
 
     #debug
     sensor_data['Brake_Pressure'] = 178
+
+def init():
+    # Create Abort Range and init sensor_data Dictionary from template file
+    abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
+                                   dtype=str)
+    abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12),
+                                  dtype=float)
+    for i in range(0, len(abort_names)):
+        if not str(abort_names[i]) in PodStatus.sensor_data:
+            PodStatus.sensor_data[abort_names[i]] = 0
+        if not str(abort_names[i]) in PodStatus.sensor_filter:
+            PodStatus.sensor_filter[abort_names[i]] = {'q': [], 'val': 0, 'mean': 0, 'true': 0}
+
+        if abort_vals[i, 2] == 1:
+            PodStatus.abort_ranges[PodStatus.SafeToApproach][abort_names[i]] = {'Low': abort_vals[i, 0],
+                                                                      'High': abort_vals[i, 1],
+                                                                      'Trigger': abort_vals[i, 9],
+                                                                      'Fault': abort_vals[i, 10]
+                                                                      }
+        if abort_vals[i, 4] == 1:
+            PodStatus.abort_ranges[PodStatus.Launching][abort_names[i]] = {'Low': abort_vals[i, 0],
+                                                                 'High': abort_vals[i, 1],
+                                                                 'Trigger': abort_vals[i, 9],
+                                                                 'Fault': abort_vals[i, 10]
+                                                                 }
+        if abort_vals[i, 5] == 1:
+            PodStatus.abort_ranges[PodStatus.BrakingHigh][abort_names[i]] = {'Low': abort_vals[i, 0],
+                                                                   'High': abort_vals[i, 1],
+                                                                   'Trigger': abort_vals[i, 9],
+                                                                   'Fault': abort_vals[i, 10]
+                                                                   }
+        if abort_vals[i, 7] == 1:
+            PodStatus.abort_ranges[PodStatus.Crawling][abort_names[i]] = {'Low': abort_vals[i, 0],
+                                                                'High': abort_vals[i, 1],
+                                                                'Trigger': abort_vals[i, 9],
+                                                                'Fault': abort_vals[i, 10]
+                                                                }
+        if abort_vals[i, 8] == 1:
+            PodStatus.abort_ranges[PodStatus.BrakingLow][abort_names[i]] = {'Low': abort_vals[i, 0],
+                                                                  'High': abort_vals[i, 1],
+                                                                  'Trigger': abort_vals[i, 9],
+                                                                  'Fault': abort_vals[i, 10]
+                                                                  }
+
+    # Create Commands Dictionary from template file
+    cmd_names = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
+                                 dtype=str)
+    cmd_vals = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
+                                dtype=int)
+    for i in range(0, len(cmd_names)):
+        PodStatus.commands[cmd_names[i]] = cmd_vals[i]
+
+    print("Checking IMUs")
+    poll_sensors()
+    filter_data()
+
+    ## CHECK IMU INIT
+    if abs(PodStatus.sensor_filter['IMU1_X']['val']) < PodStatus.IMU_init_range and \
+            abs(PodStatus.sensor_filter['IMU2_X']['val']) < PodStatus.IMU_init_range:
+        print("Both IMUs valid.")
+        PodStatus.init = True
+    else:
+        print("IMU init failed.")
+
+    ### Create log file ###
+    date = datetime.datetime.today()
+    new_number = str(date.year) + str(date.month) + str(date.day) \
+                 + str(date.hour) + str(date.minute) + str(date.second)
+    PodStatus.file_name = 'log_' + new_number
+    file = open(os.path.join('logs/', PodStatus.file_name), 'a')
+    columns = ['Label','Value','Fault','Time']
+    with file:
+        file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
+        file.write("\n")
+    file.close()
+
+    ## Confirm boot info ##
+    print("Pod init complete, State: " + str(PodStatus.state))
+    print("Log file created: " + str(PodStatus.file_name))
 
 def poll_sensors():
     """
@@ -236,26 +256,29 @@ def poll_sensors():
 
     ### I2C DATA ###
     # IMU1
-    try:
-        PodStatus.orientation = PodStatus.IMU1.read_euler()
-    except IOError:
-        PodStatus.orientation = [0,0,0]
-    try:
-        tempIMU = PodStatus.IMU1.read_linear_acceleration()
-        PodStatus.sensor_data['IMU1_X'] = tempIMU[0] / 32.174   # reads in [g]
-    except IOError:
-        PodStatus.sensor_data['IMU1_X'] = 99
-
-    # IMU2
-    try:
-        PodStatus.orientation = PodStatus.IMU2.read_euler()
-    except IOError:
-        PodStatus.orientation = [0,0,0]
-    try:
-        tempIMU = PodStatus.IMU2.read_linear_acceleration()
-        PodStatus.sensor_data['IMU2_X'] = tempIMU[0] / 32.174   # reads in [g]
-    except IOError:
-        PodStatus.sensor_data['IMU2_X'] = 99
+    # try:
+    #     PodStatus.orientation = PodStatus.IMU1.read_euler()
+    # except IOError:
+    #     PodStatus.orientation = [0,0,0]
+    # try:
+    #     tempIMU = PodStatus.IMU1.read_linear_acceleration()
+    #     PodStatus.sensor_data['IMU1_X'] = tempIMU[0] / 32.174   # reads in [g]
+    # except IOError:
+    #     PodStatus.sensor_data['IMU1_X'] = 99
+    #
+    # # IMU2
+    # try:
+    #     PodStatus.orientation = PodStatus.IMU2.read_euler()
+    # except IOError:
+    #     PodStatus.orientation = [0,0,0]
+    # try:
+    #     tempIMU = PodStatus.IMU2.read_linear_acceleration()
+    #     PodStatus.sensor_data['IMU2_X'] = tempIMU[0] / 32.174   # reads in [g]
+    # except IOError:
+    #     PodStatus.sensor_data['IMU2_X'] = 99
+    ### DEBUG
+    PodStatus.sensor_filter['IMU1_X']['val'] = 0.0001
+    PodStatus.sensor_filter['IMU1_X']['val'] = 0.0001
 
 
     ### RPI DATA ###
@@ -267,10 +290,10 @@ def poll_sensors():
     PodStatus.sensor_data['RPi_Mem_Load'] = rpi_data2.percent
     PodStatus.sensor_data['RPi_Mem_Free'] = rpi_data2.free / 2 ** 20
     PodStatus.sensor_data['RPi_Mem_Used'] = rpi_data2.used / 2 ** 20
-    temp = os.popen("vcgencmd measure_temp").readline()
-    temp = temp.replace("temp=",'')
-    temp = temp.replace("'C",'')
-    PodStatus.sensor_data['RPi_Temp'] = temp
+    # temp = os.popen("vcgencmd measure_temp").readline()
+    # temp = temp.replace("temp=",'')
+    # temp = temp.replace("'C",'')
+    # PodStatus.sensor_data['RPi_Temp'] = temp
 
     ### SPACEX DATA ###
 
@@ -299,31 +322,125 @@ def poll_sensors():
 def filter_data():
     """ Filters sensor data based on moving average.
     """
-    for key in PodStatus.sensor_filter:
+    ### Search all sensor_data points
+    for key in PodStatus.sensor_data:
 
-        # If queue is not full, fill queue
-        if len(PodStatus.sensor_filter[str(key)]['q']) < PodStatus.filter_length:
-            PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
-                                                                  PodStatus.sensor_data[str(key)])
-        else:
-            PodStatus.sensor_filter[str(key)]['std_dev'] = numpy.std(PodStatus.sensor_filter[str(key)]['q'])
-            PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
+        ### Refine search to just priority items specified in PodStatus.init()
+        if key in PodStatus.filter_items:
 
-            # if new value is inside range of std_dev (hence valid), then add to q
-            if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['mean']) <= \
-                    PodStatus.sensor_filter[str(key)]['std_dev']:
+            # If queue is not full, fill queue
+            if len(PodStatus.sensor_filter[str(key)]['q']) < PodStatus.filter_length:
+                PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
+                                                                      PodStatus.sensor_data[str(key)])
+            else:
+                PodStatus.sensor_filter[str(key)]['std_dev'] = numpy.std(PodStatus.sensor_filter[str(key)]['q'])
+                PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
-                # shift q values over
-                for i in range(0, (len(PodStatus.sensor_filter[str(key)]['q'])-1)):
-                    PodStatus.sensor_filter[str(key)]['q'][i] = PodStatus.sensor_filter[str(key)]['q'][i+1]
-                # add new value to end of queue
-                PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)]
-                # set the filtered value to the mean of the new queue
-                PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
+                # if new value is inside range of std_dev (hence valid), then add to q
+                if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['mean']) <= \
+                        PodStatus.sensor_filter[str(key)]['std_dev']:
+
+                    # shift q values over
+                    for i in range(0, (len(PodStatus.sensor_filter[str(key)]['q'])-1)):
+                        PodStatus.sensor_filter[str(key)]['q'][i] = PodStatus.sensor_filter[str(key)]['q'][i+1]
+                    # add new value to end of queue
+                    PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)]
+                    # set the filtered value to the mean of the new queue
+                    PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
 def sensor_fusion():
     """ Combines various filtered sensor data to a common solution."""
-    pass
+
+    ### BEGIN ACCELERATION FUSION
+    # If queue is not full, fill queue
+    good_IMUs = []  # reset good_IMUs to empty set
+    if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
+        # Add mean of IMU values to
+        PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
+                                                              numpy.mean(PodStatus.sensor_filter['IMU1_X']['val'],
+                                                                         PodStatus.sensor_filter['IMU2_X']['val']))
+    else:
+        PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
+
+        # determine valid IMU data
+        # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
+        if abs(PodStatus.sensor_filter['IMU1_X']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
+                2 * PodStatus.true_data['A']['std_dev']:
+            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_X']['val'])
+        if abs(PodStatus.sensor_filter['IMU2_X']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
+                2 * PodStatus.true_data['A']['std_dev']:
+            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_X']['val'])
+
+        # if good_IMUs is not empty set, take mean value and add to true_data q
+        if good_IMUs:
+            print("Good data found for A")
+            # reset IMU_bad_time timer
+            PodStatus.IMU_bad_time_elapsed = 0
+            PodStatus.IMU_bad_time = None
+
+            # Set true value to mean of good_IMUs array
+            PodStatus.true_data['A']['val'] = numpy.mean(good_IMUs)
+
+            # add valid data to true_data q
+            # shift q values over
+            for i in range(0, (len(PodStatus.true_data['A']['q']) - 1)):
+                PodStatus.true_data['A']['q'][i] = PodStatus.true_data['A']['q'][i + 1]
+            # add new value to end of queue
+            PodStatus.true_data['A']['q'][(PodStatus.filter_length - 1)] = PodStatus.true_data['A']['val']
+
+        # if no good IMU data, start or progress the bad IMU data timer
+        else:
+            if not PodStatus.IMU_bad_time:
+                PodStatus.IMU_bad_time = clock()
+                print("Bad IMU data, starting 1 second clock at " + str(PodStatus.IMU_bad_time))
+
+            else:
+                PodStatus.IMU_bad_time_elapsed = clock()-PodStatus.IMU_bad_time
+                print("Bad IMU data, elapsed time: " + str(PodStatus.IMU_bad_time_elapsed))
+
+
+    ### END ACCELERATION FUSION
+
+    ### BEGIN VELOCITY FUSION
+    # If queue is not full, fill queue
+    if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
+        # Add mean of IMU values to
+        PodStatus.true_data['V']['q'] = numpy.append(PodStatus.true_data['V']['q'],
+                                                     PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'])
+
+    else:
+        # Estimate new velocity
+        Vdr = PodStatus.poll_interval * PodStatus.true_data['A']['val']
+
+        # Set std_dev
+        PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
+
+        # Evaluate new data compared to true q and std dev
+        if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
+                2 * PodStatus.true_data['V']['std_dev']:
+            PodStatus.V_bad_time_elapsed = 0
+            PodStatus.V_bad_time = None
+            PodStatus.true_data['V']['val'] = PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val']
+
+        # if new data is invalid:
+        else:
+            # RUN TRACTION CONTROL FUNCTION
+
+            # Start or progress bad V data timer
+            if not PodStatus.V_bad_time:
+                PodStatus.V_bad_time = clock()
+                print("Bad V data, starting clock at " + str(PodStatus.IMU_bad_time))
+
+            else:
+                PodStatus.V_bad_time_elapsed = clock()-PodStatus.V_bad_time
+                print("Bad V data, elapsed time: " + str(PodStatus.V_bad_time_elapsed))
+    ### END VELOCITY FUSION
+
+    ### BEGIN DISTANCE FUSION
+
+    ### END DISTANCE FUSION
+
+
 
 def eval_abort():
     """
@@ -348,15 +465,29 @@ def eval_abort():
     """
 
     for key in PodStatus.abort_ranges[PodStatus.state]:     # Search abort_ranges dict for current state
-        # if out of range, log 'Fault' key as 1
-        if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.state][str(key)]['Low'] \
-                or PodStatus.sensor_data[str(key)] > PodStatus.abort_ranges[PodStatus.state][str(key)]['High']:
-            ### DEBUG PRINT
-            print("Pod Fault!\tSensor: " + str(key))
-            print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
-            print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['Low']) +
-                  " to " + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['High']))
-            PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] = 1
+        # if data is not being filtered, record abort criteria based on raw
+        if not key in PodStatus.sensor_filter[str(key)]:
+            # if out of range, log 'Fault' key as 1
+            if PodStatus.sensor_data[str(key)] < PodStatus.abort_ranges[PodStatus.state][str(key)]['Low'] \
+                    or PodStatus.sensor_data[str(key)] > PodStatus.abort_ranges[PodStatus.state][str(key)]['High']:
+                ### DEBUG PRINT
+                print("Pod Fault!\tSensor: " + str(key))
+                print("Value:\t" + str(PodStatus.sensor_data[str(key)]))
+                print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['Low']) +
+                      " to " + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['High']))
+                PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] = 1
+        # if data is being filtered, record abort criteria based on filtered data
+        else:
+            # if out of range, log 'Fault' key as 1
+            if PodStatus.sensor_filter[str(key)]['val'] < PodStatus.abort_ranges[PodStatus.state][str(key)]['Low'] \
+                    or PodStatus.sensor_filter[str(key)]['val'] > PodStatus.abort_ranges[PodStatus.state][str(key)]['High']:
+                ### DEBUG PRINT
+                print("Pod Fault!\tSensor: " + str(key))
+                print("Value:\t" + str(PodStatus.sensor_filter[str(key)]['val']))
+                print("Range:\t" + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['Low']) +
+                      " to " + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['High']))
+                PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] = 1
+
 
     PodStatus.total_triggers = 0
     PodStatus.total_faults = 0      # Reset total_fault count to 0 each loop
@@ -682,6 +813,11 @@ def run_state():
             print("Pod has exceeded max time.")
             transition()
 
+        # TRANSITIONS FOR BAD DATA
+        if PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
+            print("Transition for bad IMU data.")
+            transition()
+
 
     # COAST (NOT USED)
     elif PodStatus.state == 4:
@@ -881,6 +1017,11 @@ def write_file():
 if __name__ == "__main__":
 
     PodStatus = Status()
+    init()
+
+    if PodStatus.init == False:
+        PodStatus.Quit = True
+        print("Failed to init.")
 
     while PodStatus.Quit == False:
         write_file()
