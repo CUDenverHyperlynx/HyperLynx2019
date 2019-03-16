@@ -115,6 +115,9 @@ class Status():
         self.para_max_crawl_speed = -1  # [ft/s] Maximum crawling speed.  Init to -1 to allow
                                         # crew to set 0 speed for crawling state
 
+        self.IMU_bad_time = None
+        self.V_bad_time = None
+
         self.filter_length = 20         # Moving average for sensor data filter
 
         # SPACEX CONFIG DATA
@@ -218,6 +221,7 @@ def init():
     filter_data()
 
     ## CHECK IMU INIT
+
     if abs(PodStatus.sensor_filter['IMU1_X']['val']) < PodStatus.IMU_init_range and \
             abs(PodStatus.sensor_filter['IMU2_X']['val']) < PodStatus.IMU_init_range:
         print("Both IMUs valid.")
@@ -357,8 +361,8 @@ def sensor_fusion():
     if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
         # Add mean of IMU values to
         PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
-                                                              numpy.mean(PodStatus.sensor_filter['IMU1_X']['val'],
-                                                                         PodStatus.sensor_filter['IMU2_X']['val']))
+                                                              numpy.mean([PodStatus.sensor_filter['IMU1_X']['val'],
+                                                                         PodStatus.sensor_filter['IMU2_X']['val']]))
     else:
         PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
 
@@ -439,8 +443,9 @@ def sensor_fusion():
     ### BEGIN DISTANCE FUSION
     PodStatus.true_data['D']['val'] = PodStatus.poll_interval * \
         PodStatus.true_data['V']['val']
-    PodStatus.true_data['stripe_dist'] = numpy.maximum([PodStatus.sensor_data['LST_Left'],
-                                                    PodStatus.sensor_data['LST_Right']])
+
+    PodStatus.true_data['stripe_dist'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
+                                                    PodStatus.sensor_data['LST_Right'])
 
     PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.true_data['stripe_dist']
 

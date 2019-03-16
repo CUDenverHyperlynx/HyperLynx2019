@@ -47,8 +47,8 @@ LVBatt_Current	0	10	0	0	0	0	1	0	0	0	0
 LVBatt_Voltage	10.8	13.5	0	0	0	0	1	1	0	1	0	
 RPi_Temp	0	70	1	0	1	1	1	0	0	0	0	
 RPi_Proc_Load	0	100	1	0	1	1	1	0	0	0	0	
-RPi_Disk_Space_Used	0	15000	1	0	1	1	0	0	0	0	0	MB
-RPi_Disk_Space_Free	1000	16000	1	0	1	1	1	1	1	0	0	MB
+RPi_Disk_Space_Used	0	15000	0	0	1	1	0	0	0	0	0	MB
+RPi_Disk_Space_Free	1000	16000	0	0	1	1	1	1	1	0	0	MB
 RPi_Mem_Free	0	0	0	0	1	1	0	0	0	0	0	
 RPi_Mem_Used	0	0	0	0	1	1	0	0	0	0	0	
 RPi_Mem_Load	0	80	1	0	1	1	1	0	0	0	0	
@@ -67,7 +67,7 @@ IMU2_Y	-0.05	0.05	0	0	0	0	1	0	0	0	0
 IMU2_Z	-0.05	0.05	0	0	0	0	1	0	0	0	0	
 IMU_bad_time_elapsed	-1	1	0	0	1	0	0	0	0	0	0	
 V_bad_time_elapsed	-1	1	0	0	1	0	0	1	0	0	0	
-LST_missed_stripe_count	-1	2	0	0	1	0	0	1	0	0	0	
+D_diff	-1	220	0	0	1	0	0	1	0	0	0	
 LIDAR	90	400	0	0	0	0	1	1	0	1	0	
 GUI_Conn	0.9	1.1	0	0	0	0	1	0	0	0	0	
 LST_Left	0	10	0	0	0	0	1	0	0	0	0	
