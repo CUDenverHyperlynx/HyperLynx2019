@@ -19,17 +19,22 @@ bus = smbus.SMBus(1)
 try:
     bus.write_quick(ADDR)
 except:
-	while True:
-		print("ERROR")
+    print("ERROR")
 #Start continuous conversions on A0   
-ADC.start_adc(0, gain=1)
+#ADC.start_adc(0, gain=1)
 
 if __name__ == '__main__':
     while True:
-		try:
-			data = (ADC.get_last_result()/CONVERT)
-		except IOError:
-			data = 0
+        try:
+            #READ SINGLE VOLTAGE ON A0
+            volt = (ADC.read_adc(0, 1) / CONVERT)
+        except IOError:
+            volt = 0
+        try:
+            #READ SINGLE CURRENT ON A1
+            amps = (ADC.read_adc(1, 1) / CONVERT)
+        except IOError:
+            amps = 0
         
-		print(data)
-		sleep(0.1)
+        print("%.2f V\t" % volt, "%.2f A" % amps)
+        sleep(0.1)
