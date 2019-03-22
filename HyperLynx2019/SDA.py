@@ -139,6 +139,7 @@ class Status():
 
         # DEBUG init for script:
         self.Quit = False
+
         # Set filter on priority data:
         self.filter_items = ['IMU1_X', 'IMU1_Y', 'IMU1_Z', 'IMU2_X', 'IMU2_Y',
                              'IMU2_Z', 'LIDAR', 'Brake_Pressure',
@@ -940,6 +941,9 @@ def run_state():
             transition()
 
     else:
+        PodStatus.state = PodStatus.BrakingLow
+        
+        #DEBUG
         print("Invalid pod state found: " + str(PodStatus.state))
         print("Quitting")
         PodStatus.Fault = True
