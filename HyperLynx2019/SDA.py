@@ -112,6 +112,7 @@ class Status():
         self.para_max_speed = 0         # [ft/s] Maximum pod speed for braking point
         self.para_max_time = 0          # [s] Maximum time of flight for braking point
         self.para_BBP = 0               # [ft] Maximum distance traveled for braking point
+        self.para_max_tube_length = 0   # [ft] Max track length
         self.para_max_crawl_speed = -1  # [ft/s] Maximum crawling speed.  Init to -1 to allow
                                         # crew to set 0 speed for crawling state
 
