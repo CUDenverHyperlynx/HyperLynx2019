@@ -157,7 +157,7 @@ class Status():
         # INITIATE STATE TO S2A
         self.state = self.SafeToApproach
 
-        #INITIATE LOG RATE INFO
+        # INITIATE LOG RATE INFO
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
@@ -170,8 +170,7 @@ def init():
     # Create Abort Range and init sensor_data Dictionary from template file
     abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                    dtype=str)
-    abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12),
-                                  dtype=float)
+    abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12))
     for i in range(0, len(abort_names)):
         if not str(abort_names[i]) in PodStatus.sensor_data:
             PodStatus.sensor_data[abort_names[i]] = 0
@@ -518,7 +517,6 @@ def eval_abort():
                       " to " + str(PodStatus.abort_ranges[PodStatus.state][str(key)]['High']))
                 PodStatus.abort_ranges[PodStatus.state][str(key)]['Fault'] = 1
 
-
     PodStatus.total_triggers = 0
     PodStatus.total_faults = 0      # Reset total_fault count to 0 each loop
     # Sum total number of faults for this state
@@ -541,7 +539,7 @@ def eval_abort():
         print("FLAGGING ABORT == TRUE")
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
 
-    if PodStatus.Abort == True:
+    if PodStatus.Abort is True:
         PodStatus.commands['Abort'] = 1
         abort()
 
@@ -686,7 +684,7 @@ def do_commands():
             abort()
 
         # Allows crew to reset Abort flag.  ONLY way to reset Abort flag.  Cannot be changed in-flight.
-        elif PodStatus.commands['Abort'] == 0 and PodStatus.Abort == True:
+        elif PodStatus.commands['Abort'] == 0 and PodStatus.Abort is True:
             PodStatus.Abort = False
             print("Resetting Abort flag to False")
 
@@ -752,7 +750,7 @@ def do_commands():
 
     else:
         # Load ONLY abort command
-        if PodStatus.commands['Abort'] == True:
+        if PodStatus.commands['Abort'] is True:
             abort()
 
 def spacex_data():
@@ -794,10 +792,10 @@ def run_state():
     # S2A STATE
     if PodStatus.state == 1:
         # Determine if SpaceX state = 1 (S2A) or 2 (Ready to Launch)
-        if (PodStatus.Fault == False and
-            PodStatus.Abort == False and
-            PodStatus.HV == True and
-            PodStatus.Brakes == False and
+        if (PodStatus.Fault is False and
+            PodStatus.Abort is False and
+            PodStatus.HV is True and
+            PodStatus.Brakes is False and
             PodStatus.para_BBP > 0 and
             PodStatus.para_max_accel > 0 and
             PodStatus.para_max_speed > 0 and
@@ -1052,11 +1050,11 @@ if __name__ == "__main__":
     PodStatus = Status()
     init()
 
-    if PodStatus.init == False:
+    if PodStatus.init is False:
         PodStatus.Quit = True
         print("Failed to init.")
 
-    while PodStatus.Quit == False:
+    while PodStatus.Quit is False:
         write_file()
         poll_sensors()
         filter_data()
