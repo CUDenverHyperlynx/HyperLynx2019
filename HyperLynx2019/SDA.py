@@ -216,6 +216,15 @@ def init():
     for i in range(0, len(cmd_names)):
         PodStatus.commands[cmd_names[i]] = cmd_vals[i]
 
+    cmd_int = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
+                               dtype=str)
+    cmd_ext = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
+                               dtype=str)
+    cmd_intval = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
+                                  dtype=int)
+    cmd_extval = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
+                                  dtype=int)
+
     print("Checking IMUs")
     poll_sensors()
     filter_data()
