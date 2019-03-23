@@ -56,7 +56,7 @@
    John Brenner & Jeff Stanek
 '''
 
-# from argparse import ArgumentParser
+#from argparse import ArgumentParser
 from time import sleep, clock
 import socket, struct
 import numpy
@@ -362,8 +362,8 @@ def sensor_fusion():
     if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
         # Add mean of IMU values to
         PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
-                                                              numpy.mean([PodStatus.sensor_filter['IMU1_X']['val'],
-                                                                         PodStatus.sensor_filter['IMU2_X']['val']]))
+                                        numpy.mean([PodStatus.sensor_filter['IMU1_X']['val'],
+                                                    PodStatus.sensor_filter['IMU2_X']['val']]))
     else:
         PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
 
@@ -471,8 +471,6 @@ def sensor_fusion():
 
 
     ### END DISTANCE FUSION
-
-
 
 def eval_abort():
     """
