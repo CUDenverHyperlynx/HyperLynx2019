@@ -63,7 +63,7 @@ import numpy
 import datetime
 import os, psutil
 #import smbus
-from Adafruit_BNO055 import BNO055
+#from Adafruit_BNO055 import BNO055
 
 class Status():
     # Definition of State Numbers

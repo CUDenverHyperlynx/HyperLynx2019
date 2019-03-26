@@ -11,6 +11,10 @@ from PyQt5 import QtCore
 
 # GUI class
 class HyperGui(QMainWindow):
+    cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
+
+    start_flg = 0
+
     # ******* Constructor for the class *******
     def __init__(self):
         super().__init__()
@@ -225,6 +229,8 @@ class HyperGui(QMainWindow):
     # This function will start the thread
     def start(self):
         self.timer.start()
+        # self.start_flg = 1
+        self.print_values()
 
     # This function will stop the thread
     def stop(self):
@@ -305,6 +311,18 @@ class HyperGui(QMainWindow):
             self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
             loop_cnt += 1
+
+    # This function will print to the log the values of the cmd_ext dictionary
+    def print_values(self):
+        # This checks if the start flag is 1
+        while self.start_flg == 1:
+            print('Abort: ', self.cmd_ext['abort'])
+            print('HV: ', self.cmd_ext['hv'])
+            print('Vent_Sol: ', self.cmd_ext['vent_sol'])
+            print('Res1_Sol: ', self.cmd_ext['res1_sol'])
+            print('Res2_Sol: ', self.cmd_ext['res2_sol'])
+            print('Mc_pump: ', self.cmd_ext['mc_pump'])
+            print('')
 
 
 # ******* Running the main application *******
