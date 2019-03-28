@@ -4,7 +4,8 @@
 import sys
 import random
 
-from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow, \
+    QTableWidgetItem
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
@@ -12,8 +13,6 @@ from PyQt5 import QtCore
 # GUI class
 class HyperGui(QMainWindow):
     cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
-
-    start_flg = 0
 
     # ******* Constructor for the class *******
     def __init__(self):
@@ -28,7 +27,6 @@ class HyperGui(QMainWindow):
 
     # ******* This class will only initialize the gui *******
     def init_ui(self):
-
         # ******* This is the gui status text for the program (Need to change design) *******
         self.gui_status = QTextEdit('<b>Live</b>', self)
         self.gui_status.setReadOnly(True)
@@ -182,6 +180,15 @@ class HyperGui(QMainWindow):
         # When you click abort button you stop the thread
         self.abort_bttn.clicked.connect(self.stop)
 
+        # ******* This is the log text box *******
+
+        # Creating the Log Text box
+        self.log_txt = QTextEdit('<b>Console Log</b>', self)
+        self.log_txt.setAlignment(Qt.AlignCenter)
+        self.log_txt.setReadOnly(True)
+        self.log_txt.resize(350, 350)
+        self.log_txt.move(550, 5)
+
         # ******* This is the pod health table *******
 
         # Creating the Pod Health text
@@ -189,7 +196,7 @@ class HyperGui(QMainWindow):
         self.pod_hlth_txt.setAlignment(Qt.AlignCenter)
         self.pod_hlth_txt.setReadOnly(True)
         self.pod_hlth_txt.resize(325, 30)
-        self.pod_hlth_txt.move(900, 5)
+        self.pod_hlth_txt.move(950, 5)
 
         # Creating the table for Pod Health
         self.pod_hlth_table = QTableWidget(self)
@@ -197,7 +204,7 @@ class HyperGui(QMainWindow):
         self.pod_hlth_table.setColumnCount(3)
         self.pod_hlth_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
         self.pod_hlth_table.resize(325, 380)
-        self.pod_hlth_table.move(900, 35)
+        self.pod_hlth_table.move(950, 35)
         self.pod_hlth_table.resizeRowsToContents()
 
         # ******* This is the Environmentals table *******
@@ -207,7 +214,7 @@ class HyperGui(QMainWindow):
         self.env_txt.setAlignment(Qt.AlignCenter)
         self.env_txt.setReadOnly(True)
         self.env_txt.resize(321, 30)
-        self.env_txt.move(900, 420)
+        self.env_txt.move(950, 420)
 
         # Creating the table for Environmentals
         self.env_table = QTableWidget(self)
@@ -215,7 +222,7 @@ class HyperGui(QMainWindow):
         self.env_table.setColumnCount(3)
         self.env_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
         self.env_table.resize(321, 295)
-        self.env_table.move(900, 450)
+        self.env_table.move(950, 450)
 
         # setGeometry has 4 values to pass in the first two are window position in relation to your computer (x, y)
         # the second two values are the size of the window itself (width, height)
@@ -229,8 +236,6 @@ class HyperGui(QMainWindow):
     # This function will start the thread
     def start(self):
         self.timer.start()
-        # self.start_flg = 1
-        self.print_values()
 
     # This function will stop the thread
     def stop(self):
@@ -310,19 +315,13 @@ class HyperGui(QMainWindow):
             self.env_table.setItem(0, 1, QTableWidgetItem(str(test_val)))
             self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
+            self.log_txt.append('Abort: ' + str(self.cmd_ext['abort']) + '\n'
+                                + 'HV: ' + str(self.cmd_ext['hv']) + '\n'
+                                + 'Vent_Sol: ' + str(self.cmd_ext['vent_sol']) + '\n'
+                                + 'Res1_Sol: ' + str(self.cmd_ext['res1_sol']) + '\n'
+                                + 'Res2_Sol: ' + str(self.cmd_ext['res2_sol']) + '\n'
+                                + 'Mc_pump: ' + str(self.cmd_ext['mc_pump']) + '\n')
             loop_cnt += 1
-
-    # This function will print to the log the values of the cmd_ext dictionary
-    def print_values(self):
-        # This checks if the start flag is 1
-        while self.start_flg == 1:
-            print('Abort: ', self.cmd_ext['abort'])
-            print('HV: ', self.cmd_ext['hv'])
-            print('Vent_Sol: ', self.cmd_ext['vent_sol'])
-            print('Res1_Sol: ', self.cmd_ext['res1_sol'])
-            print('Res2_Sol: ', self.cmd_ext['res2_sol'])
-            print('Mc_pump: ', self.cmd_ext['mc_pump'])
-            print('')
 
 
 # ******* Running the main application *******
