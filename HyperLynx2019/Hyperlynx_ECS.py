@@ -57,6 +57,11 @@ class HyperlynxECS():
 		self.closeAllBus()												#RESET TCA9548A MULTIPLEXER TO CLOSE ALL CHANNELS AT STARTUP
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
+		self.IO.setup(self.greenPIN, self.IO.OUT, initial=self.IO.LOW)	#SET GREEN LED PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.redPIN, self.IO.OUT, initial=self.IO.LOW)	#SET RED LED PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.HIGH)
+		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)
+		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)
 		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
 		self.tcaLIDAR = 0												#TCA CHANNEL FOR LIDAR
 		self.tcaNOSE = 1												#TCA CHANNEL FOR NOSE AVIONICS
@@ -309,6 +314,25 @@ class HyperlynxECS():
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
 		return data * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
+	
+	def initializeDROK():
+		self.IO.setup(self.greenPIN, self.IO.OUT, initial=self.IO.LOW)	#SET GREEN LED PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.redPIN, self.IO.OUT, initial=self.IO.LOW)	#SET RED LED PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.HIGH)	#SET NO SOLENOID PIN AS OUTPUT, INITIALIZE HIGH
+		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 1 PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 2 PIN AS OUTPUT, INITIALIZE LOW
+			
+	def switchGreenLED(self, status):
+		if(status == 1):
+			self.IO.output(self.greenPIN, self.IO.HIGH)
+		else:
+			self.IO.output(self.greenPIN, self.IO.LOW)
+			
+	def switchRedLED(self, status):
+		if(status == 1):
+			self.IO.output(self.redLED, self.IO.HIGH)
+		else:
+			self.IO.output(self.redLED, self.IO.LOW)
 				
 	
 		
