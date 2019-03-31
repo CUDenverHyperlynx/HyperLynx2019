@@ -57,11 +57,6 @@ class HyperlynxECS():
 		self.closeAllBus()												#RESET TCA9548A MULTIPLEXER TO CLOSE ALL CHANNELS AT STARTUP
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
-		self.IO.setup(self.greenPIN, self.IO.OUT, initial=self.IO.LOW)	#SET GREEN LED PIN AS OUTPUT, INITIALIZE LOW
-		self.IO.setup(self.redPIN, self.IO.OUT, initial=self.IO.LOW)	#SET RED LED PIN AS OUTPUT, INITIALIZE LOW
-		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.HIGH)
-		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)
-		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)
 		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
 		self.tcaLIDAR = 0												#TCA CHANNEL FOR LIDAR
 		self.tcaNOSE = 1												#TCA CHANNEL FOR NOSE AVIONICS
