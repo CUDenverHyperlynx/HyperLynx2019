@@ -217,7 +217,11 @@ def init():
     for i in range(0, len(cmd_names)):
         PodStatus.commands[cmd_names[i]] = cmd_vals[i]
 
-    # Need to build dictionaries, not arrays
+    cmd_int = {}
+    cmd_ext = {}
+    cmd_intval = {}
+    cmd_extval = {}
+
     cmd_int = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                dtype=str)
     cmd_ext = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
