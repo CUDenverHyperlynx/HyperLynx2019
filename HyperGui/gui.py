@@ -12,6 +12,7 @@ from PyQt5 import QtCore
 
 # GUI class
 class HyperGui(QMainWindow):
+    # Creating the dictionary
     cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
 
     # ******* Constructor for the class *******
@@ -164,18 +165,18 @@ class HyperGui(QMainWindow):
 
         # ******* This is the LAUNCH button for the program (Need to change design) *******
         self.launch_bttn = QPushButton('LAUNCH', self)
-        self.launch_bttn.setToolTip('This is a <b>LAUNCH</b> button')
-        self.launch_bttn.resize(100, 100)
-        self.launch_bttn.move(250, 120)
+        self.launch_bttn.setToolTip('This is the <b>LAUNCH</b> button')
+        self.launch_bttn.resize(90, 90)
+        self.launch_bttn.move(250, 90)
 
         # When you click the launch button you start the thread
         self.launch_bttn.clicked.connect(self.start)
 
         # ******* This is the ABORT button for the program (Need to change design) *******
         self.abort_bttn = QPushButton('ABORT', self)
-        self.abort_bttn.setToolTip('This is a <b>ABORT</b> button')
-        self.abort_bttn.resize(100, 100)
-        self.abort_bttn.move(250, 230)
+        self.abort_bttn.setToolTip('This is the <b>ABORT</b> button')
+        self.abort_bttn.resize(90, 90)
+        self.abort_bttn.move(250, 180)
 
         # When you click abort button you stop the thread
         self.abort_bttn.clicked.connect(self.stop)
@@ -183,11 +184,11 @@ class HyperGui(QMainWindow):
         # ******* This is the log text box *******
 
         # Creating the Log Text box
-        self.log_txt = QTextEdit('<b>Console Log</b>', self)
-        self.log_txt.setAlignment(Qt.AlignCenter)
-        self.log_txt.setReadOnly(True)
-        self.log_txt.resize(350, 350)
-        self.log_txt.move(550, 5)
+        self.pd_val_txt = QTextEdit('<b>Pod Value</b>', self)
+        self.pd_val_txt.setAlignment(Qt.AlignCenter)
+        self.pd_val_txt.setReadOnly(True)
+        self.pd_val_txt.resize(150, 230)
+        self.pd_val_txt.move(550, 5)
 
         # ******* This is the pod health table *******
 
@@ -315,12 +316,6 @@ class HyperGui(QMainWindow):
             self.env_table.setItem(0, 1, QTableWidgetItem(str(test_val)))
             self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
-            self.log_txt.append('Abort: ' + str(self.cmd_ext['abort']) + '\n'
-                                + 'HV: ' + str(self.cmd_ext['hv']) + '\n'
-                                + 'Vent_Sol: ' + str(self.cmd_ext['vent_sol']) + '\n'
-                                + 'Res1_Sol: ' + str(self.cmd_ext['res1_sol']) + '\n'
-                                + 'Res2_Sol: ' + str(self.cmd_ext['res2_sol']) + '\n'
-                                + 'Mc_pump: ' + str(self.cmd_ext['mc_pump']) + '\n')
             loop_cnt += 1
 
 
