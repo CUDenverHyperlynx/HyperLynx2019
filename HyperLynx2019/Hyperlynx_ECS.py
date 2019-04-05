@@ -17,7 +17,7 @@ Purpose:	Test full ECS
 				ADS1115 at 0x48	gain = 1 (4.096V MAX)
 """
 import smbus
-from time import sleep
+from time import sleep, clock
 from mlx90614 import MLX90614
 from Adafruit_BNO055 import BNO055
 import Adafruit_ADS1x15
@@ -38,7 +38,7 @@ class HyperlynxECS():
 		self.LID_ADDR = 0x62											#I2C ADDRESS FOR LIDAR LITE V3
 		self.ADC_ADDR = 0x48											#I2C ADDRESS FOR ADS1115 ADC
 		self.METER2G = (3.28084/32.2)									#CONVERSION: METER TO FEET => FEET/G FOR ACCELERATION
-		self.VOLT2PSI = 59.761											#CONVERSION: VOLTS READ BY ADC TO PSI FOR HONEYWELL PRESSURE SENSOR
+		self.VOLT2PSI = 94.697											#CONVERSION: VOLTS READ BY ADC TO PSI FOR HONEYWELL PRESSURE SENSOR
 		self.PRESSURE = 2												#ADC PIN FOR HONEYWELL PRESSURE SENSOR
 		self.VOLT = 0													#ADC PIN FOR ATTOPILOT VOLTAGE READ
 		self.AMP = 1													#ADC PIN FOR ATTOPILOT CURRENT READ
@@ -46,6 +46,7 @@ class HyperlynxECS():
 		self.ADC_CONVERT = (4.096/32767.0)								#CONVERT ADC 16BIT SIGNED RESOLUTION TO VOLTAGE LEVEL FOR GAIN OF 1
 		self.vRatio = 4.13												#ATTOPILOT RATIO: VOLTAGE TRANSMITTED TO ACTUAL VOLTAGE READING
 		self.iRatio = 1													#ATTOPILOT RATIO: VOLTAGE TRANSMITTED TO ACTUAL CURRENT READING
+		self.PASC2PSI = (1/6894.757)
 		self.IO = RPi.GPIO												#INITIALIZE RPi.GPIO LIBRARY TO CONTROL DROK SWITCHES
 		self.NOsolPIN = 17												#DROK SIGNAL PIN FOR NORMALLY OPEN SOLENOID
 		self.NCsol1PIN = 27												#DROK SIGNAL PIN FOR NORMALLY CLOSED SOLENOID RESERVIOR 1
@@ -53,6 +54,7 @@ class HyperlynxECS():
 		self.CoolPumpPIN = 5											#DROK SIGNAL PIN FOR COOLANT PUMP
 		self.greenPIN = 6												#DROK SIGNAL PIN FOR GREEN LED
 		self.redPIN = 13												#DROK SIGNAL PIN FOR RED LED
+		self.contactorPIN = 18											#DROK SIGNAL PIN FOR CONTACTORS
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
 		self.closeAllBus()												#RESET TCA9548A MULTIPLEXER TO CLOSE ALL CHANNELS AT STARTUP
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
@@ -149,7 +151,7 @@ class HyperlynxECS():
 			except IOError:
 				data = [0, 0, 0]										#SETS AS ZEROS IF CANNOT CONNECT TO BNO055
 			return data
-		if(imu_num == 2):
+		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_euler()
 			except IOError:
@@ -171,7 +173,7 @@ class HyperlynxECS():
 			except IOError:
 				return 0
 			return data[0] * self.METER2G								#RETURNS ACCELERATION IN G'S
-		if(imu_num == 2):
+		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_linear_acceleration()
 			except IOError:
@@ -229,8 +231,8 @@ class HyperlynxECS():
 				data = self.BMER.read_pressure()						#FETCH PRESSURE
 			except IOError:
 				data = 0												#SETS AS ZERO IF CANNOT CONNECT TO BME
-			return data													#RETURNS PRESSURE IN PSI
-		if(vessel == 2):
+			return data	* self.PASC2PSI									#RETURNS PRESSURE IN PSI
+		elif(vessel == 2):
 			if(self.currentBus != self.tcaPVL):
 				try:
 					self.openBus(self.tcaPVL)
@@ -241,7 +243,7 @@ class HyperlynxECS():
 				data = self.BMEL.read_pressure()
 			except IOError:
 				data = 0
-			return data
+			return data * self.PASC2PSI
 		else:
 			print("Illegal vessel")
 			data = 0
@@ -259,7 +261,7 @@ class HyperlynxECS():
 			except IOError:
 				data = 0												#SETS AS ZERO IF CANNOT CONNECT TO BME
 			return data													#RETURNS TEMPERATURE IN DEGREES CELSIUS
-		if(vessel == 2):
+		elif(vessel == 2):
 			if(self.currentBus != self.tcaPVL):
 				try:
 					self.openBus(self.tcaPVL)
@@ -285,7 +287,7 @@ class HyperlynxECS():
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
 		return data * self.ADC_CONVERT * self.vRatio					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY ATTOPILOT AND SCALES TO VOLTAGE READ BY ATTOPILOT, RETURNS VOLTAGE
-	"""FETCH LV BATTERY CURRENT DRAW"""#DOES NOT WORK YET		
+	"""FETCH LV BATTERY CURRENT DRAW"""#DOES NOT WORK YET, SOURCING NEW SENSOR	
 	def getCurrentLevel(self):
 		if(self.currentBus != self.tcaPVR):
 			try:
@@ -296,7 +298,7 @@ class HyperlynxECS():
 			data = self.ADC.read_adc(self.AMP, self.ADC_GAIN)
 		except IOError:
 			data = 0
-		return data * self.ADC_CONVERT * self.iRATIO
+		return data * self.ADC_CONVERT * self.iRatio
 	"""FETCH BRAKE LINE PRESSURE"""	
 	def getBrakePressure(self):
 		if(self.currentBus != self.tcaPVR):
@@ -311,53 +313,86 @@ class HyperlynxECS():
 		return data * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
 	
 	def initializeDROK():
+		self.IO.setup(self.contactorPIN, self.IO.OUT, initial=self.IO.LOW)#SET CONTACTOR PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.greenPIN, self.IO.OUT, initial=self.IO.LOW)	#SET GREEN LED PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.redPIN, self.IO.OUT, initial=self.IO.LOW)	#SET RED LED PIN AS OUTPUT, INITIALIZE LOW
-		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.HIGH)	#SET NO SOLENOID PIN AS OUTPUT, INITIALIZE HIGH
+		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.LOW)	#SET NO SOLENOID PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 1 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 2 PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.coolPumpPIN, self.IO.OUT, initial=self.IO.LOW)#SET COOLANT PUMP PIN TO OUTPUT, INITIALIZE LOW
 			
 	def switchGreenLED(self, status):
-		if(status == 1):
-			self.IO.output(self.greenPIN, self.IO.HIGH)
-		else:
+		if(status == 0):
 			self.IO.output(self.greenPIN, self.IO.LOW)
+		else:
+			self.IO.output(self.greenPIN, self.IO.HIGH)
 			
 	def switchRedLED(self, status):
-		if(status == 1):
-			self.IO.output(self.redLED, self.IO.HIGH)
+		if(status == 0):
+			self.IO.output(self.redPIN, self.IO.LOW)
 		else:
-			self.IO.output(self.redLED, self.IO.LOW)
+			self.IO.output(self.redPIN, self.IO.HIGH)
+	
+	def switchNOSolenoid(self, status):
+		if(status == 0):
+			self.IO.output(self.NOsolPIN, self.IO.LOW)
+		else:
+			self.IO.output(self.NOsolPIN, self.IO.HIGH)
+			
+	def switchNCSolenoid(self, reservior, status):
+		if(reservior == 1):
+			if(status == 0):
+				self.IO.output(self.NCsol1PIN, self.IO.LOW)
+			else:
+				self.IO.output(self.NCsol1PIN, self.IO.HIGH)
+		elif(reservior == 2):
+			if(status == 0):
+				self.IO.output(self.NCsol2PIN, self.IO.LOW)
+			else:
+				self.IO.output(self.NCsol2PIN, self.IO.HIGH)
+				
+	def switchCoolantPump(self, status):
+		if(status == 0):
+			self.IO.output(self.coolPumpPIN, self.IO.LOW)
+		else:
+			self.IO.output(self.coolPumpPIN, self.IO.HIGH)
+	
+	def switchContactor(self, status):
+		if(status == 0):
+			self.IO.output(self.contactorPIN, self.IO.LOW)
+		else:
+			self.IO.output(self.contactorPIN, self.IO.HIGH)
+			
 				
 	
 		
 if __name__ == '__main__':
 	system = HyperlynxECS()
 	system.initializeSensors()
-	
-	while True:
-		distance = system.getLidarDistance()
-		battTemp = system.getBatteryTemp()
-		accel1 = system.getAcceleration(1)
-		accel2 = system.getAcceleration(2)
-		orient1 = system.getOrientation(1)
-		orient2 = system.getOrientation(2)
-		temp1 = system.getBMEtemperature(1)
-		temp2 = system.getBMEtemperature(2)
-		press1 = system.getBMEpressure(1)
-		press2 = system.getBMEpressure(2)
-		tubepress = system.getTubePressure()
-		tubetemp = system.getTubeTemp()
-		voltage = system.getVoltageLevel()
-		current = system.getCurrentLevel()
-		brakePressure = system.getBrakePressure()
-		print("%.2f m\t"%distance, "%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
-		print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
-		print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
-		print("PV1: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PV2: %.2f psi\t"%press2, "%.2f"%temp2)
-		print("Tube: %.2f psi\t"%tubepress, "%.2f C"%tubetemp)
-		print("%.2f V\t"%voltage, "%.2f A"%current)
-		print("Brakes: %.2f psi" % brakePressure)
-		print("\n")
-		sleep(0.1)
+	startTime = clock()
+	distance = system.getLidarDistance()
+	battTemp = system.getBatteryTemp()
+	temp2 = system.getBMEtemperature(2)
+	press2 = system.getBMEpressure(2)
+	voltage = system.getVoltageLevel()
+	current = system.getCurrentLevel()
+	brakePressure = system.getBrakePressure()
+	accel1 = system.getAcceleration(1)
+	accel2 = system.getAcceleration(2)
+	orient1 = system.getOrientation(1)
+	orient2 = system.getOrientation(2)
+	tubepress = system.getTubePressure()
+	tubetemp = system.getTubeTemp()
+	temp1 = system.getBMEtemperature(1)
+	press1 = system.getBMEpressure(1)
+	endTime = clock() - startTime
+	print(endTime)
+	#print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
+	#print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
+	#print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
+	#print("PV1: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PV2: %.2f psi\t"%press2, "%.2f C"%temp2)
+	#print("Tube: %.2f psi\t"%tubepress, "%.2f C"%tubetemp)
+	#print("%.2f V\t"%voltage, "%.2f A"%current)
+	#print("Brakes: %.2f psi" % brakePressure)
+	#print("\n")
 
