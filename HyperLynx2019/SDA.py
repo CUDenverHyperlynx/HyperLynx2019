@@ -63,7 +63,7 @@ import numpy
 import datetime
 import os, psutil
 #import smbus
-#from Adafruit_BNO055 import BNO055
+import Hyperlynx_ECS
 
 class Status():
     # Definition of State Numbers
@@ -131,12 +131,9 @@ class Status():
 
         # I2C init
         self.IMU_init_range = 0.001
-        # self.IMU1_addr = 0x28
-        # self.IMU2_addr = 0x29
-        # self.IMU1 = BNO055(None, self.IMU1_addr)
-        # self.IMU2 = BNO055.BNO055(None, self.IMU2_addr)
-        # self.IMU1.begin()
-        # self.IMU2.begin()
+        self.sensor_poll = Hyperlynx_ECS.HyperlynxECS()
+        self.sensor_poll.initializeSensors()
+
 
         # DEBUG init for script:
         self.Quit = False
@@ -296,6 +293,7 @@ def poll_sensors():
     # except IOError:
     #     PodStatus.sensor_data['IMU2_X'] = 99
     ### DEBUG
+
     PodStatus.sensor_filter['IMU1_X']['val'] = 0.0001
     PodStatus.sensor_filter['IMU1_X']['val'] = 0.0001
 
