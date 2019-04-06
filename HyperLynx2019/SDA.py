@@ -162,7 +162,7 @@ class Status():
 
 
     #debug
-    sensor_data['Brake_Pressure'] = 178
+    sensor_data['Brake_Pressure'] = self.sensor_poll.getBrakePressure()
 
 def init():
     # Create Abort Range and init sensor_data Dictionary from template file
