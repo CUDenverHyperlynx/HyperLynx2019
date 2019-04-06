@@ -286,7 +286,6 @@ def poll_sensors():
     PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
     PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
     PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
-    PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.get()
 
 
     ### RPI DATA ###
