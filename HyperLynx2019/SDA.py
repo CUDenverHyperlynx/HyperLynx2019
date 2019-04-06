@@ -271,31 +271,7 @@ def poll_sensors():
     ### CAN DATA ###
 
     ### I2C DATA ###
-    # IMU1
-    # try:
-    #     PodStatus.orientation = PodStatus.IMU1.read_euler()
-    # except IOError:
-    #     PodStatus.orientation = [0,0,0]
-    # try:
-    #     tempIMU = PodStatus.IMU1.read_linear_acceleration()
-    #     PodStatus.sensor_data['IMU1_X'] = tempIMU[0] / 32.174   # reads in [g]
-    # except IOError:
-    #     PodStatus.sensor_data['IMU1_X'] = 99
-    #
-    # # IMU2
-    # try:
-    #     PodStatus.orientation = PodStatus.IMU2.read_euler()
-    # except IOError:
-    #     PodStatus.orientation = [0,0,0]
-    # try:
-    #     tempIMU = PodStatus.IMU2.read_linear_acceleration()
-    #     PodStatus.sensor_data['IMU2_X'] = tempIMU[0] / 32.174   # reads in [g]
-    # except IOError:
-    #     PodStatus.sensor_data['IMU2_X'] = 99
-    ### DEBUG
 
-    PodStatus.sensor_filter['IMU1_X']['val'] = 0.0001
-    PodStatus.sensor_filter['IMU1_X']['val'] = 0.0001
 
 
     ### RPI DATA ###
