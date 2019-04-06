@@ -214,10 +214,10 @@ def init():
     for i in range(0, len(cmd_names)):
         PodStatus.commands[cmd_names[i]] = cmd_vals[i]
 
-    cmd_int = {}
-    cmd_ext = {}
-    cmd_intval = {}
-    cmd_extval = {}
+    cmd_int = dict()
+    cmd_ext = dict()
+    cmd_intval = dict()
+    cmd_extval = dict()
 
     cmd_int = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                dtype=str)
