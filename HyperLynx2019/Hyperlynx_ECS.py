@@ -332,24 +332,23 @@ class HyperlynxECS():
 			self.IO.output(self.redPIN, self.IO.LOW)
 		else:
 			self.IO.output(self.redPIN, self.IO.HIGH)
-	
-	def switchNOSolenoid(self, status):
-		if(status == 0):
-			self.IO.output(self.NOsolPIN, self.IO.LOW)
-		else:
-			self.IO.output(self.NOsolPIN, self.IO.HIGH)
-			
-	def switchNCSolenoid(self, reservior, status):
-		if(reservior == 1):
+	#Switches solenoid DROKs. Parameters(solenoid: 1 = NC res 1, 2 = NC res 2, 3 = NO, status: 0 = off, 1 = on)
+	def switchSolenoid(self, solednoid, status):
+		if(solenoid == 1):
 			if(status == 0):
 				self.IO.output(self.NCsol1PIN, self.IO.LOW)
-			else:
+			elif(status == 1):
 				self.IO.output(self.NCsol1PIN, self.IO.HIGH)
-		elif(reservior == 2):
+		elif(solenoid == 2):
 			if(status == 0):
 				self.IO.output(self.NCsol2PIN, self.IO.LOW)
-			else:
+			elif(status == 1):
 				self.IO.output(self.NCsol2PIN, self.IO.HIGH)
+		elif(solenoid == 3):
+			if(status == 0):
+				self.IO.output(self.NOsolPIN, self.IO.LOW)
+			elif(status == 1):
+				self.IO.output(self.NOsolPIN, self.IO.LOW)
 				
 	def switchCoolantPump(self, status):
 		if(status == 0):
