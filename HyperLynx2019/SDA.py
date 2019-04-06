@@ -159,8 +159,6 @@ class Status():
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
-    sensor_data['Brake_Pressure'] = 178
-
 
 def init():
     # Create Abort Range and init sensor_data Dictionary from template file
@@ -305,6 +303,8 @@ def poll_sensors():
 
     ### CONVERT DATA ###
     # Set pod state variable for brakes
+
+    PodStatus.sensor_data['Brake_Pressure'] = 178
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
     else:
