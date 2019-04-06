@@ -159,7 +159,7 @@ class Status():
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
-        self.sensor_data['Brake_Pressure'] = 200
+        self.sensor_data['Brake_Pressure'] = 176
 
 
 def init():
