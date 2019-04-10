@@ -94,7 +94,7 @@ class Status():
         self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
         self.StartTime = clock()
         self.HV = 0                     # Current state of HV system (1 or 0)
-        self.Brakes = 1                 # Current state of brakes (1 = >177psi, 0 = <177psi)
+        self.Brakes = 1                 # Current state of brakes (1 = <177psi, 0 = >177psi)
         self.Vent_Sol = 1               # state of vent solenoid (1 = closed, 0 = open)
         self.Res1_Sol = 0               # state of reservoir #1 solenoid (1 = open, 0 = closed)
         self.Res2_Sol = 0               # state of reservoir #2 solenoid (1 = open, 0 = closed)
@@ -306,9 +306,9 @@ def poll_sensors():
 
     PodStatus.sensor_data['Brake_Pressure'] = 178
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
-        PodStatus.Brakes = True
-    else:
         PodStatus.Brakes = False
+    else:
+        PodStatus.Brakes = True
 
     # Set pod state variable for speed and acceleration
     old_speed = PodStatus.speed
@@ -579,12 +579,12 @@ def rec_data():
         print(str(PodStatus.sensor_data['Brake_Pressure']))
         a = input('Enter choice: ')
         if a == '2':
-            if PodStatus.HV == 0:
-                PodStatus.commands['HV'] = 1
-                PodStatus.HV = 1
+            if PodStatus.HV is False:
+                PodStatus.commands['HV'] = True
+                PodStatus.HV = True
             else:
-                PodStatus.commands['HV'] = 0
-                PodStatus.HV = 0
+                PodStatus.commands['HV'] = False
+                PodStatus.HV = False
         elif a == '3':
             if PodStatus.commands['Vent_Sol'] == 0:
                 PodStatus.commands['Vent_Sol'] = 1           # Brake Vent opens
