@@ -837,17 +837,17 @@ def run_state():
         if PodStatus.distance > PodStatus.para_BBP:
             print("Pod has crossed BBP.")
             transition()
-        if PodStatus.speed > PodStatus.para_max_speed:
+        elif PodStatus.speed > PodStatus.para_max_speed:
             print("Pod has reached max speed.")
             transition()
-        if PodStatus.MET > PodStatus.para_max_time:
+        elif PodStatus.MET > PodStatus.para_max_time:
             print("Pod has exceeded max time.")
             transition()
 
-        # # TRANSITIONS FOR BAD DATA
-        # if PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
-        #     print("Transition for bad IMU data.")
-        #     transition()
+        # TRANSITIONS FOR BAD DATA
+        elif PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
+            print("Transition for bad IMU data.")
+            transition()
 
 
     # COAST (NOT USED)
