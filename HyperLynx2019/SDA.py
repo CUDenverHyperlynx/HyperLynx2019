@@ -844,10 +844,10 @@ def run_state():
             print("Pod has exceeded max time.")
             transition()
 
-        # TRANSITIONS FOR BAD DATA
-        if PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
-            print("Transition for bad IMU data.")
-            transition()
+        # # TRANSITIONS FOR BAD DATA
+        # if PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
+        #     print("Transition for bad IMU data.")
+        #     transition()
 
 
     # COAST (NOT USED)
