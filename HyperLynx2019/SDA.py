@@ -306,9 +306,9 @@ def poll_sensors():
 
     PodStatus.sensor_data['Brake_Pressure'] = 178
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
-        PodStatus.Brakes = False
-    else:
         PodStatus.Brakes = True
+    else:
+        PodStatus.Brakes = False
 
     # Set pod state variable for speed and acceleration
     old_speed = PodStatus.speed
