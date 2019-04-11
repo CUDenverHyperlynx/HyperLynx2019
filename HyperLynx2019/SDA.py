@@ -93,6 +93,7 @@ class Status():
         self.init = False
         self.flight_sim = False
         self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
+        self.wheel_circum = numpy.pi * self.wheel_diameter
         self.StartTime = clock()
         self.HV = 0                     # Current state of HV system (1 or 0)
         self.Brakes = 1                 # Current state of brakes (1 = <177psi, 0 = >177psi)
