@@ -63,7 +63,7 @@ import numpy
 import datetime
 import os, psutil
 #import smbus
-import Hyperlynx_ECS
+import Hyperlynx_ECS, flight_sim
 
 class Status():
     # Definition of State Numbers
@@ -91,6 +91,7 @@ class Status():
 
     def __init__(self):        # BOOT INIT
         self.init = False
+        self.flight_sim = False
         self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
         self.StartTime = clock()
         self.HV = 0                     # Current state of HV system (1 or 0)
@@ -265,24 +266,30 @@ def poll_sensors():
     PodStatus.poll_interval = PodStatus.poll_newtime-PodStatus.poll_oldtime
 
     ### CAN DATA ###
+    # None Yet Added
 
     ### I2C DATA ###
-    #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
-    PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
-    PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
-    PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
-    PodStatus.sensor_data['PV_Left_Temp'] = PodStatus.sensor_poll.getBMEtemperature(2)
-    PodStatus.sensor_data['PV_Left_Pressure'] = PodStatus.sensor_poll.getBMEpressure(2)
-    PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
-    PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
-    PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
-    PodStatus.sensor_data['IMU1_X'] = PodStatus.sensor_poll.getOrientation(1)[0]
-    PodStatus.sensor_data['IMU1_Y'] = PodStatus.sensor_poll.getOrientation(1)[1]
-    PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(1)[2]
-    PodStatus.sensor_data['IMU2_X'] = PodStatus.sensor_poll.getOrientation(2)[0]
-    PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
-    PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
-    PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
+
+    # If you want to run the flight sim:
+    if PodStatus.flight_sim == True:
+        flight_sim.sim(PodStatus)
+    else:
+        #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
+        PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
+        PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
+        PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
+        PodStatus.sensor_data['PV_Left_Temp'] = PodStatus.sensor_poll.getBMEtemperature(2)
+        PodStatus.sensor_data['PV_Left_Pressure'] = PodStatus.sensor_poll.getBMEpressure(2)
+        PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
+        PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
+        PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
+        PodStatus.sensor_data['IMU1_X'] = PodStatus.sensor_poll.getOrientation(1)[0]
+        PodStatus.sensor_data['IMU1_Y'] = PodStatus.sensor_poll.getOrientation(1)[1]
+        PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(1)[2]
+        PodStatus.sensor_data['IMU2_X'] = PodStatus.sensor_poll.getOrientation(2)[0]
+        PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
+        PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
+        PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
 
     ### RPI DATA ###
@@ -554,6 +561,7 @@ def rec_data():
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
         "\tState:               " + str(PodStatus.state) + "\t\t")
+    print("\tFlight Sim:        " + str(PodStatus.flight_sim) + "\t\t")
     print("\tPod Clock Time:    " + str(round(PodStatus.MET,3)) + "\t")
     print("\tFault:             " + str(PodStatus.Fault) + "\t\t")
     print("\tAbort Flag         " + str(PodStatus.Abort) + "\t\t")
@@ -575,6 +583,7 @@ def rec_data():
               "\t(L) Launch\n"
               "\t(R) Reset Abort Flag\n"
               "\t(Q) Quit\n"
+              "\t(FS) Activate Flight Sim\n"
               "\t\tType line number or letter command to change values.\n")
         print(str(PodStatus.sensor_data['Brake_Pressure']))
         a = input('Enter choice: ')
@@ -630,6 +639,8 @@ def rec_data():
             PodStatus.MET_startime = -1
         elif a == 'Q':
             PodStatus.Quit = True
+        elif a == 'FS':
+            PodStatus.flight_sim = True
         else:
             pass
 
