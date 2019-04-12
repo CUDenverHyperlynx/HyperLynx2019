@@ -53,9 +53,16 @@ class HyperlynxECS():
 		self.NCsol2PIN = 22												#DROK SIGNAL PIN FOR NORMALLY CLOSED SOLENOID RESERVOIR 2
 		self.CoolPumpPIN = 5											#DROK SIGNAL PIN FOR COOLANT PUMP
 		self.greenPIN = 6												#DROK SIGNAL PIN FOR GREEN LED
-		self.redPIN = 13												#DROK SIGNAL PIN FOR RED LED
-		self.contactorPIN = 18											#DROK SIGNAL PIN FOR CONTACTORS
+		self.contactorPIN1 = 13											#DROK SIGNAL PIN FOR CONTACTOR 1
+		self.contactorPIN2 = 18											#DROK SIGNAL PIN FOR CONTACTOR 2
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
+		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
+			self.bus.write_byte(self.MUX_ADDR, 0)
+			print("TCA I2C Multiplexer Ready")
+		except IOError:
+			print("Connection Error with TCA I2C Multiplexer")
+			while True:
+				pass													#IF UNABLE TO CONNECT TO MULTIPLEXER, STALL PROGRAM
 		self.closeAllBus()												#RESET TCA9548A MULTIPLEXER TO CLOSE ALL CHANNELS AT STARTUP
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
@@ -193,7 +200,7 @@ class HyperlynxECS():
 			data = self.Lidar.getDistance()								#FETCH DISTANCE
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO LIDAR
-		return data / 100												#RETURNS DISTANCE IN METERS
+		return data * 0.0328084											#RETURNS DISTANCE IN FEET
 	"""FETCH TUBE PRESSURE"""	
 	def getTubePressure(self):
 		if(self.currentBus != self.tcaNOSE):
@@ -313,9 +320,9 @@ class HyperlynxECS():
 		return data * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
 	
 	def initializeDROK():
-		self.IO.setup(self.contactorPIN, self.IO.OUT, initial=self.IO.LOW)#SET CONTACTOR PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.contactorPIN1, self.IO.OUT, initial=self.IO.LOW)#SET CONTACTOR1 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.greenPIN, self.IO.OUT, initial=self.IO.LOW)	#SET GREEN LED PIN AS OUTPUT, INITIALIZE LOW
-		self.IO.setup(self.redPIN, self.IO.OUT, initial=self.IO.LOW)	#SET RED LED PIN AS OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.contactorPIN2, self.IO.OUT, initial=self.IO.LOW)	#SET CONTACTOR 2 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.LOW)	#SET NO SOLENOID PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 1 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 2 PIN AS OUTPUT, INITIALIZE LOW
@@ -327,12 +334,7 @@ class HyperlynxECS():
 		else:
 			self.IO.output(self.greenPIN, self.IO.HIGH)
 			
-	def switchRedLED(self, status):
-		if(status == 0):
-			self.IO.output(self.redPIN, self.IO.LOW)
-		else:
-			self.IO.output(self.redPIN, self.IO.HIGH)
-	#Switches solenoid DROKs. Parameters(solenoid: 1 = NC res 1, 2 = NC res 2, 3 = NO, status: 0 = off, 1 = on)
+	#Switches solenoid DROKs. Parameters(solenoid: 1 = NC res 1, 2 = NC res 2, 3 = NO, status: 0 = LOW, 1 = HIGH)
 	def switchSolenoid(self, solednoid, status):
 		if(solenoid == 1):
 			if(status == 0):
@@ -355,12 +357,20 @@ class HyperlynxECS():
 			self.IO.output(self.coolPumpPIN, self.IO.LOW)
 		else:
 			self.IO.output(self.coolPumpPIN, self.IO.HIGH)
-	
-	def switchContactor(self, status):
-		if(status == 0):
-			self.IO.output(self.contactorPIN, self.IO.LOW)
-		else:
-			self.IO.output(self.contactorPIN, self.IO.HIGH)
+			
+	#SWITCHES CONTACTOR DROKS. PARAMETERS(contactor: 1 = Contactor 1; 2 = Contactor 2, status: 0 = LOW; 1 = HIGH
+	#RED LED WILL LIGHT WHEN BOTH CONTACTORS ARE SWITCHED ON
+	def switchContactor(self, contactor, status):
+		if(contactor == 1):
+			if(status == 0):
+				self.IO.output(self.contactorPIN1, self.IO.LOW)
+			elif(status == 1):
+				self.IO.output(self.contactorPIN1, self.IO.HIGH)
+		elif(contactor == 2):
+			if(status == 0):
+				self.IO.output(self.contactorPIN2, self.IO.HIGH)
+			elif(status == 1):
+				self.IO.output(self.contactorPIN2, self.IO.HIGH)
 			
 				
 	
