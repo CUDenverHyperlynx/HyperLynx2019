@@ -30,8 +30,8 @@ class HyperlynxECS():
 	def __init__(self, bus_num=1):
 		self.MUX_ADDR = 0x70											#I2C ADDRESS FOR TCA9548A MULTIPLEXER
 		self.IR_ADDR = 0x5B												#I2C ADDRESS FOR MLX90614 IR THERMOMETER
-		self.IMU_ADDR1 = 0x29											#I2C ADDRESS 1 FOR BNO055 ABSOLUTE ORIENTATION
-		self.IMU_ADDR2 = 0x28											#I2C ADDRESS 2 FOR BNO055 ABSOLUTE ORIENTATION
+		self.IMU_ADDR1 = 0x28											#I2C ADDRESS 1 FOR BNO055 ABSOLUTE ORIENTATION
+		self.IMU_ADDR2 = 0x29											#I2C ADDRESS 2 FOR BNO055 ABSOLUTE ORIENTATION
 		self.BMP_ADDR = 0x77											#I2C ADDRESS FOR BMP280 PRESSURE SENSOR
 		self.BME_ADDR1 = 0x77											#I2C ADDRESS 1 FOR BME280 PRESSURE SENSOR
 		self.BME_ADDR2 = 0x76											#I2C ADDRESS 2 FOR BME280 PRESSURE SENSOR
@@ -100,6 +100,7 @@ class HyperlynxECS():
 		except IOError:
 			print("Connection error with TCA Multiplexer")
 			return 0
+
 		try:
 			for x in range(0, self.connectAttempt):
 				self.IMU1 = BNO055(address=self.IMU_ADDR1)				#CREATE OBJECT FOR BNO055 AT ADDRESS 1 
@@ -109,7 +110,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection error with BNO055 at ADDR 1")
-			return 0
+			#return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.IMU2 = BNO055(address=self.IMU_ADDR2)				#CREATE OBJECT FOR BNO055 AT ADDRESS 2
@@ -119,7 +120,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with IMU2")
-			return 0
+			#return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
@@ -129,7 +130,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with BMP")
-			return 0
+			#return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.openBus(self.tcaPVL)								#OPEN CHANNEL ON TCA
@@ -148,7 +149,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with BME2 LPV")
-			return 0
+			#return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.openBus(self.tcaPVR)								#OPEN TCA CHANNEL
@@ -167,13 +168,13 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with Therm")
-			return 0
+			#return 0
 		try:
 			self.ADC = Adafruit_ADS1x15.ADS1115(address=self.ADC_ADDR, busnum=1)#CREATE OBJECT FOR ADS1115 ADC
 			print("ADC Ready")		
 		except IOError:
 			print("Connection error with ADS ADC")
-			return 0
+			#return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.BMER = BME280(address=self.BME_ADDR1)				#CREATE  OBJECT FOR BME280 AT ADDRESS 2
@@ -183,7 +184,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with BME RPV")
-			return 0
+			#return 0
 		return 1
 			
 	"""CLOSE ALL CHANNELS ON THE TCA"""
@@ -459,7 +460,7 @@ if __name__ == '__main__':
 			print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
 			print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
 			print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
-			print("PV1: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PV2: %.2f psi\t"%press2, "%.2f C"%temp2)
+			print("PVL: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PVR: %.2f psi\t"%press2, "%.2f C"%temp2)
 			print("Tube: %.2f psi\t"%tubepress, "%.2f C"%tubetemp)
 			print("%.2f V\t"%voltage, "%.2f A"%current)
 			print("Brakes: %.2f psi" % brakePressure)
