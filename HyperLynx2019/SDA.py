@@ -64,6 +64,7 @@ import datetime
 import os, psutil
 #import smbus
 import Hyperlynx_ECS, flight_sim
+from Client import send_server
 
 class Status():
     # Definition of State Numbers
@@ -791,11 +792,13 @@ def spacex_data():
                              int(distance), int(speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
         sock.sendto(packet, server)
 
-def send_data():        # Sends data to UDP (GUI) and CAN (BMS/MC)
+def send_data(pod_status):        # Sends data to TCP (GUI) and CAN (BMS/MC)
 
     ### Send to CAN ###
 
-    ### Send to UDP ###
+    ### Send to TCP ###
+
+    send_server(pod_status)
 
     pass
 
@@ -1078,8 +1081,8 @@ if __name__ == "__main__":
         do_commands()
         eval_abort()
         rec_data()
-        send_data()
         spacex_data()
+        send_data(PodStatus)
         print(PodStatus.sensor_data['IMU1_X'])
 
     # DEBUG...REMOVE BEFORE FLIGHT

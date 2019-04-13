@@ -3,74 +3,45 @@
 
 import socket
 import pickle
-import time
-import sys
-
-# open file to log data
-file = open('testfile.txt', 'w')
-
-# used for run time of server
-start_time = time.time()
+from time import clock
 
 # set up connection
-HOST = socket.gethostbyname(socket.gethostname())
+HOST = socket.gethostbyname(socket.gethostname())       # Change IP Address when using radios
 PORT = 1028
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((HOST, PORT))
 
-s.listen(1)
-
-# print out Host and port it's listening on
-print('Current time:\t', time.time() - start_time,
-      '\nListening on\tHost: ', HOST, '\tPort: ', PORT)
-
-file.write('Current time:\t')
-file.write(str(time.time() - start_time))
-file.write('\nListening on\nHost: ')
-file.write(HOST)
-file.write('\tPort: ')
-file.write(str(PORT))
-file.write('\n\n')
-
-# connect and print what it's connected to
-conn, addr = s.accept()
-print('\nConnection from client made at:\t', time.time() - start_time)
-print('Connected on', addr)
-
-file.write('Connection from client made at:\t')
-file.write(str(time.time()-start_time))
-file.write('\nConnection on\t')
-file.write(str(addr))
-file.write('\n\n')
+# Print Listening on HOST and PORT
+print(HOST)
+print(PORT)
 
 # loop during run
 while 1:
-    try:
-        # receive new data
-        data = conn.recv(1028)
-        data_variable = pickle.loads(data)
+    # Receive new data
+    data, address = s.recvfrom(50000)
+    data_variable = pickle.loads(data)
 
-        print('--------------------------')
-        print('Data received from client at time\t', time.time()-start_time)
-        print('x:\t', data_variable.x)
-        print('y:\t', data_variable.y)
-        print('--------------------------\n')
+    # Print all data that was in the log file to the console
+    for key in data_variable.sensor_data:
+        if str(key) in data_variable.abort_ranges[data_variable.state]:
+            fault_code = data_variable.abort_ranges[data_variable.state][str(key)]['Fault']
+        else:
+            fault_code = 0
 
-        # Access data by data_variable.x, data_variable.y, etc...
-        # Write data to file
-        file.write('\"Time\" : \"')
-        file.write(str(time.time()-start_time))
-        file.write('\"\n\"x\" : \"')
-        file.write(str(data_variable.x))
-        file.write('\"\n\"y\" : \"')
-        file.write(str(data_variable.y))
-        file.write('\"\n\n')
-    except:
-        print('Connection has been disconnected')
-        file.write('Connection has been disconnected at ')
-        file.write(str(time.time() - start_time))
-        break
+        print(str(key) + '\t' + str(data_variable.sensor_data[str(key)]) + '\t' +
+              str(int(fault_code)) + '\t' + str(round(clock(), 2)))
 
-# close file and connection
-file.close()
-conn.close()
+    for key in data_variable.commands:
+        print(str(key) + '\t' + str(data_variable.commands[str(key)]) + '\t\t' + str(round(clock(), 2)))
+
+    print('state' + '\t' + str(data_variable.state) + '\t\t' + str(round(clock(), 2)) + '\n' + 'spacex_state' + '\t'
+          + str(data_variable.spacex_state) + '\t\t' + str(round(clock(), 2)) + '\n'
+          + 'total_faults' + '\t' + str(data_variable.total_faults) + '\t\t' + str(round(clock(), 2)) + '\n'
+          + 'throttle' + '\t' + str(data_variable.throttle) + '\t\t' + str(round(clock(), 2)) + '\n'
+          + 'distance' + '\t' + str(data_variable.distance) + '\t\t' + str(round(clock(), 2)) + '\n'
+          + 'speed' + '\t' + str(data_variable.speed) + '\t\t' + str(round(clock(), 2)) + '\n'
+          + 'accel' + '\t' + str(data_variable.accel) + '\t\t' + str(round(clock(), 2)) + '\n'
+          + 'wheel_diameter' + '\t' + str(data_variable.wheel_diameter) + '\t\t' + str(round(clock(), 2)) + '\n')
+
+    # Call GUI function and send data
+    # Put GUI function here
