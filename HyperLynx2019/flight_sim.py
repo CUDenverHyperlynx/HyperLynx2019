@@ -10,18 +10,18 @@ Flight simulator
 import random, numpy
 
 
-def sim(PodStatus, cmd_int, cmd_ext, *args):
+def sim(PodStatus, *args):
 
     # Activate Res1
-    if (cmd_ext['Res1_Sol'] == True) or (cmd_int['Res1_Sol'] == True) and (PodStatus.Vent_Sol == True):
+    if (PodStatus.cmd_ext['Res1_Sol'] == True) or (PodStatus.cmd_int['Res1_Sol'] == True) and (PodStatus.Vent_Sol == True):
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_data['Brake_Pressure'] + \
                                                   200 + random.randint(-10,10)*10^-2
     # Activate Res2
-    if (cmd_ext['Res2_Sol'] == True) or (cmd_int['Res2_Sol'] == True) and (PodStatus.Vent_Sol == True):
+    if (PodStatus.cmd_ext['Res2_Sol'] == True) or (PodStatus.cmd_int['Res2_Sol'] == True) and (PodStatus.Vent_Sol == True):
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_data['Brake_Pressure'] + \
                                                   200 + random.randint(-10,10)*10^-2
     # Activate Vent
-    if (cmd_ext['Vent_Sol'] == False) or (cmd_int['Vent_Sol'] == False):
+    if (PodStatus.cmd_ext['Vent_Sol'] == False) or (PodStatus.cmd_int['Vent_Sol'] == False):
         PodStatus.sensor_data['Brake_Pressure'] = 0.01 + random.randint(-10,10)*10^-3
 
     if PodStatus.Brakes == False:
