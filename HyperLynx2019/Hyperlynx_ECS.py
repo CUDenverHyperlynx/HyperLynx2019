@@ -10,7 +10,7 @@ Purpose:	Test full ECS
 				BNO055 at 0x29
 				BMP280 at 0x77
 			bus 2:
-				BME280 at 0x76
+				BME280 at 0x76 LPV
 			bus 3:
 				MLX90614 at 0x5B
 				BME280 at 0x77
@@ -56,6 +56,14 @@ class HyperlynxECS():
 		self.contactorPIN1 = 13											#DROK SIGNAL PIN FOR CONTACTOR 1
 		self.contactorPIN2 = 18											#DROK SIGNAL PIN FOR CONTACTOR 2
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
+		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
+		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
+		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
+		self.tcaLIDAR = 0												#TCA CHANNEL FOR LIDAR
+		self.tcaNOSE = 1												#TCA CHANNEL FOR NOSE AVIONICS
+		self.tcaPVL = 2													#TCA CHANNEL FOR LEFT PV AVIONICS
+		self.tcaPVR = 3													#TCA CHANNEL FOR RIGHT PV AVIONICS
+		self.connectAttempt = 5
 		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
 			self.bus.write_byte(self.MUX_ADDR, 0)
 			print("TCA I2C Multiplexer Ready")
@@ -64,66 +72,119 @@ class HyperlynxECS():
 			while True:
 				pass													#IF UNABLE TO CONNECT TO MULTIPLEXER, STALL PROGRAM
 		self.closeAllBus()												#RESET TCA9548A MULTIPLEXER TO CLOSE ALL CHANNELS AT STARTUP
-		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
-		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
-		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
-		self.tcaLIDAR = 0												#TCA CHANNEL FOR LIDAR
-		self.tcaNOSE = 1												#TCA CHANNEL FOR NOSE AVIONICS
-		self.tcaPVL = 2													#TCA CHANNEL FOR LEFT PV AVIONICS
-		self.tcaPVR = 3													#TCA CHANNEL FOR RIGHT PV AVIONICS
 		
-	"""SETUP AL AVIONICS SENSORS ON THE I2C BUS"""
+	"""SETUP ALL AVIONICS SENSORS ON THE I2C BUS"""
 	def initializeSensors(self):
-		self.openBus(self.tcaLIDAR)										#OPEN CHANNEL ON TCA
-		self.Lidar = Lidar.Lidar_Lite()									#CREATE OBJECT FOR LIDAR LITE V3
 		try:
+			for x in range(0, self.connectAttempt):
+				self.openBus(self.tcaLIDAR)								#OPEN CHANNEL ON TCA
+				if(self.currentBus == self.tcaLIDAR):
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection error with TCA Multiplexer")
+			return 0;
+		try:
+			self.Lidar = Lidar.Lidar_Lite()								#CREATE OBJECT FOR LIDAR LITE V3
 			self.bus.write_quick(self.LID_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
 			print("Lidar Ready")
 		except IOError:
 			print("Connection error with Lidar")						#PRINT ERROR IF UNABLE TO CONNECT
-		self.openBus(self.tcaNOSE)										#OPEN CHANNEL ON TCA
-		self.IMU1 = BNO055(address=self.IMU_ADDR1)						#CREATE OBJECT FOR BNO055 AT ADDRESS 1
-		if(self.IMU1.begin()):											#CHECK FOR CONNECTION TO I2C BUS AND SET OPERATION MODE
-			print("IMU1 Ready")
-		else:
-			print("Connection Error with IMU1")
-		self.IMU2 = BNO055(address=self.IMU_ADDR2)						#CREATE OBJECT FOR BNO055 AT ADDRESS 2
-		if(self.IMU2.begin()):											#CHECK FOR CONNECTION TO I2C BUS AND SET OPERATION MODE
-			print("IMU2 Ready")
-		else:
-			print("Connection Error with IMU2")
-		self.BMP = BMP280(address=self.BMP_ADDR)						#CREATE OBJECT FOR BMP280
+			return 0
 		try:
-			self.bus.write_quick(self.BMP_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
-			print("BMP Ready")
+			for x in range(0, self.connectAttempt):
+				self.openBus(self.tcaNOSE)								#OPEN CHANNEL ON TCA
+				if(self.currentBus == self.tcaNOSE):
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection error with TCA Multiplexer")
+			return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.IMU1 = BNO055(address=self.IMU_ADDR1)				#CREATE OBJECT FOR BNO055 AT ADDRESS 1 
+				if(self.IMU1.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
+					print("IMU1 Ready")
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection error with BNO055 at ADDR 1")
+			return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.IMU2 = BNO055(address=self.IMU_ADDR2)				#CREATE OBJECT FOR BNO055 AT ADDRESS 2
+				if(self.IMU2.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
+					print("IMU2 Ready")
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection Error with IMU2")
+			return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
+				if(self.BMP.read_raw_temp()):							#ATTEMPT READING FROM BMP
+					print("BMP Ready")
+					break
+				sleep(0.5)
 		except IOError:
 			print("Connection Error with BMP")
-		self.openBus(self.tcaPVL)										#OPEN CHANNEL ON TCA
-		self.BMEL = BME280(address=self.BME_ADDR2)						#CREATE OBJECT FOR BME280 AT ADDRESS 2
+			return 0
 		try:
-			self.bus.write_quick(self.BME_ADDR2)						#QUICK WRITE TO TEST CONNECTION TO I2C BUS
-			print("BME2 Ready")
+			for x in range(0, self.connectAttempt):
+				self.openBus(self.tcaPVL)								#OPEN CHANNEL ON TCA
+				if(self.currentBus == self.tcaPVL):
+					break
+				sleep(0.5)
 		except IOError:
-			print("Connection Error with BME2")
-		self.openBus(self.tcaPVR)										#OPEN TCA CHANNEL
-		self.Therm = MLX90614(address=self.IR_ADDR)						#CREATE OBJECT FOR MLX90614 IR THERMOMETER
+			print("Connection error wit TCA Multiplexer")
+			return 0
 		try:
-			self.bus.write_quick(self.IR_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
-			print("Therm Ready")
+			for x in range(0, self.connectAttempt):
+				self.BMEL = BME280(address=self.BME_ADDR2)					#CREATE OBJECT FOR BME280 AT ADDRESS 2
+				if(self.BMEL.read_raw_temp()):
+					print("BME LPV Ready")
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection Error with BME2 LPV")
+			return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.openBus(self.tcaPVR)								#OPEN TCA CHANNEL
+				if(self.currentBus == self.tcaPVR):
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection error with TCA Multiplexer")
+			return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.Therm = MLX90614(address=self.IR_ADDR)				#CREATE OBJECT FOR MLX90614 IR THERMOMETER
+				if(self.Therm.check_connect):							#CHECK CONNECTION
+					print("MLX90614 Ready")
+					break
+				sleep(0.5)
 		except IOError:
 			print("Connection Error with Therm")
-		self.ADC = Adafruit_ADS1x15.ADS1115(address=self.ADC_ADDR, busnum=1)	#CREATE OBJECT FOR ADS1115 ADC 
+			return 0
 		try:
-			self.bus.write_quick(self.ADC_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
-			print("ADC Ready")
+			self.ADC = Adafruit_ADS1x15.ADS1115(address=self.ADC_ADDR, busnum=1)#CREATE OBJECT FOR ADS1115 ADC
+			print("ADC Ready")		
 		except IOError:
-			print("Connection Error with ADC")
-		self.BMER = BME280(address=self.BME_ADDR1)						#CREATE  OBJECT FOR BME280 AT ADDRESS 2
+			print("Connection error with ADS ADC")
+			return 0
 		try:
-			self.bus.write_quick(self.BME_ADDR1)						#QUICK WRITE TO TEST CONNECTION TO I2C BUS
-			print("BME1 Ready")
+			for x in range(0, self.connectAttempt):
+				self.BMER = BME280(address=self.BME_ADDR1)				#CREATE  OBJECT FOR BME280 AT ADDRESS 2
+				if(self.BMER.read_raw_temp()):
+					print("BME RPV Ready")
+					break
+				sleep(0.5)
 		except IOError:
-			print("Connection Error with BME1")
+			print("Connection Error with BME RPV")
+			return 0
+		return 1
 			
 	"""CLOSE ALL CHANNELS ON THE TCA"""
 	def closeAllBus(self):
@@ -234,7 +295,6 @@ class HyperlynxECS():
 				except IOError:
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
 			try:
-				t1 = self.BMER.read_raw_temp()							#BME REQUIRES A TEMP READ TO INITIALIZE VARIABLES FOR ALL OTHER READINGS. WILL CHANGE THIS TO initializeSensors()
 				data = self.BMER.read_pressure()						#FETCH PRESSURE
 			except IOError:
 				data = 0												#SETS AS ZERO IF CANNOT CONNECT TO BME
@@ -246,7 +306,6 @@ class HyperlynxECS():
 				except IOError:
 					return 0
 			try:
-				t1 = self.BMEL.read_raw_temp()
 				data = self.BMEL.read_pressure()
 			except IOError:
 				data = 0
@@ -377,31 +436,32 @@ class HyperlynxECS():
 		
 if __name__ == '__main__':
 	system = HyperlynxECS()
-	system.initializeSensors()
-	startTime = clock()
-	distance = system.getLidarDistance()
-	battTemp = system.getBatteryTemp()
-	temp2 = system.getBMEtemperature(2)
-	press2 = system.getBMEpressure(2)
-	voltage = system.getVoltageLevel()
-	current = system.getCurrentLevel()
-	brakePressure = system.getBrakePressure()
-	accel1 = system.getAcceleration(1)
-	accel2 = system.getAcceleration(2)
-	orient1 = system.getOrientation(1)
-	orient2 = system.getOrientation(2)
-	tubepress = system.getTubePressure()
-	tubetemp = system.getTubeTemp()
-	temp1 = system.getBMEtemperature(1)
-	press1 = system.getBMEpressure(1)
-	endTime = clock() - startTime
-	print(endTime)
-	#print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
-	#print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
-	#print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
-	#print("PV1: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PV2: %.2f psi\t"%press2, "%.2f C"%temp2)
-	#print("Tube: %.2f psi\t"%tubepress, "%.2f C"%tubetemp)
-	#print("%.2f V\t"%voltage, "%.2f A"%current)
-	#print("Brakes: %.2f psi" % brakePressure)
-	#print("\n")
-
+	if(system.initializeSensors()):
+		while True:
+			startTime = clock()
+			distance = system.getLidarDistance()
+			battTemp = system.getBatteryTemp()
+			temp2 = system.getBMEtemperature(2)
+			press2 = system.getBMEpressure(2)
+			voltage = system.getVoltageLevel()
+			current = system.getCurrentLevel()
+			brakePressure = system.getBrakePressure()
+			accel1 = system.getAcceleration(1)
+			accel2 = system.getAcceleration(2)
+			orient1 = system.getOrientation(1)
+			orient2 = system.getOrientation(2)
+			tubepress = system.getTubePressure()
+			tubetemp = system.getTubeTemp()
+			temp1 = system.getBMEtemperature(1)
+			press1 = system.getBMEpressure(1)
+			endTime = clock() - startTime
+			print(endTime)
+			print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
+			print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
+			print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
+			print("PV1: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PV2: %.2f psi\t"%press2, "%.2f C"%temp2)
+			print("Tube: %.2f psi\t"%tubepress, "%.2f C"%tubetemp)
+			print("%.2f V\t"%voltage, "%.2f A"%current)
+			print("Brakes: %.2f psi" % brakePressure)
+			print("\n")
+			#sleep(0.05)
