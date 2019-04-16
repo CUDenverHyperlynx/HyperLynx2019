@@ -312,7 +312,7 @@ def poll_sensors():
 
     ### CONVERT DATA ###
     # Set pod state variable for brakes
-
+    # debug line below before actual testing
     PodStatus.sensor_data['Brake_Pressure'] = 178
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
@@ -1083,7 +1083,7 @@ if __name__ == "__main__":
         rec_data()
         spacex_data()
         send_data(PodStatus)
-        print(PodStatus.sensor_data['IMU1_X'])
+        #print(PodStatus.sensor_data['IMU1_X'])
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
