@@ -24,16 +24,6 @@
    a(t)-Pod Acceleration(0-10 G)
    B(t)-Pneumatic Brake System State(1-CLOSED/ON/VENT 0-OPEN/OFF/CHARGED)
    d(t)-Pod Position in Tube(distance traveled)(0-4150 ft)
-   E(t)-Individual Sensor Error Flags(0-NO ERROR 1-ERROR FLAG)
-
-      - E(t) = (LV Current, LV Voltage, LV Temp., BME1, BME2, BMP, IMU's, BMS Current,
-                BMS Voltage, BMS Temp., Pneumatics, MC Current, MC Voltage, MC Temp., Comms Loss, Spare)
-
-   OUTPUTS
-   HVC(t)-High Voltage Contactors(0-CLOSED/SHORT/ON 1-OPEN/OFF)
-   TR(t) -Throttle Control(MAX/CRAWL/OFF)
-   LG(t) -Data Logging
-   B(t)  -Pneumatic Brake System Control(1-CLOSED/ON/VENT 0-OPEN/OFF/CHARGED)
 
    SENSORS:
 
@@ -56,12 +46,12 @@
    John Brenner & Jeff Stanek
 '''
 
-#from argparse import ArgumentParser
 from time import sleep, clock
 import socket, struct
 import numpy
 import datetime
 import os, psutil
+#from argparse import ArgumentParser
 #import smbus
 import Hyperlynx_ECS, flight_sim
 from Client import send_server
