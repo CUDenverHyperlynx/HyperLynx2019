@@ -856,13 +856,6 @@ def run_state():
 
 
     # COAST (NOT USED)
-    elif PodStatus.state == 4:
-        PodStatus.spacex_state = 4
-
-        # GET OUT OF THIS STATE
-        PodStatus.state = PodStatus.BrakingLow
-        PodStatus.Abort = True
-        pass
 
     # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
