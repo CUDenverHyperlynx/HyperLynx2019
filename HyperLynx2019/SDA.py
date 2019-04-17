@@ -152,6 +152,18 @@ class Status():
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
+    def create_log(self):
+        ### Create log file ###
+        date = datetime.datetime.today()
+        new_number = str(date.year) + str(date.month) + str(date.day) \
+                     + str(date.hour) + str(date.minute) + str(date.second)
+        self.file_name = 'log_' + new_number
+        file = open(os.path.join('logs/', self.file_name), 'a')
+        columns = ['Label', 'Value', 'Fault', 'Time']
+        with file:
+            file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
+            file.write("\n")
+        file.close()
 
 def init():
     # Create Abort Range and init sensor_data Dictionary from template file
@@ -230,17 +242,7 @@ def init():
     else:
         print("IMU init failed.")
 
-    ### Create log file ###
-    date = datetime.datetime.today()
-    new_number = str(date.year) + str(date.month) + str(date.day) \
-                 + str(date.hour) + str(date.minute) + str(date.second)
-    PodStatus.file_name = 'log_' + new_number
-    file = open(os.path.join('logs/', PodStatus.file_name), 'a')
-    columns = ['Label','Value','Fault','Time']
-    with file:
-        file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
-        file.write("\n")
-    file.close()
+    PodStatus.create_log()
 
     ## Confirm boot info ##
     print("Pod init complete, State: " + str(PodStatus.state))
@@ -972,6 +974,8 @@ def transition():
     elif PodStatus.state == 7:
         PodStatus.state = 1
         print("TRANS: BRAKE(7) TO S2A(1)")
+        print("Creating new log file.")
+        PodStatus.create_log()
 
     else:
         print("POD IN INVALID STATE: " + str(PodStatus.state))
