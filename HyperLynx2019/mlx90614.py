@@ -30,6 +30,13 @@ class MLX90614():
         self.bus_num = bus_num
         self.address = address
         self.bus = smbus.SMBus(bus=bus_num)
+    
+    def check_connect(self):
+        data = self.read_reg(self.MLX90614_TOBJ1)
+        if(data):
+            return True
+        else:
+            return False
 
     def read_reg(self, reg_addr):
         return self.bus.read_word_data(self.address, reg_addr)
