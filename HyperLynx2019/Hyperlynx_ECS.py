@@ -13,8 +13,9 @@ Purpose:	Test full ECS
 				BME280 at 0x76 LPV
 			bus 3:
 				MLX90614 at 0x5B
-				BME280 at 0x77
 				ADS1115 at 0x48	gain = 1 (4.096V MAX)
+			bus 4:
+				BME280 at 0x77
 """
 import smbus
 from time import sleep, clock
@@ -58,11 +59,16 @@ class HyperlynxECS():
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
+		self.Y1OFFSET = 0
+		self.Y2OFFSET = 0
+		self.Z1OFFSET = 0
+		self.Z2OFFSET = 0
 		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
 		self.tcaLIDAR = 0												#TCA CHANNEL FOR LIDAR
 		self.tcaNOSE = 1												#TCA CHANNEL FOR NOSE AVIONICS
 		self.tcaPVL = 2													#TCA CHANNEL FOR LEFT PV AVIONICS
-		self.tcaPVR = 3													#TCA CHANNEL FOR RIGHT PV AVIONICS
+		self.tcaPVR = 3													#TCA CHANNEL FOR RIGHT PV AVIONICS 1
+		self.tcaPVR2 = 4												#TCA CHANNEL FOR RIGHT PV AVIONICS 2
 		self.connectAttempt = 5
 		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
 			self.bus.write_byte(self.MUX_ADDR, 0)
@@ -105,22 +111,46 @@ class HyperlynxECS():
 			for x in range(0, self.connectAttempt):
 				self.IMU1 = BNO055(address=self.IMU_ADDR1)				#CREATE OBJECT FOR BNO055 AT ADDRESS 1 
 				if(self.IMU1.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
+					while(self.IMU1.get_calibration_status()[1] != 3):
+						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
 					print("IMU1 Ready")
 					break
 				sleep(0.5)
 		except IOError:
-			print("Connection error with BNO055 at ADDR 1")
+			print("Connection error with IMU1")
 			#return 0
+		try:
+			self.Y1OFFSET = self.getOrientation(1)[1]
+			print("IMU1 Y offset angle set")
+		except IOError:
+			print("IMU1 Y offset angle not set")
+		try:
+			self.Z1OFFSET = self.getOrientation(1)[2]
+			print("IMU1 Z offset angle set")
+		except IOError:
+			print("IMU1 Z offset angle not set")
 		try:
 			for x in range(0, self.connectAttempt):
 				self.IMU2 = BNO055(address=self.IMU_ADDR2)				#CREATE OBJECT FOR BNO055 AT ADDRESS 2
 				if(self.IMU2.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
+					while(self.IMU2.get_calibration_status()[1] != 3):
+						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
 					print("IMU2 Ready")
 					break
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with IMU2")
 			#return 0
+		try:
+			self.Y2OFFSET = self.getOrientation(2)[1]
+			print("IMU2 Y offset angle set")
+		except IOError:
+			print("IMU2 Y offset angle not set")
+		try:
+			self.Z1OFFSET = self.getOrientation(2)[2]
+			print("IMU2 Z offset angle set")
+		except IOError:
+			print("IMU2 Z offset angle not set")
 		try:
 			for x in range(0, self.connectAttempt):
 				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
@@ -142,7 +172,7 @@ class HyperlynxECS():
 			return 0
 		try:
 			for x in range(0, self.connectAttempt):
-				self.BMEL = BME280(address=self.BME_ADDR2)					#CREATE OBJECT FOR BME280 AT ADDRESS 2
+				self.BMEL = BME280(address=self.BME_ADDR2)				#CREATE OBJECT FOR BME280 AT ADDRESS 2
 				if(self.BMEL.read_raw_temp()):
 					print("BME LPV Ready")
 					break
@@ -177,6 +207,15 @@ class HyperlynxECS():
 			#return 0
 		try:
 			for x in range(0, self.connectAttempt):
+				self.openBus(self.tcaPVR2)								#OPEN CHANNEL ON TCA
+				if(self.currentBus == self.tcaPVR2):
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection error with TCA Multiplexer")
+			return 0
+		try:
+			for x in range(0, self.connectAttempt):
 				self.BMER = BME280(address=self.BME_ADDR1)				#CREATE  OBJECT FOR BME280 AT ADDRESS 2
 				if(self.BMER.read_raw_temp()):
 					print("BME RPV Ready")
@@ -201,7 +240,8 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaPVR)								#CHECKS FOR CURRENT OPEN CHANNEL TO SAVE TIME SELECTING IF IT IS ALREADY OPEN, IF ALREADY NOT OPENED, OPEN IT
 			except IOError:
-				return 0												#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
+				return 0
+		sleep(0.001)													#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
 		try:
 			data = self.Therm.get_obj_temp_C()							#FETCH OBJECT TEMP
 		except IOError:
@@ -318,9 +358,9 @@ class HyperlynxECS():
 	"""FETCH BME TEMPERATURE"""											#PARAMETER IS DESIRED BME (1 = RIGHT PV, 2 = LEFT PV) 		
 	def getBMEtemperature(self, vessel):
 		if(vessel == 1):
-			if(self.currentBus != self.tcaPVR):
+			if(self.currentBus != self.tcaPVR2):
 				try:
-					self.openBus(self.tcaPVR)
+					self.openBus(self.tcaPVR2)
 				except IOError:
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
 			try:
