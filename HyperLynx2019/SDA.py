@@ -268,6 +268,7 @@ def poll_sensors():
     if PodStatus.flight_sim == True:
         flight_sim.sim(PodStatus)
     else:
+        # Uncomment Brake Pressure for pulling in actual data when we have this set up
         #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
