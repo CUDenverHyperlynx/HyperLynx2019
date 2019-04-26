@@ -26,6 +26,7 @@ from HyperlynxBMP280 import BMP280
 from Adafruit_BME280 import BME280
 import Lidar
 import RPi.GPIO
+import os
 import math	#cos()
 
 class HyperlynxECS():
@@ -504,6 +505,7 @@ if __name__ == '__main__':
 			press1 = system.getBMEpressure(1)
 			endTime = clock() - startTime
 			print(endTime)
+			print("%.2f\t"%distance)
 			print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
 			print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
 			print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
@@ -511,5 +513,7 @@ if __name__ == '__main__':
 			print("Tube: %.2f psi\t"%tubepress, "%.2f C"%tubetemp)
 			print("%.2f V\t"%voltage, "%.2f A"%current)
 			print("Brakes: %.2f psi" % brakePressure)
+			temp = os.popen("vcgencmd measure_temp").readline()
+			print(temp)
 			print("\n")
 			#sleep(0.05)
