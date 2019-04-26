@@ -26,6 +26,7 @@ from HyperlynxBMP280 import BMP280
 from Adafruit_BME280 import BME280
 import Lidar
 import RPi.GPIO
+import math	#cos()
 
 class HyperlynxECS():
 	def __init__(self, bus_num=1):
@@ -147,7 +148,7 @@ class HyperlynxECS():
 		except IOError:
 			print("IMU2 Y offset angle not set")
 		try:
-			self.Z1OFFSET = self.getOrientation(2)[2]
+			self.Z2OFFSET = self.getOrientation(2)[2]
 			print("IMU2 Z offset angle set")
 		except IOError:
 			print("IMU2 Z offset angle not set")
@@ -258,14 +259,20 @@ class HyperlynxECS():
 			try:
 				data = self.IMU1.read_euler()							#READS X, Y AND Z ORIENTATION IN DEGREES AND RETURNS AS TUPLE
 			except IOError:
-				data = [0, 0, 0]										#SETS AS ZEROS IF CANNOT CONNECT TO BNO055
-			return data
+				data = [0, 0, 0]
+			x = data[0]
+			y = data[1] - self.Y1OFFSET
+			z = data[2] - self.Z1OFFSET
+			return [x, y, z]
 		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_euler()
 			except IOError:
 				data = [0, 0, 0]
-			return data
+			x = data[0]
+			y = data[1] - self.Y2OFFSET
+			z = data[2] - self.Z2OFFSET
+			return [x, y, z]
 		else:
 			print("Illegal Selection")
 			return 0
