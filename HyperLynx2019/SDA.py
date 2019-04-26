@@ -1073,7 +1073,7 @@ if __name__ == "__main__":
         rec_data()
         spacex_data()
         send_data(PodStatus)
-        print("D:" + str(PodStatus.true_data['D']['val']) + '\t' + "V:" + str(PodStatus.true_data['V']['val']) + '\t' + str(PodStatus.true_data['A']['val']))
+        print("D:" + str(PodStatus.true_data['D']['val']) + '\t' + "V:" + str(PodStatus.true_data['V']['val']) + '\t' + "A:" + str(PodStatus.true_data['A']['val']))
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
