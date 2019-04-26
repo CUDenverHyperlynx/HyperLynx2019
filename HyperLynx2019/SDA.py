@@ -72,6 +72,8 @@ class Status():
     abort_ranges[Crawling] = {}
     abort_ranges[BrakingLow] = {}
     commands = {}               # Contains all possible inputs from GUI
+    cmd_int = {}
+    cmd_ext = {}
     sensor_data = {}            # Contains all inputs from I2C/CAN buses
     sensor_filter = {}
     true_data = {}
@@ -215,11 +217,6 @@ def init():
     for i in range(0, len(cmd_names)):
         PodStatus.commands[cmd_names[i]] = cmd_vals[i]
 
-    cmd_int = dict()
-    cmd_ext = dict()
-    cmd_intval = dict()
-    cmd_extval = dict()
-
     cmd_int = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                dtype=str)
     cmd_ext = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
@@ -228,6 +225,12 @@ def init():
                                   dtype=int)
     cmd_extval = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
                                   dtype=int)
+
+    for i in range(0, len(cmd_int)):
+        PodStatus.cmd_int[cmd_int[i]] = cmd_intval[i]
+
+    for i in range(0, len(cmd_ext)):
+        PodStatus.cmd_ext[cmd_ext[i]] = cmd_extval[i]
 
     print("Checking IMUs")
     poll_sensors()
