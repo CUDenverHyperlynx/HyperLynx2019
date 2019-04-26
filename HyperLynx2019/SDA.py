@@ -217,20 +217,19 @@ def init():
     for i in range(0, len(cmd_names)):
         PodStatus.commands[cmd_names[i]] = cmd_vals[i]
 
-    cmd_int = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
-                               dtype=str)
-    cmd_ext = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
-                               dtype=str)
-    cmd_intval = numpy.genfromtxt('cmd_int', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
-                                  dtype=int)
-    cmd_extval = numpy.genfromtxt('cmd_ext', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
-                                  dtype=int)
+    PodStatus.cmd_int = {"Abort": 0,
+                         "HV": 0,
+                         "Vent_Sol": 0,
+                         "Res1_Sol": 0,
+                         "Res2_Sol": 0,
+                         "MC_Pump": 0}
 
-    for i in range(0, len(cmd_int)):
-        PodStatus.cmd_int[cmd_int[i]] = cmd_intval[i]
-
-    for i in range(0, len(cmd_ext)):
-        PodStatus.cmd_ext[cmd_ext[i]] = cmd_extval[i]
+    PodStatus.cmd_ext = {"Abort": 0,
+                         "HV": 0,
+                         "Vent_Sol": 0,
+                         "Res1_Sol": 0,
+                         "Res2_Sol": 0,
+                         "MC_Pump": 0}
 
     print("Checking IMUs")
     poll_sensors()
