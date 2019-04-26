@@ -15,24 +15,24 @@ def sim(PodStatus, *args):
     # Activate Res1
     if (PodStatus.cmd_ext['Res1_Sol'] == True) or (PodStatus.cmd_int['Res1_Sol'] == True) and (PodStatus.Vent_Sol == True):
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_data['Brake_Pressure'] + \
-                                                  200 + random.randint(-10,10)*10^-2
+                                                  200 + random.randint(-10,10)*10**-2
     # Activate Res2
     if (PodStatus.cmd_ext['Res2_Sol'] == True) or (PodStatus.cmd_int['Res2_Sol'] == True) and (PodStatus.Vent_Sol == True):
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_data['Brake_Pressure'] + \
-                                                  200 + random.randint(-10,10)*10^-2
+                                                  200 + random.randint(-10,10)*10**-2
     # Activate Vent
     if (PodStatus.cmd_ext['Vent_Sol'] == False) or (PodStatus.cmd_int['Vent_Sol'] == False):
-        PodStatus.sensor_data['Brake_Pressure'] = 0.01 + random.randint(-10,10)*10^-3
+        PodStatus.sensor_data['Brake_Pressure'] = 0.01 + random.randint(-10,10)*10**-3
 
     if PodStatus.Brakes == False:
         # Increment accelerometer data
-        PodStatus.sensor_data['IMU1_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10^-2
-        PodStatus.sensor_data['IMU2_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10^-2
+        PodStatus.sensor_data['IMU1_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
+        PodStatus.sensor_data['IMU2_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
                                                          PodStatus.true_data['A']['val'] * PodStatus.poll_interval + \
-                                                         random.randint(-10,10)*10^-2) * 60 / PodStatus.wheel_circum
+                                                         random.randint(-10,10)*10**-2) * 60 / PodStatus.wheel_circum
 
         # Increment stripe count
             # Ensure stripe count only incremented when:
