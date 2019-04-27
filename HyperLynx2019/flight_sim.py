@@ -33,6 +33,7 @@ def sim(PodStatus):
         PodStatus.sensor_data['IMU2_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
         print(str(PodStatus.sensor_data['IMU1_X']))
         print(str(PodStatus.sensor_data['IMU2_X']))
+        print(PodStatus.throttle)
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
