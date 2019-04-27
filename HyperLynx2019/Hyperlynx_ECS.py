@@ -58,11 +58,12 @@ class HyperlynxECS():
 		self.greenPIN = 6												#DROK SIGNAL PIN FOR GREEN LED
 		self.contactorPIN1 = 13											#DROK SIGNAL PIN FOR CONTACTOR 1
 		self.contactorPIN2 = 18											#DROK SIGNAL PIN FOR CONTACTOR 2
+		self.MLX_rstPIN = 19											#ACTIVE LOW RESET FOR MLX90614
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
-		self.Y1OFFSET = 0
-		self.Y2OFFSET = 0
+		self.X1OFFSET = 0
+		self.X2OFFSET = 0
 		self.Z1OFFSET = 0
 		self.Z2OFFSET = 0
 		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
@@ -72,6 +73,14 @@ class HyperlynxECS():
 		self.tcaPVR = 3													#TCA CHANNEL FOR RIGHT PV AVIONICS 1
 		self.tcaPVR2 = 4												#TCA CHANNEL FOR RIGHT PV AVIONICS 2
 		self.connectAttempt = 5
+		self.MLX_status = False
+		self.BNO1_status = False
+		self.BNO2_status = False
+		self.BME1_status = False
+		self.BME2_status = False
+		self.BMP_status = False
+		self.LID_status = False
+		self.ADC_status = False
 		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
 			self.bus.write_byte(self.MUX_ADDR, 0)
 			print("TCA I2C Multiplexer Ready")
@@ -96,6 +105,7 @@ class HyperlynxECS():
 			self.Lidar = Lidar.Lidar_Lite()								#CREATE OBJECT FOR LIDAR LITE V3
 			self.bus.write_quick(self.LID_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
 			print("Lidar Ready")
+			self.LID_status = True
 		except IOError:
 			print("Connection error with Lidar")						#PRINT ERROR IF UNABLE TO CONNECT
 			return 0
@@ -116,13 +126,14 @@ class HyperlynxECS():
 					while(self.IMU1.get_calibration_status()[1] != 3):
 						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
 					print("IMU1 Ready")
+					self.BNO1_status = True
 					break
 				sleep(0.5)
 		except IOError:
 			print("Connection error with IMU1")
 			#return 0
 		try:
-			self.Y1OFFSET = self.getOrientation(1)[1]
+			self.X1OFFSET = self.getOrientation(1)[1]
 			print("IMU1 Y offset angle set")
 		except IOError:
 			print("IMU1 Y offset angle not set")
@@ -138,13 +149,14 @@ class HyperlynxECS():
 					while(self.IMU2.get_calibration_status()[1] != 3):
 						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
 					print("IMU2 Ready")
+					self.BNO2_status = True
 					break
 				sleep(0.5)
 		except IOError:
 			print("Connection Error with IMU2")
 			#return 0
 		try:
-			self.Y2OFFSET = self.getOrientation(2)[1]
+			self.X2OFFSET = self.getOrientation(2)[1]
 			print("IMU2 Y offset angle set")
 		except IOError:
 			print("IMU2 Y offset angle not set")
@@ -158,6 +170,7 @@ class HyperlynxECS():
 				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
 				if(self.BMP.read_raw_temp()):							#ATTEMPT READING FROM BMP
 					print("BMP Ready")
+					self.BMP_status = True
 					break
 				sleep(0.5)
 		except IOError:
@@ -177,6 +190,7 @@ class HyperlynxECS():
 				self.BMEL = BME280(address=self.BME_ADDR2)				#CREATE OBJECT FOR BME280 AT ADDRESS 2
 				if(self.BMEL.read_raw_temp()):
 					print("BME LPV Ready")
+					self.BME2_status = True
 					break
 				sleep(0.5)
 		except IOError:
@@ -196,6 +210,7 @@ class HyperlynxECS():
 				self.Therm = MLX90614(address=self.IR_ADDR)				#CREATE OBJECT FOR MLX90614 IR THERMOMETER
 				if(self.Therm.check_connect):							#CHECK CONNECTION
 					print("MLX90614 Ready")
+					self.MLX_status = True
 					break
 				sleep(0.5)
 		except IOError:
@@ -203,7 +218,8 @@ class HyperlynxECS():
 			#return 0
 		try:
 			self.ADC = Adafruit_ADS1x15.ADS1115(address=self.ADC_ADDR, busnum=1)#CREATE OBJECT FOR ADS1115 ADC
-			print("ADC Ready")		
+			print("ADC Ready")	
+			self.ADC_status = True	
 		except IOError:
 			print("Connection error with ADS ADC")
 			#return 0
@@ -221,6 +237,7 @@ class HyperlynxECS():
 				self.BMER = BME280(address=self.BME_ADDR1)				#CREATE  OBJECT FOR BME280 AT ADDRESS 2
 				if(self.BMER.read_raw_temp()):
 					print("BME RPV Ready")
+					self.BME1_status = True
 					break
 				sleep(0.5)
 		except IOError:
@@ -246,8 +263,10 @@ class HyperlynxECS():
 		sleep(0.001)													#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
 		try:
 			data = self.Therm.get_obj_temp_C()							#FETCH OBJECT TEMP
+			self.MLX_status = True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO MLX90614
+			self.MLX_status = False
 		return data														#RETURNS TEMPERATURE READING IN DEGREES CELSIUS
 	"""FETCH ORIENTATION"""												#PARAMETER IS DESIRED IMU (1 OR 2)
 	def getOrientation(self, imu_num):
@@ -259,21 +278,25 @@ class HyperlynxECS():
 		if(imu_num == 1):
 			try:
 				data = self.IMU1.read_euler()							#READS X, Y AND Z ORIENTATION IN DEGREES AND RETURNS AS TUPLE
+				self.BNO1_status = True
 			except IOError:
 				data = [0, 0, 0]
-			x = data[0]
-			y = data[1] - self.Y1OFFSET
+				self.BNO1_status = False
+			y = data[0]
+			x = data[1] - self.X1OFFSET
 			z = data[2] - self.Z1OFFSET
-			return [x, y, z]
+			return [y, x, z]
 		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_euler()
+				self.BNO2_status = True
 			except IOError:
 				data = [0, 0, 0]
-			x = data[0]
-			y = data[1] - self.Y2OFFSET
+				self.BNO2_status = False
+			y = data[0]
+			x = data[1] - self.X2OFFSET
 			z = data[2] - self.Z2OFFSET
-			return [x, y, z]
+			return [y, x, z]
 		else:
 			print("Illegal Selection")
 			return 0
@@ -287,13 +310,17 @@ class HyperlynxECS():
 		if(imu_num == 1):
 			try:
 				data = self.IMU1.read_linear_acceleration()
+				self.BNO1_status = True
 			except IOError:
+				self.BNO1_status = False
 				return 0
 			return data[0] * self.METER2G								#RETURNS ACCELERATION IN G'S
 		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_linear_acceleration()
+				self.BNO2_status = True
 			except IOError:
+				self.BNO2_status = False
 				return 0
 			return data[0] * self.METER2G								#RETURNS ACCELERATION IN G'S
 		else:
@@ -308,8 +335,10 @@ class HyperlynxECS():
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.Lidar.getDistance()								#FETCH DISTANCE
+			self.LID_status =True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO LIDAR
+			self.LID_status = False
 		return data * 0.0328084											#RETURNS DISTANCE IN FEET
 	"""FETCH TUBE PRESSURE"""	
 	def getTubePressure(self):
@@ -320,8 +349,10 @@ class HyperlynxECS():
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.BMP.read_pressure()								#FETCH PRESSURE
+			self.BMP_status = True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO BMP
+			self.BMP_status = False
 		return data														#RETURNS PRESSURE IN PSI
 	"""FETCH TUBE TEMPERATURE"""	
 	def getTubeTemp(self):
@@ -332,21 +363,25 @@ class HyperlynxECS():
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.BMP.read_temperature()							#FETCH TEMPERATURE
+			self.BMP_status = True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO BMP
+			self.BMP_status = False
 		return data														#RETURNS TEMPERATURE IN DEGREES CELSIUS
 	"""FETCH BME PRESSURE"""											#PARAMETER IS DESIRED BME (1 = RIGHT PV, 2 = LEFT PV)
 	def getBMEpressure(self, vessel):
 		if(vessel == 1):
-			if(self.currentBus != self.tcaPVR):
+			if(self.currentBus != self.tcaPVR2):
 				try:
-					self.openBus(self.tcaPVR)
+					self.openBus(self.tcaPVR2)
 				except IOError:
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
 			try:
 				data = self.BMER.read_pressure()						#FETCH PRESSURE
+				self.BME1_status = True
 			except IOError:
 				data = 0												#SETS AS ZERO IF CANNOT CONNECT TO BME
+				self.BME1_status = False
 			return data	* self.PASC2PSI									#RETURNS PRESSURE IN PSI
 		elif(vessel == 2):
 			if(self.currentBus != self.tcaPVL):
@@ -356,8 +391,10 @@ class HyperlynxECS():
 					return 0
 			try:
 				data = self.BMEL.read_pressure()
+				self.BME2_status = True
 			except IOError:
 				data = 0
+				self.BME2_status = False
 			return data * self.PASC2PSI
 		else:
 			print("Illegal vessel")
@@ -373,8 +410,10 @@ class HyperlynxECS():
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
 			try:
 				data = self.BMER.read_temperature()						#FETCH TEMPERATURE
+				self.BME1_status = True
 			except IOError:
 				data = 0												#SETS AS ZERO IF CANNOT CONNECT TO BME
+				self.BME1_status = False
 			return data													#RETURNS TEMPERATURE IN DEGREES CELSIUS
 		elif(vessel == 2):
 			if(self.currentBus != self.tcaPVL):
@@ -384,7 +423,9 @@ class HyperlynxECS():
 					return 0
 			try:
 				data = self.BMEL.read_temperature()
+				self.BME2_status = True
 			except IOError:
+				self.BME2_status = False
 				return 0
 			return data
 		else:
@@ -399,8 +440,10 @@ class HyperlynxECS():
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.ADC.read_adc(self.VOLT, self.ADC_GAIN)			#READ VOLTAGE PIN SET ON ADC
+			self.ADC_status = True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
+			self.ADC_status = False
 		return data * self.ADC_CONVERT * self.vRatio					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY ATTOPILOT AND SCALES TO VOLTAGE READ BY ATTOPILOT, RETURNS VOLTAGE
 	"""FETCH LV BATTERY CURRENT DRAW"""#DOES NOT WORK YET, SOURCING NEW SENSOR	
 	def getCurrentLevel(self):
@@ -411,8 +454,10 @@ class HyperlynxECS():
 				return 0
 		try:
 			data = self.ADC.read_adc(self.AMP, self.ADC_GAIN)
+			self.ADC_status = True
 		except IOError:
 			data = 0
+			self.ADC_status = False
 		return data * self.ADC_CONVERT * self.iRatio
 	"""FETCH BRAKE LINE PRESSURE"""	
 	def getBrakePressure(self):
@@ -423,8 +468,10 @@ class HyperlynxECS():
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.ADC.read_adc(self.PRESSURE, self.ADC_GAIN)		#READ PRESSURE PIN SET ON ADC
+			self.ADC_status = True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
+			self.ADC_status = False
 		return data * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
 	
 	def initializeDROK():
@@ -435,6 +482,7 @@ class HyperlynxECS():
 		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 1 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 2 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.coolPumpPIN, self.IO.OUT, initial=self.IO.LOW)#SET COOLANT PUMP PIN TO OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.MLXrstPIN, self.IO.OUT, initial=self.IO.HIGH)
 			
 	def switchGreenLED(self, status):
 		if(status == 0):
@@ -479,7 +527,15 @@ class HyperlynxECS():
 				self.IO.output(self.contactorPIN2, self.IO.HIGH)
 			elif(status == 1):
 				self.IO.output(self.contactorPIN2, self.IO.HIGH)
-			
+	
+	def MLX_RESET():
+		self.IO.output(self.MLX_rstPIN, self.IO.LOW)
+		sleep(0.001)
+		self.IO.output(self.MLXrstPIN, self.IO.HIGH)
+		
+	def statusCheck():
+		if(not self.MLX_status and not self.BNO1_status and not self.BNO2_status and not self.BME1_status and not self.BME2_status and not self.BMP_status and not self.LID_status and not self.ADC_status):
+			MLX_RESET()
 				
 	
 		
