@@ -10,7 +10,7 @@ Flight simulator
 import random, numpy
 
 
-def sim(PodStatus, *args):
+def sim(PodStatus):
 
     print("In Flight Simulation")
 
