@@ -46,6 +46,7 @@ def sim(PodStatus):
             PodStatus.sensor_data['LST_Left'] += 1
 
     print("D:" + str(PodStatus.true_data['D']['val']) + '\t' + "V:" + str(PodStatus.true_data['V']['val']) + '\t' + "A:" + str(PodStatus.true_data['A']['val']))
+    print("Left Stripe:" + str(PodStatus.sensor_data['LST_Left']) + '\t' + "Right Stripe:" + str(PodStatus.sensor_data['LST_Right']))
 
     return(PodStatus)
 
