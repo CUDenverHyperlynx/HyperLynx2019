@@ -58,7 +58,7 @@ class HyperlynxECS():
 		self.greenPIN = 6												#DROK SIGNAL PIN FOR GREEN LED
 		self.contactorPIN1 = 13											#DROK SIGNAL PIN FOR CONTACTOR 1
 		self.contactorPIN2 = 18											#DROK SIGNAL PIN FOR CONTACTOR 2
-		self.MLX_rstPIN = 19											#ACTIVE LOW RESET FOR MLX90614
+		self.MLXrstPIN = 19											#ACTIVE LOW RESET FOR MLX90614
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
@@ -81,9 +81,12 @@ class HyperlynxECS():
 		self.BMP_status = False
 		self.LID_status = False
 		self.ADC_status = False
+		self.TCA_status = False
+		self.MLXRST = 0
 		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
 			self.bus.write_byte(self.MUX_ADDR, 0)
 			print("TCA I2C Multiplexer Ready")
+			self.TCA_status = True
 		except IOError:
 			print("Connection Error with TCA I2C Multiplexer")
 			while True:
@@ -100,6 +103,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection error with TCA Multiplexer")
+			self.TCA_status = False
 			return 0;
 		try:
 			self.Lidar = Lidar.Lidar_Lite()								#CREATE OBJECT FOR LIDAR LITE V3
@@ -117,6 +121,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection error with TCA Multiplexer")
+			self.TCA_status = False
 			return 0
 
 		try:
@@ -184,6 +189,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection error wit TCA Multiplexer")
+			self.TCA_status = 0
 			return 0
 		try:
 			for x in range(0, self.connectAttempt):
@@ -204,6 +210,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection error with TCA Multiplexer")
+			self.TCA_status = False
 			return 0
 		try:
 			for x in range(0, self.connectAttempt):
@@ -231,6 +238,7 @@ class HyperlynxECS():
 				sleep(0.5)
 		except IOError:
 			print("Connection error with TCA Multiplexer")
+			self.TCA_status = False
 			return 0
 		try:
 			for x in range(0, self.connectAttempt):
@@ -259,6 +267,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaPVR)								#CHECKS FOR CURRENT OPEN CHANNEL TO SAVE TIME SELECTING IF IT IS ALREADY OPEN, IF ALREADY NOT OPENED, OPEN IT
 			except IOError:
+				self.TCA_status = False
 				return 0
 		sleep(0.001)													#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
 		try:
@@ -274,6 +283,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaNOSE)								#CHECK IF BUS IS OPENED, IF IT IS NOT, OPEN IT
 			except IOError:
+				self.TCA_status = False
 				return [0, 0, 0]										#RETURNS TUPLE OF ZEROS IF CANNOT CONNECT TO TCA
 		if(imu_num == 1):
 			try:
@@ -306,6 +316,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaNOSE)
 			except IOError:
+				self.TCA_status = False
 				return 0
 		if(imu_num == 1):
 			try:
@@ -332,10 +343,11 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaLIDAR)
 			except IOError:
+				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.Lidar.getDistance()								#FETCH DISTANCE
-			self.LID_status =True
+			self.LID_status = True
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO LIDAR
 			self.LID_status = False
@@ -346,6 +358,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaNOSE)
 			except IOError:
+				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.BMP.read_pressure()								#FETCH PRESSURE
@@ -360,6 +373,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaNOSE)
 			except IOError:
+				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.BMP.read_temperature()							#FETCH TEMPERATURE
@@ -375,6 +389,7 @@ class HyperlynxECS():
 				try:
 					self.openBus(self.tcaPVR2)
 				except IOError:
+					self.TCA_status = 0
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
 			try:
 				data = self.BMER.read_pressure()						#FETCH PRESSURE
@@ -388,6 +403,7 @@ class HyperlynxECS():
 				try:
 					self.openBus(self.tcaPVL)
 				except IOError:
+					self.TCA_status = False
 					return 0
 			try:
 				data = self.BMEL.read_pressure()
@@ -407,6 +423,7 @@ class HyperlynxECS():
 				try:
 					self.openBus(self.tcaPVR2)
 				except IOError:
+					self.TCA_status = False
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
 			try:
 				data = self.BMER.read_temperature()						#FETCH TEMPERATURE
@@ -420,6 +437,7 @@ class HyperlynxECS():
 				try:
 					self.openBus(self.tcaPVL)
 				except IOError:
+					self.TCA_status = False
 					return 0
 			try:
 				data = self.BMEL.read_temperature()
@@ -437,6 +455,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaPVR)
 			except IOError:
+				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.ADC.read_adc(self.VOLT, self.ADC_GAIN)			#READ VOLTAGE PIN SET ON ADC
@@ -451,6 +470,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaPVR)
 			except IOError:
+				self.TCA_status = False
 				return 0
 		try:
 			data = self.ADC.read_adc(self.AMP, self.ADC_GAIN)
@@ -465,6 +485,7 @@ class HyperlynxECS():
 			try:
 				self.openBus(self.tcaPVR)
 			except IOError:
+				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
 		try:
 			data = self.ADC.read_adc(self.PRESSURE, self.ADC_GAIN)		#READ PRESSURE PIN SET ON ADC
@@ -474,14 +495,14 @@ class HyperlynxECS():
 			self.ADC_status = False
 		return data * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
 	
-	def initializeDROK():
+	def initializeIO(self):
 		self.IO.setup(self.contactorPIN1, self.IO.OUT, initial=self.IO.LOW)#SET CONTACTOR1 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.greenPIN, self.IO.OUT, initial=self.IO.LOW)	#SET GREEN LED PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.contactorPIN2, self.IO.OUT, initial=self.IO.LOW)	#SET CONTACTOR 2 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NOsolPIN, self.IO.OUT, initial=self.IO.LOW)	#SET NO SOLENOID PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol1PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 1 PIN AS OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.NCsol2PIN, self.IO.OUT, initial=self.IO.LOW)	#SET NC SOLENOID RES 2 PIN AS OUTPUT, INITIALIZE LOW
-		self.IO.setup(self.coolPumpPIN, self.IO.OUT, initial=self.IO.LOW)#SET COOLANT PUMP PIN TO OUTPUT, INITIALIZE LOW
+		self.IO.setup(self.CoolPumpPIN, self.IO.OUT, initial=self.IO.LOW)#SET COOLANT PUMP PIN TO OUTPUT, INITIALIZE LOW
 		self.IO.setup(self.MLXrstPIN, self.IO.OUT, initial=self.IO.HIGH)
 			
 	def switchGreenLED(self, status):
@@ -510,9 +531,9 @@ class HyperlynxECS():
 				
 	def switchCoolantPump(self, status):
 		if(status == 0):
-			self.IO.output(self.coolPumpPIN, self.IO.LOW)
+			self.IO.output(self.CoolPumpPIN, self.IO.LOW)
 		else:
-			self.IO.output(self.coolPumpPIN, self.IO.HIGH)
+			self.IO.output(self.CoolPumpPIN, self.IO.HIGH)
 			
 	#SWITCHES CONTACTOR DROKS. PARAMETERS(contactor: 1 = Contactor 1; 2 = Contactor 2, status: 0 = LOW; 1 = HIGH
 	#RED LED WILL LIGHT WHEN BOTH CONTACTORS ARE SWITCHED ON
@@ -528,19 +549,28 @@ class HyperlynxECS():
 			elif(status == 1):
 				self.IO.output(self.contactorPIN2, self.IO.HIGH)
 	
-	def MLX_RESET():
-		self.IO.output(self.MLX_rstPIN, self.IO.LOW)
-		sleep(0.001)
+	def MLX_RESET(self):
+		self.IO.output(self.MLXrstPIN, self.IO.LOW)
+		sleep(0.00001)
 		self.IO.output(self.MLXrstPIN, self.IO.HIGH)
 		
-	def statusCheck():
-		if(not self.MLX_status and not self.BNO1_status and not self.BNO2_status and not self.BME1_status and not self.BME2_status and not self.BMP_status and not self.LID_status and not self.ADC_status):
-			MLX_RESET()
+	def statusCheck(self):
+		data = self.MLX_status + self.BNO1_status + self.BNO2_status + self.BME1_status + self.BME2_status + self.BMP_status + self.LID_status + self.ADC_status
+		if(not self.TCA_status):
+			self.MLX_RESET()
+			self.MLXRST = self.MLXRST + 1
+			self.TCA_status = True
+		elif(data == 0):
+			self.MLX_RESET()
+			self.MLXRST = self.MLXRST + 1
+		return (data / 8) * 100
+		
 				
 	
 		
 if __name__ == '__main__':
 	system = HyperlynxECS()
+	system.initializeIO()
 	if(system.initializeSensors()):
 		while True:
 			startTime = clock()
@@ -559,7 +589,10 @@ if __name__ == '__main__':
 			tubetemp = system.getTubeTemp()
 			temp1 = system.getBMEtemperature(1)
 			press1 = system.getBMEpressure(1)
+			stat = system.statusCheck()
 			endTime = clock() - startTime
+			print(stat)
+			print(system.MLXRST)
 			print(endTime)
 			print("%.2f\t"%distance)
 			print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
