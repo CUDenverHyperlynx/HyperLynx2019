@@ -88,7 +88,7 @@ class Status():
         self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
         self.wheel_circum = numpy.pi * self.wheel_diameter
         self.StartTime = clock()
-        self.HV = 0                     # Current state of HV system (1 or 0)
+        self.HV = 1                     # Current state of HV system (1 or 0)
         self.Brakes = 1                 # Current state of brakes (1 = <177psi, 0 = >177psi)
         self.Vent_Sol = 1               # state of vent solenoid (1 = closed, 0 = open)
         self.Res1_Sol = 0               # state of reservoir #1 solenoid (1 = open, 0 = closed)
