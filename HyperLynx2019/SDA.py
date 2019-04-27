@@ -590,6 +590,7 @@ def rec_data():
         "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
         "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
         "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
+        "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"                                                                    
         "*************************")
 
     if PodStatus.state == PodStatus.SafeToApproach:
