@@ -13,6 +13,7 @@ import random, numpy
 def sim(PodStatus):
 
     print("In Flight Simulation")
+    PodStatus.throttle += 0.1
 
     # Activate Res1
     if (PodStatus.cmd_ext['Res1_Sol'] == True) or (PodStatus.cmd_int['Res1_Sol'] == True) and (PodStatus.Vent_Sol == True):
@@ -33,7 +34,6 @@ def sim(PodStatus):
         PodStatus.sensor_data['IMU2_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
         print(str(PodStatus.sensor_data['IMU1_X']))
         print(str(PodStatus.sensor_data['IMU2_X']))
-        print(PodStatus.throttle)
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
