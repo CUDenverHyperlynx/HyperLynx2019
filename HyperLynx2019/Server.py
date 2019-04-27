@@ -13,7 +13,13 @@ from PyQt5 import QtCore
 
 class HyperGui(QMainWindow):
     # Creating the dictionary
-    cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
+    # cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
+
+    # set up connection
+    HOST = '127.0.0.1'  # Change IP Address when using radios
+    PORT = 1028
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.bind((HOST, PORT))
 
     # ******* Constructor for the class *******
     def __init__(self):
@@ -322,18 +328,13 @@ class HyperGui(QMainWindow):
 app = QApplication([])
 my_gui = HyperGui()
 
-# set up connection
-HOST = socket.gethostbyname(socket.gethostname())       # Change IP Address when using radios
-PORT = 1028
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.bind((HOST, PORT))
-
 # Print Listening on HOST and PORT
-print(HOST)
-print(PORT)
+# print(HOST)
+# print(PORT)
 
 my_gui.show()
 
+'''
 # loop during run
 while 1:
     # Receive new data
@@ -364,5 +365,6 @@ while 1:
 
     # Call GUI function and send data
     # Put GUI function here
+'''
 
-# sys.exit(app.exec_())
+sys.exit(app.exec_())
