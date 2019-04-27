@@ -40,7 +40,7 @@ def sim(PodStatus):
             # Ensure stripe count only incremented when:
             #   - current distance is > 25ft from the previous count point
             #   - current distance is < 5ft from the next stripe
-        if (PodStatus.true_data['D']['val']/100 - PodStatus.true_data['stripe_dist'] > 25) and \
+        if (PodStatus.true_data['D']['val']/100 - PodStatus.stripe_count > 25) and \
                 (abs(PodStatus.true_data['D']['val']/100 - numpy.around(PodStatus.true_data['D']['val']/100)) < 0.05):
             PodStatus.sensor_data['LST_Right'] += 1
             PodStatus.sensor_data['LST_Left'] += 1
