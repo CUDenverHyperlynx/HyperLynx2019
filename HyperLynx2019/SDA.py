@@ -268,10 +268,11 @@ def poll_sensors():
 
     # If you want to run the flight sim:
     if PodStatus.flight_sim is True:
+
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
-        #PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
+        PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
         PodStatus.sensor_data['PV_Left_Temp'] = PodStatus.sensor_poll.getBMEtemperature(2)
         PodStatus.sensor_data['PV_Left_Pressure'] = PodStatus.sensor_poll.getBMEpressure(2)
         PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
@@ -281,8 +282,27 @@ def poll_sensors():
         PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(1)[2]
         PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
         PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
-        #PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
+        PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
+
+        if PodStatus.state == PodStatus.Launching:
+
+            PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
+            PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
+            PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
+            PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
+            PodStatus.sensor_data['PV_Left_Temp'] = PodStatus.sensor_poll.getBMEtemperature(2)
+            PodStatus.sensor_data['PV_Left_Pressure'] = PodStatus.sensor_poll.getBMEpressure(2)
+            PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
+            PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
+            PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
+            PodStatus.sensor_data['IMU1_Y'] = PodStatus.sensor_poll.getOrientation(1)[1]
+            PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(1)[2]
+            PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
+            PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
+            PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
+            
         flight_sim.sim(PodStatus)
+
     else:
         # Uncomment Brake Pressure for pulling in actual data when we have this set up
         #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
@@ -588,17 +608,6 @@ def rec_data():
         "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
         "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
         "*************************")
-
-    if PodStatus.flight_sim is True:
-        PodStatus.HV = True
-        PodStatus.Vent_Sol = 1
-        PodStatus.Res1_Sol = 1
-        PodStatus.MC_Pump = 1
-        PodStatus.para_BBP = 4150
-        PodStatus.para_max_speed = 200
-        PodStatus.para_max_accel = 1
-        PodStatus.para_max_time = 10
-        PodStatus.para_max_crawl_speed = 20
 
     if PodStatus.state == PodStatus.SafeToApproach:
         print("\n*** MENU ***\n"
