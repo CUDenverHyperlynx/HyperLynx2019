@@ -268,6 +268,15 @@ def poll_sensors():
 
     # If you want to run the flight sim:
     if PodStatus.flight_sim is True:
+        PodStatus.HV = True
+        PodStatus.Vent_Sol = 1
+        PodStatus.Res1_Sol = 1
+        PodStatus.MC_Pump = 1
+        PodStatus.para_BBP = 4150
+        PodStatus.para_max_speed = 200
+        PodStatus.para_max_accel = 1
+        PodStatus.para_max_time = 10
+        PodStatus.para_max_crawl_speed = 20
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
