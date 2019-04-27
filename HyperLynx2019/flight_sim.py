@@ -27,10 +27,12 @@ def sim(PodStatus):
         PodStatus.sensor_data['Brake_Pressure'] = 0.01 + random.randint(-10,10)*10**-3
 
     if PodStatus.Brakes is False:
-        print(str(PodStatus.sensor_data['IMU1_X']))
+
         # Increment accelerometer data
         PodStatus.sensor_data['IMU1_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
         PodStatus.sensor_data['IMU2_X'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
+        print(str(PodStatus.sensor_data['IMU1_X']))
+        print(str(PodStatus.sensor_data['IMU2_X']))
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
