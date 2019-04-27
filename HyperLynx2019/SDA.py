@@ -479,11 +479,11 @@ def sensor_fusion():
             print("Looking for stripe")
             if PodStatus.sensor_data['LST_Left'] == temp_count:
                 print("Left stripe counted!")
-                PodStatus.true_data['stripe_dist'] = PodStatus.sensor_data['LST_Left']
+                PodStatus.stripe_count = PodStatus.sensor_data['LST_Left']
                 PodStatus.sensor_data['LST_Right'] = PodStatus.sensor_data['LST_Left']
             elif PodStatus.sensor_data['LST_Right'] == temp_count:
                 print("Right stripe counted!")
-                PodStatus.true_data['stripe_dist'] = PodStatus.sensor_data['LST_Right']
+                PodStatus.stripe_count = PodStatus.sensor_data['LST_Right']
                 PodStatus.sensor_data['LST_Left'] = PodStatus.sensor_data['LST_Right']
             else:
                 print("No stripe counted, still waiting.")
@@ -856,9 +856,9 @@ def run_state():
 
         # ACCEL UP TO MAX G within 2%
         # Linear inputs; MC has a built-in throttle damper
-        if PodStatus.accel < (0.98 * PodStatus.para_max_accel):
+        if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel):
             PodStatus.throttle = PodStatus.throttle * 1.01
-        elif PodStatus.accel > (1.02*PodStatus.para_max_accel):
+        elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel):
             PodStatus.throttle = PodStatus.throttle * 0.99
 
         # TRANSITIONS
