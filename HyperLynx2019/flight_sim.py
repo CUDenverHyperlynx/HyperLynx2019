@@ -12,6 +12,8 @@ import random, numpy
 
 def sim(PodStatus, *args):
 
+    print("In Flight Simulation")
+
     # Activate Res1
     if (PodStatus.cmd_ext['Res1_Sol'] == True) or (PodStatus.cmd_int['Res1_Sol'] == True) and (PodStatus.Vent_Sol == True):
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_data['Brake_Pressure'] + \
