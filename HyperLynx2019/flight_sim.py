@@ -13,7 +13,6 @@ import random, numpy
 def sim(PodStatus):
 
     print("In Flight Simulation")
-    PodStatus.throttle += 0.1
 
     # Activate Res1
     if (PodStatus.cmd_ext['Res1_Sol'] == True) or (PodStatus.cmd_int['Res1_Sol'] == True) and (PodStatus.Vent_Sol == True):
