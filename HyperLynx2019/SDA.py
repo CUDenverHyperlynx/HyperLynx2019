@@ -88,7 +88,7 @@ class Status():
         self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
         self.wheel_circum = numpy.pi * self.wheel_diameter
         self.StartTime = clock()
-        self.HV = 1                     # Current state of HV system (1 or 0)
+        self.HV = False                     # Current state of HV system (True(1) or False(0))
         self.Brakes = 1                 # Current state of brakes (1 = <177psi, 0 = >177psi)
         self.Vent_Sol = 1               # state of vent solenoid (1 = closed, 0 = open)
         self.Res1_Sol = 0               # state of reservoir #1 solenoid (1 = open, 0 = closed)
@@ -267,7 +267,7 @@ def poll_sensors():
     ### I2C DATA ###
 
     # If you want to run the flight sim:
-    if PodStatus.flight_sim == True:
+    if PodStatus.flight_sim is True:
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
