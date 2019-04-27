@@ -219,15 +219,15 @@ def init():
 
     PodStatus.cmd_int = {"Abort": 0,
                          "HV": 0,
-                         "Vent_Sol": 1,
-                         "Res1_Sol": 1,
+                         "Vent_Sol": 0,
+                         "Res1_Sol": 0,
                          "Res2_Sol": 0,
                          "MC_Pump": 0}
 
     PodStatus.cmd_ext = {"Abort": 0,
                          "HV": 0,
-                         "Vent_Sol": 1,
-                         "Res1_Sol": 1,
+                         "Vent_Sol": 0,
+                         "Res1_Sol": 0,
                          "Res2_Sol": 0,
                          "MC_Pump": 0}
 
@@ -1083,7 +1083,7 @@ if __name__ == "__main__":
         write_file()
         poll_sensors()
         filter_data()
-        sensor_fusion()
+        #sensor_fusion()
         run_state()
         do_commands()
         eval_abort()
