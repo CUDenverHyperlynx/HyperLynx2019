@@ -1090,8 +1090,6 @@ if __name__ == "__main__":
         rec_data()
         spacex_data()
         send_data(PodStatus)
-        if PodStatus.flight_sim is True:
-            print("D:" + str(PodStatus.true_data['D']['val']) + '\t' + "V:" + str(PodStatus.true_data['V']['val']) + '\t' + "A:" + str(PodStatus.true_data['A']['val']))
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
