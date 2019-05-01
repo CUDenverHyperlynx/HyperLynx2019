@@ -14,11 +14,11 @@ end
 fclose(file);
 fprintf("Length of file: %d\n", length(data));
 j = 1;
-datatype = 'Brake_Pressure';
+%datatype = 'Brake_Pressure';
 
 %% Load specific datatype into array for plotting
 for i = 1:length(data)
-    if (data{i,1} == datatype)
+    if datatype == string(data{i,1})
         spec_data(j,1) = data{i,2};
         spec_data(j,2) = data{i,4};
         j = j + 1;
