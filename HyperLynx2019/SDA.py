@@ -660,8 +660,8 @@ def rec_data():
             pass
 
     elif PodStatus.state == PodStatus.Launching:
-        print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
-        a = input('Enter choice: ')
+        #print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
+        #a = input('Enter choice: ')
         if a == '1':
             PodStatus.commands['Abort'] = 1
             abort()
