@@ -83,6 +83,7 @@ class HyperlynxECS():
 		self.ADC_status = False
 		self.TCA_status = False
 		self.MLXRST = 0
+		
 		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
 			self.bus.write_byte(self.MUX_ADDR, 0)
 			print("TCA I2C Multiplexer Ready")
@@ -463,7 +464,7 @@ class HyperlynxECS():
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
 			self.ADC_status = False
-		return data * self.ADC_CONVERT * self.vRatio					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY ATTOPILOT AND SCALES TO VOLTAGE READ BY ATTOPILOT, RETURNS VOLTAGE
+		return (data-4700) * self.ADC_CONVERT * self.vRatio					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY ATTOPILOT AND SCALES TO VOLTAGE READ BY ATTOPILOT, RETURNS VOLTAGE
 	"""FETCH LV BATTERY CURRENT DRAW"""#DOES NOT WORK YET, SOURCING NEW SENSOR	
 	def getCurrentLevel(self):
 		if(self.currentBus != self.tcaPVR):
@@ -478,7 +479,7 @@ class HyperlynxECS():
 		except IOError:
 			data = 0
 			self.ADC_status = False
-		return data * self.ADC_CONVERT * self.iRatio
+		return (data-4700) * self.ADC_CONVERT * self.iRatio
 	"""FETCH BRAKE LINE PRESSURE"""	
 	def getBrakePressure(self):
 		if(self.currentBus != self.tcaPVR):
@@ -493,7 +494,7 @@ class HyperlynxECS():
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
 			self.ADC_status = False
-		return data * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
+		return (data-4700) * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
 	
 	def initializeIO(self):
 		self.IO.setup(self.contactorPIN1, self.IO.OUT, initial=self.IO.LOW)#SET CONTACTOR1 PIN AS OUTPUT, INITIALIZE LOW
