@@ -1090,13 +1090,14 @@ if __name__ == "__main__":
         write_file()
         poll_sensors()
         filter_data()
-        #sensor_fusion()
+        sensor_fusion()
         run_state()
         do_commands()
         eval_abort()
         rec_data()
         spacex_data()
         send_data(PodStatus)
+
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
