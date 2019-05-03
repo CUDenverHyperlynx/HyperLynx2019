@@ -896,6 +896,7 @@ def run_state():
     elif PodStatus.state == 5:
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
+        PodStatus.Brakes = True
 
         if PodStatus.speed <= 0.5 and PodStatus.stopped_time <= 0:
             PodStatus.stopped_time = clock()
