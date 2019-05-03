@@ -857,9 +857,15 @@ def run_state():
         # ACCEL UP TO MAX G within 2%
         # Linear inputs; MC has a built-in throttle damper
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel):
-            PodStatus.throttle = PodStatus.throttle * 1.01
+            if PodStatus.throttle < 1:
+                PodStatus.throttle = PodStatus.throttle + 0.01
+                if PodStatus.throttle > 1:
+                    PodStatus.throttle = 1
         elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel):
-            PodStatus.throttle = PodStatus.throttle * 0.99
+            if PodStatus.throttle > 0:
+                PodStatus.throttle = PodStatus.throttle - 0.01
+                if PodStatus.throttle < 0:
+                    PodStatus.throttle = 0
 
         # TRANSITIONS
         if PodStatus.distance > PodStatus.para_BBP:
