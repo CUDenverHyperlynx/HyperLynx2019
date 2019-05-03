@@ -394,6 +394,11 @@ def sensor_fusion():
         if abs(PodStatus.sensor_filter['IMU1_X']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
                 2 * PodStatus.true_data['A']['std_dev']:
             numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_X']['val'])
+        else:
+            print('IMUX_1 Data Bad\n')
+            print('IMUX Value ' + str(abs(PodStatus.sensor_filter['IMU1_X']['val'])) + '\n')
+            print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
+            print('A two times STD ' + str(2 * PodStatus.true_data['A']['std_dev']) + '\n')
         if abs(PodStatus.sensor_filter['IMU2_X']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
                 2 * PodStatus.true_data['A']['std_dev']:
             numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_X']['val'])
@@ -1070,10 +1075,9 @@ def write_file():
                     + 'spacex_state' + '\t' + str(PodStatus.spacex_state) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
                     + 'total_faults' + '\t' + str(PodStatus.total_faults) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
                     + 'throttle' + '\t' + str(PodStatus.throttle) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'distance' + '\t' + str(PodStatus.distance) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'speed' + '\t' + str(PodStatus.speed) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'accel' + '\t' + str(PodStatus.accel) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'wheel_diameter' + '\t' + str(PodStatus.wheel_diameter) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n'
+                    + 'D' + '\t' + str(PodStatus.true_data['D']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'V' + '\t' + str(PodStatus.true_data['V']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
