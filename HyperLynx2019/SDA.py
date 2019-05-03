@@ -305,6 +305,10 @@ def poll_sensors():
         PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
+    if abs(PodStatus.sensor_data['IMU1_X']) > 20:
+        PodStatus.sensor_data['IMU1_X'] = 0
+    if abs(PodStatus.sensor_data['IMU2_X']) > 20:
+        PodStatus.sensor_data['IMU2_X'] = 0
 
     ### RPI DATA ###
     rpi_data = psutil.disk_usage('/')
