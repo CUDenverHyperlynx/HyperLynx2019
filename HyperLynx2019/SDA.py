@@ -577,6 +577,12 @@ def rec_data():
     During DEBUG, this function is a mock GUI for testing SDA.
     """
 
+    PodStatus.para_BBP = 4150
+    PodStatus.para_max_speed = 200
+    PodStatus.para_max_accel = 2
+    PodStatus.para_max_time = 6
+    PodStatus.para_max_crawl_speed = 20
+
     ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
     print("\n******* POD STATUS ******\n"
         "\tState:               " + str(PodStatus.state) + "\t\t")
