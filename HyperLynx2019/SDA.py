@@ -660,18 +660,19 @@ def rec_data():
             pass
 
     elif PodStatus.state == PodStatus.Launching:
+        pass
         #print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
         #a = input('Enter choice: ')
-        if a == '1':
-            PodStatus.commands['Abort'] = 1
-            abort()
-        elif a == '2':
-            PodStatus.distance = PodStatus.para_BBP + 1
-            print(PodStatus.distance)
-        elif a == '3':
-            PodStatus.Quit = True
-        else:
-            pass
+        #if a == '1':
+        #    PodStatus.commands['Abort'] = 1
+        #    abort()
+        #elif a == '2':
+        #     PodStatus.distance = PodStatus.para_BBP + 1
+        #     print(PodStatus.distance)
+        # elif a == '3':
+        #     PodStatus.Quit = True
+        # else:
+        #     pass
     elif PodStatus.state == PodStatus.BrakingHigh:
         pass
     elif PodStatus.state == PodStatus.Crawling:
