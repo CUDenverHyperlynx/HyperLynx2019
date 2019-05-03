@@ -172,6 +172,7 @@ def init():
     abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                    dtype=str)
     abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12))
+
     for i in range(0, len(abort_names)):
         if not str(abort_names[i]) in PodStatus.sensor_data:
             PodStatus.sensor_data[abort_names[i]] = 0
@@ -214,6 +215,7 @@ def init():
                                  dtype=str)
     cmd_vals = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
                                 dtype=int)
+
     for i in range(0, len(cmd_names)):
         PodStatus.commands[cmd_names[i]] = cmd_vals[i]
 
@@ -674,6 +676,7 @@ def rec_data():
         else:
             pass
 
+    # Commented out for Flight Simulation purposes
     elif PodStatus.state == PodStatus.Launching:
         pass
         #print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
@@ -906,6 +909,7 @@ def run_state():
     elif PodStatus.state == 5:
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
+        # Debug line below for actual brake state
         PodStatus.Brakes = True
 
         if PodStatus.speed <= 0.5 and PodStatus.stopped_time <= 0:
