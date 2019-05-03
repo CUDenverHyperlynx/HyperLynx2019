@@ -1065,14 +1065,14 @@ def write_file():
                 line = str(key) + '\t' + str(PodStatus.commands[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             ### Log pod state variables
-            line = 'state' + '\t' + str(PodStatus.state) + '\t\t' + 0+ '\t\t' + str(round(clock(),2)) + '\n' \
+            line = 'state' + '\t' + str(PodStatus.state) + '\t\t' + 0 + '\t\t' + str(round(clock(),2)) + '\n' \
                     + 'spacex_state' + '\t' + str(PodStatus.spacex_state) + '\t\t' + 0 + '\t\t' + str(round(clock(),2)) + '\n' \
-                    + 'total_faults' + '\t' + str(PodStatus.total_faults) + '\t\t' + 0+ '\t\t' + str(round(clock(),2)) + '\n' \
-                    + 'throttle' + '\t' + str(PodStatus.throttle) + '\t\t' + 0+ '\t\t' + str(round(clock(), 2)) + '\n' \
-                    + 'distance' + '\t' + str(PodStatus.distance) + '\t\t' + 0+ '\t\t' + str(round(clock(), 2)) + '\n' \
-                    + 'speed' + '\t' + str(PodStatus.speed) + '\t\t' + 0+ '\t\t' + str(round(clock(), 2)) + '\n' \
-                    + 'accel' + '\t' + str(PodStatus.accel) + '\t\t' + 0+ '\t\t' + str(round(clock(), 2)) + '\n' \
-                    + 'wheel_diameter' + '\t' + str(PodStatus.wheel_diameter) + '\t\t' + 0+ '\t\t' + str(round(clock(),2)) + '\n'
+                    + 'total_faults' + '\t' + str(PodStatus.total_faults) + '\t\t' + 0 + '\t\t' + str(round(clock(),2)) + '\n' \
+                    + 'throttle' + '\t' + str(PodStatus.throttle) + '\t\t' + 0 + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'distance' + '\t' + str(PodStatus.distance) + '\t\t' + 0 + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'speed' + '\t' + str(PodStatus.speed) + '\t\t' + 0 + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'accel' + '\t' + str(PodStatus.accel) + '\t\t' + 0 + '\t\t' + str(round(clock(), 2)) + '\n' \
+                    + 'wheel_diameter' + '\t' + str(PodStatus.wheel_diameter) + '\t\t' + str(0) + '\t\t' + str(round(clock(),2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
