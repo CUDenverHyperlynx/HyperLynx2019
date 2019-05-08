@@ -582,7 +582,7 @@ def rec_data():
         # Need to receive: cmd_ext{} and para{} into temp values.
         # If state = 1, then load all cmd_ext{} and para_ into the PodStatus dicts.
         # If state != 1, then *only* load the cmd_ext['Abort'] value to the PodStatus.cmd_int['Abort'] var.
-
+        pass
     ###DEBUG CONSOLE GUI###
     if gui == 1:
         """
