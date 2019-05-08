@@ -1,21 +1,27 @@
 """
-Author:		Patrick Tafoya
-Purpose:	Test full ECS
-			For this test i have the sensors hooked up to the following tca channels
+			Author:	Patrick Tafoya
 			
-			bus 0:
-				LIDAR lite v3	5v
-			bus 1:
-				BNO055 at 0x28
-				BNO055 at 0x29
-				BMP280 at 0x77
-			bus 2:
-				BME280 at 0x76 LPV
-			bus 3:
-				MLX90614 at 0x5B
-				ADS1115 at 0x48	gain = 1 (4.096V MAX)
-			bus 4:
-				BME280 at 0x77
+			bus 0:	NOSE	5V		PCA Diff.
+					LIDAR Lite V3	addr 0x62
+					BMP280 			addr 0x77
+			bus 1:	LPV		3.3V	PCA Diff.
+					BME280			addr 0x76
+			bus 2:	RPV1	3.3V
+					MLX90614		addr 0x5B
+					ADS1115			addr 0x48
+			bus 3:	RPV2	3.3V
+					BME280			addr 0x77
+					BNO055			addr 0x29
+					BNO055			addr 0x28
+		
+		ORIENTATION AXIS
+					
+					|Y   / Z
+					|   /
+					|  /
+					| /
+					|/
+		X-----------
 """
 import smbus
 from time import sleep, clock
@@ -58,7 +64,7 @@ class HyperlynxECS():
 		self.greenPIN = 6												#DROK SIGNAL PIN FOR GREEN LED
 		self.contactorPIN1 = 13											#DROK SIGNAL PIN FOR CONTACTOR 1
 		self.contactorPIN2 = 18											#DROK SIGNAL PIN FOR CONTACTOR 2
-		self.MLXrstPIN = 19											#ACTIVE LOW RESET FOR MLX90614
+		self.MLXrstPIN = 19												#ACTIVE LOW RESET FOR MLX90614
 		self.bus = smbus.SMBus(bus_num)									#OPEN I2C BUS
 		self.IO.setmode(self.IO.BCM)									#BCM MODE USES BROADCOM SOC CHANNEL NUMBER FOR EACH PIN
 		self.IO.setwarnings(False)										#TURN OFF WARNINGS TO ALLOW OVERIDE OF CURRENT GPIO CONFIGURATION
@@ -67,11 +73,10 @@ class HyperlynxECS():
 		self.Z1OFFSET = 0
 		self.Z2OFFSET = 0
 		self.currentBus = 10											#VARIABLE TO KEEP TRACK OF WHICH TCA CHANNEL IS OPEN, 10 WILL BE NO CHANNEL AS 0 IS A SPECIFIC CHANNEL
-		self.tcaLIDAR = 0												#TCA CHANNEL FOR LIDAR
-		self.tcaNOSE = 1												#TCA CHANNEL FOR NOSE AVIONICS
-		self.tcaPVL = 2													#TCA CHANNEL FOR LEFT PV AVIONICS
-		self.tcaPVR = 3													#TCA CHANNEL FOR RIGHT PV AVIONICS 1
-		self.tcaPVR2 = 4												#TCA CHANNEL FOR RIGHT PV AVIONICS 2
+		self.tcaNOSE = 0												#TCA CHANNEL FOR NOSE AVIONICS
+		self.tcaPVL = 1													#TCA CHANNEL FOR LEFT PV AVIONICS
+		self.tcaPVR = 2													#TCA CHANNEL FOR RIGHT PV AVIONICS 1
+		self.tcaPVR2 = 3												#TCA CHANNEL FOR RIGHT PV AVIONICS 2
 		self.connectAttempt = 5
 		self.MLX_status = False
 		self.BNO1_status = False
@@ -98,8 +103,8 @@ class HyperlynxECS():
 	def initializeSensors(self):
 		try:
 			for x in range(0, self.connectAttempt):
-				self.openBus(self.tcaLIDAR)								#OPEN CHANNEL ON TCA
-				if(self.currentBus == self.tcaLIDAR):
+				self.openBus(self.tcaNOSE)								#OPEN CHANNEL ON TCA
+				if(self.currentBus == self.tcaNOSE):
 					break
 				sleep(0.5)
 		except IOError:
@@ -114,63 +119,6 @@ class HyperlynxECS():
 		except IOError:
 			print("Connection error with Lidar")						#PRINT ERROR IF UNABLE TO CONNECT
 			return 0
-		try:
-			for x in range(0, self.connectAttempt):
-				self.openBus(self.tcaNOSE)								#OPEN CHANNEL ON TCA
-				if(self.currentBus == self.tcaNOSE):
-					break
-				sleep(0.5)
-		except IOError:
-			print("Connection error with TCA Multiplexer")
-			self.TCA_status = False
-			return 0
-
-		try:
-			for x in range(0, self.connectAttempt):
-				self.IMU1 = BNO055(address=self.IMU_ADDR1)				#CREATE OBJECT FOR BNO055 AT ADDRESS 1 
-				if(self.IMU1.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
-					while(self.IMU1.get_calibration_status()[1] != 3):
-						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
-					print("IMU1 Ready")
-					self.BNO1_status = True
-					break
-				sleep(0.5)
-		except IOError:
-			print("Connection error with IMU1")
-			#return 0
-		try:
-			self.X1OFFSET = self.getOrientation(1)[1]
-			print("IMU1 Y offset angle set")
-		except IOError:
-			print("IMU1 Y offset angle not set")
-		try:
-			self.Z1OFFSET = self.getOrientation(1)[2]
-			print("IMU1 Z offset angle set")
-		except IOError:
-			print("IMU1 Z offset angle not set")
-		try:
-			for x in range(0, self.connectAttempt):
-				self.IMU2 = BNO055(address=self.IMU_ADDR2)				#CREATE OBJECT FOR BNO055 AT ADDRESS 2
-				if(self.IMU2.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
-					while(self.IMU2.get_calibration_status()[1] != 3):
-						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
-					print("IMU2 Ready")
-					self.BNO2_status = True
-					break
-				sleep(0.5)
-		except IOError:
-			print("Connection Error with IMU2")
-			#return 0
-		try:
-			self.X2OFFSET = self.getOrientation(2)[1]
-			print("IMU2 Y offset angle set")
-		except IOError:
-			print("IMU2 Y offset angle not set")
-		try:
-			self.Z2OFFSET = self.getOrientation(2)[2]
-			print("IMU2 Z offset angle set")
-		except IOError:
-			print("IMU2 Z offset angle not set")
 		try:
 			for x in range(0, self.connectAttempt):
 				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
@@ -252,6 +200,52 @@ class HyperlynxECS():
 		except IOError:
 			print("Connection Error with BME RPV")
 			#return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.IMU1 = BNO055(address=self.IMU_ADDR1)				#CREATE OBJECT FOR BNO055 AT ADDRESS 1 
+				if(self.IMU1.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
+					while(self.IMU1.get_calibration_status()[1] != 3):
+						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
+					print("IMU1 Ready")
+					self.BNO1_status = True
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection error with IMU1")
+			#return 0
+		try:
+			self.X1OFFSET = self.getOrientation(1)[1]
+			print("IMU1 Y offset angle set")
+		except IOError:
+			print("IMU1 Y offset angle not set")
+		try:
+			self.Z1OFFSET = self.getOrientation(1)[2]
+			print("IMU1 Z offset angle set")
+		except IOError:
+			print("IMU1 Z offset angle not set")
+		try:
+			for x in range(0, self.connectAttempt):
+				self.IMU2 = BNO055(address=self.IMU_ADDR2)				#CREATE OBJECT FOR BNO055 AT ADDRESS 2
+				if(self.IMU2.begin(mode=0x08)):							#CHECK FOR CONNECTION TO I2C BUS AND SET IMU OPR MODE (MAG DISABLED)
+					while(self.IMU2.get_calibration_status()[1] != 3):
+						pass											#WAIT FOR GYRO CALIBRATION COMPLETE
+					print("IMU2 Ready")
+					self.BNO2_status = True
+					break
+				sleep(0.5)
+		except IOError:
+			print("Connection Error with IMU2")
+			#return 0
+		try:
+			self.X2OFFSET = self.getOrientation(2)[1]
+			print("IMU2 Y offset angle set")
+		except IOError:
+			print("IMU2 Y offset angle not set")
+		try:
+			self.Z2OFFSET = self.getOrientation(2)[2]
+			print("IMU2 Z offset angle set")
+		except IOError:
+			print("IMU2 Z offset angle not set")
 		return 1
 			
 	"""CLOSE ALL CHANNELS ON THE TCA"""
@@ -269,8 +263,7 @@ class HyperlynxECS():
 				self.openBus(self.tcaPVR)								#CHECKS FOR CURRENT OPEN CHANNEL TO SAVE TIME SELECTING IF IT IS ALREADY OPEN, IF ALREADY NOT OPENED, OPEN IT
 			except IOError:
 				self.TCA_status = False
-				return 0
-		sleep(0.001)													#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
+				return 0												#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
 		try:
 			data = self.Therm.get_obj_temp_C()							#FETCH OBJECT TEMP
 			self.MLX_status = True
@@ -280,9 +273,9 @@ class HyperlynxECS():
 		return data														#RETURNS TEMPERATURE READING IN DEGREES CELSIUS
 	"""FETCH ORIENTATION"""												#PARAMETER IS DESIRED IMU (1 OR 2)
 	def getOrientation(self, imu_num):
-		if(self.currentBus != self.tcaNOSE):
+		if(self.currentBus != self.tcaPVR2):
 			try:
-				self.openBus(self.tcaNOSE)								#CHECK IF BUS IS OPENED, IF IT IS NOT, OPEN IT
+				self.openBus(self.tcaPVR2)								#CHECK IF BUS IS OPENED, IF IT IS NOT, OPEN IT
 			except IOError:
 				self.TCA_status = False
 				return [0, 0, 0]										#RETURNS TUPLE OF ZEROS IF CANNOT CONNECT TO TCA
@@ -296,7 +289,7 @@ class HyperlynxECS():
 			y = data[0]
 			x = data[1] - self.X1OFFSET
 			z = data[2] - self.Z1OFFSET
-			return [y, x, z]
+			return [x, y, z]
 		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_euler()
@@ -307,42 +300,48 @@ class HyperlynxECS():
 			y = data[0]
 			x = data[1] - self.X2OFFSET
 			z = data[2] - self.Z2OFFSET
-			return [y, x, z]
+			return [x, y, z]
 		else:
 			print("Illegal Selection")
 			return 0
 	"""FETCH LINEAR ACCELERATION"""										#PARAMETER IS DESIRED IMU (1 OR 2)										
 	def getAcceleration(self, imu_num):
-		if(self.currentBus != self.tcaNOSE):
+		if(self.currentBus != self.tcaPVR2):
 			try:
-				self.openBus(self.tcaNOSE)
+				self.openBus(self.tcaPVR2)
 			except IOError:
 				self.TCA_status = False
-				return 0
+				return (0, 0, 0)
 		if(imu_num == 1):
 			try:
 				data = self.IMU1.read_linear_acceleration()
+				z = data[0] * self.METER2G
+				x = data[1] * self.METER2G
+				y = data[2] * self.METER2G
 				self.BNO1_status = True
 			except IOError:
 				self.BNO1_status = False
-				return 0
-			return data[0] * self.METER2G								#RETURNS ACCELERATION IN G'S
+				return (0, 0, 0)
+			return (z, x, y)											#RETURNS ACCELERATION IN G'S
 		elif(imu_num == 2):
 			try:
 				data = self.IMU2.read_linear_acceleration()
+				z = data[0] * self.METER2G
+				x = data[1] * self.METER2G
+				y = data[2] * self.METER2G
 				self.BNO2_status = True
 			except IOError:
 				self.BNO2_status = False
-				return 0
-			return data[0] * self.METER2G								#RETURNS ACCELERATION IN G'S
+				return (0, 0, 0)
+			return (z, x, y)											#RETURNS ACCELERATION IN G'S
 		else:
 			print("Illegal Selection")
 			return 0		
 	"""FETCH LIDAR DISTANCE READING"""										
 	def getLidarDistance(self):
-		if(self.currentBus != self.tcaLIDAR):
+		if(self.currentBus != self.tcaNOSE):
 			try:
-				self.openBus(self.tcaLIDAR)
+				self.openBus(self.tcaNOSE)
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -513,7 +512,7 @@ class HyperlynxECS():
 			self.IO.output(self.greenPIN, self.IO.HIGH)
 			
 	#Switches solenoid DROKs. Parameters(solenoid: 1 = NC res 1, 2 = NC res 2, 3 = NO, status: 0 = LOW, 1 = HIGH)
-	def switchSolenoid(self, solenoid, status):
+	def switchSolenoid(self, solednoid, status):
 		if(solenoid == 1):
 			if(status == 0):
 				self.IO.output(self.NCsol1PIN, self.IO.LOW)
@@ -556,19 +555,13 @@ class HyperlynxECS():
 		self.IO.output(self.MLXrstPIN, self.IO.HIGH)
 		
 	def statusCheck(self):
-		data = self.MLX_status + self.BNO1_status + self.BNO2_status + self.BME1_status + self.BME2_status + self.BMP_status + self.LID_status + self.ADC_status
-		if(not self.TCA_status):
+		data = self.MLX_status + self.BNO1_status + self.BNO2_status + self.BME1_status + self.BME2_status + self.BMP_status + self.LID_status + self.ADC_status + self.TCA_status
+		if(not self.TCA_status or data == 0):
 			self.MLX_RESET()
 			self.MLXRST = self.MLXRST + 1
 			self.TCA_status = True
-		elif(data == 0):
-			self.MLX_RESET()
-			self.MLXRST = self.MLXRST + 1
-		return (data / 8) * 100
-		
+		return (data / 9) * 100
 				
-	
-		
 if __name__ == '__main__':
 	system = HyperlynxECS()
 	system.initializeIO()
@@ -576,6 +569,8 @@ if __name__ == '__main__':
 		while True:
 			startTime = clock()
 			distance = system.getLidarDistance()
+			tubepress = system.getTubePressure()
+			tubetemp = system.getTubeTemp()
 			battTemp = system.getBatteryTemp()
 			temp2 = system.getBMEtemperature(2)
 			press2 = system.getBMEpressure(2)
@@ -586,8 +581,6 @@ if __name__ == '__main__':
 			accel2 = system.getAcceleration(2)
 			orient1 = system.getOrientation(1)
 			orient2 = system.getOrientation(2)
-			tubepress = system.getTubePressure()
-			tubetemp = system.getTubeTemp()
 			temp1 = system.getBMEtemperature(1)
 			press1 = system.getBMEpressure(1)
 			stat = system.statusCheck()
@@ -596,7 +589,7 @@ if __name__ == '__main__':
 			print(system.MLXRST)
 			print(endTime)
 			print("%.2f\t"%distance)
-			print("%.2f C\t"%battTemp, "%.2f G\t"%accel1, "%.2f G"%accel2)
+			print("%.2f C\t"%battTemp, "%.2f G\t"%accel1[0], "%.2f G"%accel2[0])
 			print("X: %.2f\t"%orient1[0], "Y: %.2f\t"%orient1[1], "Z: %.2f"%orient1[2])
 			print("X: %.2f\t"%orient2[0], "Y: %.2f\t"%orient2[1], "Z: %.2f"%orient2[2])
 			print("PVL: %.2f psi\t"%press1, "%.2f C\t"%temp1, "PVR: %.2f psi\t"%press2, "%.2f C"%temp2)
