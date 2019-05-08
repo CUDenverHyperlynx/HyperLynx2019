@@ -512,7 +512,7 @@ class HyperlynxECS():
 			self.IO.output(self.greenPIN, self.IO.HIGH)
 			
 	#Switches solenoid DROKs. Parameters(solenoid: 1 = NC res 1, 2 = NC res 2, 3 = NO, status: 0 = LOW, 1 = HIGH)
-	def switchSolenoid(self, solednoid, status):
+	def switchSolenoid(self, solenoid, status):
 		if(solenoid == 1):
 			if(status == 0):
 				self.IO.output(self.NCsol1PIN, self.IO.LOW)
