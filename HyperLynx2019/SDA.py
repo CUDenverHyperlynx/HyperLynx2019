@@ -103,6 +103,13 @@ class Status():
         self.MET = 0                    # Mission Elapsed Time (since launch)
         self.MET_starttime = -1
         self.stopped_time = -1          # Time since coming to a stop
+        self.para = {'max_accel': 0,
+                     'max_speed': 0,
+                     'max_time': 0,
+                     'BBP': 0,
+                     'max_tube_length': 0,
+                     'max_crawl_speed': -1}
+
         self.para_max_accel = 0         # [g] Maximum pod acceleration for control loop
         self.para_max_speed = 0         # [ft/s] Maximum pod speed for braking point
         self.para_max_time = 0          # [s] Maximum time of flight for braking point
@@ -210,15 +217,6 @@ def init():
                                                                   'Fault': abort_vals[i, 10]
                                                                   }
 
-    # Create Commands Dictionary from template file
-    cmd_names = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
-                                 dtype=str)
-    cmd_vals = numpy.genfromtxt('commands.txt', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 2),
-                                dtype=int)
-
-    for i in range(0, len(cmd_names)):
-        PodStatus.commands[cmd_names[i]] = cmd_vals[i]
-
     PodStatus.cmd_int = {"Abort": 0,
                          "HV": 0,
                          "Vent_Sol": 0,
@@ -307,10 +305,10 @@ def poll_sensors():
         PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
-    if abs(PodStatus.sensor_data['IMU1_X']) > 20:
-        PodStatus.sensor_data['IMU1_X'] = 0
-    if abs(PodStatus.sensor_data['IMU2_X']) > 20:
-        PodStatus.sensor_data['IMU2_X'] = 0
+    if abs(PodStatus.sensor_data['IMU1_Z']) > 20:
+        PodStatus.sensor_data['IMU1_Z'] = 0
+    if abs(PodStatus.sensor_data['IMU2_Z']) > 20:
+        PodStatus.sensor_data['IMU2_Z'] = 0
 
     ### RPI DATA ###
     rpi_data = psutil.disk_usage('/')
@@ -341,7 +339,7 @@ def poll_sensors():
     old_speed = PodStatus.speed
     if PodStatus.sensor_data['SD_MotorData_MotorRPM']:
         PodStatus.speed = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2 * numpy.pi * PodStatus.wheel_diameter
-    PodStatus.accel = numpy.mean([PodStatus.sensor_data['IMU1_X'], PodStatus.sensor_data['IMU2_X']])
+    PodStatus.accel = numpy.mean([PodStatus.sensor_data['IMU1_Z'], PodStatus.sensor_data['IMU2_Z']])
 
     # Integrate distance.  At 1.4GHz clock speeds, integration can be numerically
     # approximated as constant speed over the time step.
@@ -390,24 +388,24 @@ def sensor_fusion():
     if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
         # Add mean of IMU values to
         PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
-                                        numpy.mean([PodStatus.sensor_filter['IMU1_X']['val'],
-                                                    PodStatus.sensor_filter['IMU2_X']['val']]))
+                                        numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
+                                                    PodStatus.sensor_filter['IMU2_Z']['val']]))
     else:
         PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
 
         # determine valid IMU data
         # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
-        if abs(PodStatus.sensor_filter['IMU1_X']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
+        if abs(PodStatus.sensor_filter['IMU1_Z']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
                 2 * PodStatus.true_data['A']['std_dev']:
-            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_X']['val'])
+            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
         else:
-            print('IMUX_1 Data Bad\n')
-            print('IMUX Value ' + str(abs(PodStatus.sensor_filter['IMU1_X']['val'])) + '\n')
+            print('IMUZ_1 Data Bad\n')
+            print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU1_Z']['val'])) + '\n')
             print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
             print('A two times STD ' + str(2 * PodStatus.true_data['A']['std_dev']) + '\n')
-        if abs(PodStatus.sensor_filter['IMU2_X']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
+        if abs(PodStatus.sensor_filter['IMU2_Z']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
                 2 * PodStatus.true_data['A']['std_dev']:
-            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_X']['val'])
+            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
 
         # if good_IMUs is not empty set, take mean value and add to true_data q
         if good_IMUs:
@@ -574,232 +572,190 @@ def eval_abort():
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
 
     if PodStatus.Abort is True:
-        PodStatus.commands['Abort'] = 1
+        PodStatus.cmd_int['Abort'] = 1
         abort()
 
 def rec_data():
-    """
-    This function receives data from the GUI, primarily commands[]
-    During DEBUG, this function is a mock GUI for testing SDA.
-    """
+    ###__ACTUAL GUI__###
+    if gui == 2:
+        ### RECEIVE DATA FROM GUI ###
+        # Need to receive: cmd_ext{} and para{} into temp values.
+        # If state = 1, then load all cmd_ext{} and para{} into the PodStatus dicts.
+        # If state != 1, then *only* load the cmd_ext['Abort'] value to the PodStatus.cmd_int['Abort'] var.
 
-    PodStatus.para_BBP = 4150
-    PodStatus.para_max_speed = 200
-    PodStatus.para_max_accel = 2
-    PodStatus.para_max_time = 6
-    PodStatus.para_max_crawl_speed = 20
 
-    ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
-    print("\n******* POD STATUS ******\n"
-        "\tState:               " + str(PodStatus.state) + "\t\t")
-    print("\tFlight Sim:        " + str(PodStatus.flight_sim) + "\t\t")
-    print("\tPod Clock Time:    " + str(round(PodStatus.MET,3)) + "\t")
-    print("\tFault:             " + str(PodStatus.Fault) + "\t\t")
-    print("\tAbort Flag         " + str(PodStatus.Abort) + "\t\t")
-    print("\t2. HV System       " + str(PodStatus.HV) + "\t\t")
-    print("\tBrakes:            " + str(PodStatus.Brakes) + "\t\n"
-        "\t3. Vent Solenoid:    " + str(PodStatus.Vent_Sol) + "\t\n"
-        "\t4. Res1 Solenoid:    " + str(PodStatus.Res1_Sol) + "\t\n"
-        "\t5. Res2 Solenoid:    " + str(PodStatus.Res2_Sol) + "\t\n"
-        "\t6. MC Pump:          " + str(PodStatus.MC_Pump) + "\t\n"
-        "\t7. Flight BBP:       " + str(PodStatus.para_BBP) + "\t\n"
-        "\t8. Flight Speed:     " + str(PodStatus.para_max_speed) + "\t\n"
-        "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
-        "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
-        "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
-        "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"                                                                    
-        "*************************")
 
-    if PodStatus.state == PodStatus.SafeToApproach:
-        print("\n*** MENU ***\n"
-              "\t(L) Launch\n"
-              "\t(R) Reset Abort Flag\n"
-              "\t(Q) Quit\n"
-              "\t(FS) Activate Flight Sim\n"
-              "\t\tType line number or letter command to change values.\n")
-        print(str(PodStatus.sensor_data['Brake_Pressure']))
-        a = input('Enter choice: ')
-        if a == '2':
-            if PodStatus.HV is False:
-                PodStatus.commands['HV'] = True
-                PodStatus.HV = True
+
+
+    ###DEBUG CONSOLE GUI###
+    if gui == 1:
+        """
+        During DEBUG, this function is a mock GUI for testing SDA.
+        """
+        PodStatus.para_BBP = 4150
+        PodStatus.para_max_speed = 200
+        PodStatus.para_max_accel = 2
+        PodStatus.para_max_time = 6
+        PodStatus.para_max_crawl_speed = 20
+
+        ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
+        print("\n******* POD STATUS ******\n"
+            "\tState:               " + str(PodStatus.state) + "\t\t")
+        print("\tFlight Sim:        " + str(PodStatus.flight_sim) + "\t\t")
+        print("\tPod Clock Time:    " + str(round(PodStatus.MET,3)) + "\t")
+        print("\tFault:             " + str(PodStatus.Fault) + "\t\t")
+        print("\tAbort Flag         " + str(PodStatus.Abort) + "\t\t")
+        print("\t2. HV System       " + str(PodStatus.HV) + "\t\t")
+        print("\tBrakes:            " + str(PodStatus.Brakes) + "\t\n"
+            "\t3. Vent Solenoid:    " + str(PodStatus.Vent_Sol) + "\t\n"
+            "\t4. Res1 Solenoid:    " + str(PodStatus.Res1_Sol) + "\t\n"
+            "\t5. Res2 Solenoid:    " + str(PodStatus.Res2_Sol) + "\t\n"
+            "\t6. MC Pump:          " + str(PodStatus.MC_Pump) + "\t\n"
+            "\t7. Flight BBP:       " + str(PodStatus.para_BBP) + "\t\n"
+            "\t8. Flight Speed:     " + str(PodStatus.para_max_speed) + "\t\n"
+            "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
+            "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
+            "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
+            "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"                                                                    
+            "*************************")
+
+        if PodStatus.state == PodStatus.SafeToApproach:
+            print("\n*** MENU ***\n"
+                  "\t(L) Launch\n"
+                  "\t(R) Reset Abort Flag\n"
+                  "\t(Q) Quit\n"
+                  "\t(FS) Activate Flight Sim\n"
+                  "\t\tType line number or letter command to change values.\n")
+            print(str('Brake Pressure: ' + PodStatus.sensor_data['Brake_Pressure']))
+            a = input('Enter choice: ')
+            if a == '2':
+                if PodStatus.HV is False:
+                    PodStatus.cmd_ext['HV'] = 1
+                    #PodStatus.HV = True
+                else:
+                    PodStatus.cmd_ext['HV'] = 0
+                    #PodStatus.HV = False
+            elif a == '3':
+                if PodStatus.cmd_ext['Vent_Sol'] == 0:
+                    PodStatus.commands['Vent_Sol'] = 1           # Brake Vent opens
+                    PodStatus.Vent_Sol = 0
+                    PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
+                else:
+                    PodStatus.commands['Vent_Sol'] = 0
+                    PodStatus.Vent_Sol = 1
+            elif a == '4':
+                if PodStatus.commands['Res1_Sol'] == 0:
+                    PodStatus.commands['Res1_Sol'] = 1
+                    if PodStatus.Vent_Sol == 1:
+                        PodStatus.sensor_data['Brake_Pressure'] = 200
+                else:
+                    PodStatus.commands['Res1_Sol'] = 0
+            elif a == '5':
+                if PodStatus.commands['Res2_Sol'] == 1:
+                    PodStatus.commands['Res2_Sol'] = 0
+                else:
+                    PodStatus.commands['Res2_Sol'] = 1
+            elif a == '6':
+                if PodStatus.commands['MC_Pump'] == 0:
+                    PodStatus.commands['MC_Pump'] = 1
+                    PodStatus.MC_Pump = 1
+                else:
+                    PodStatus.commands['MC_Pump'] = 0
+                    PodStatus.MC_Pump = 0
+            elif a == '7':
+                PodStatus.commands['para_BBP'] = float(input("Enter BBP Distance in feet: "))
+            elif a == '8':
+                PodStatus.commands['para_max_speed'] = float(input("Enter max speed in ft/s: "))
+            elif a == '9':
+                PodStatus.commands['para_max_accel'] = float(input("Enter max accel in g: "))
+            elif a == '10':
+                PodStatus.commands['para_max_time'] = float(input("Enter max time in s: "))
+            elif a == '11':
+                PodStatus.commands['para_max_crawl_speed'] = float(input("Enter max crawl speed in ft/s: "))
+            elif a == 'L':
+                PodStatus.commands['Launch'] = 1
+            elif a == 'R':
+                PodStatus.commands['Abort'] = 0
+                PodStatus.stopped_time = -1
+                PodStatus.MET_startime = -1
+            elif a == 'Q':
+                PodStatus.Quit = True
+            elif a == 'FS':
+                PodStatus.flight_sim = True
             else:
-                PodStatus.commands['HV'] = False
-                PodStatus.HV = False
-        elif a == '3':
-            if PodStatus.commands['Vent_Sol'] == 0:
-                PodStatus.commands['Vent_Sol'] = 1           # Brake Vent opens
-                PodStatus.Vent_Sol = 0
-                PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
+                pass
+
+        # Commented out for Flight Simulation purposes
+        elif PodStatus.state == PodStatus.Launching:
+            pass
+            #print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
+            #a = input('Enter choice: ')
+            #if a == '1':
+            #    PodStatus.commands['Abort'] = 1
+            #    abort()
+            #elif a == '2':
+            #     PodStatus.distance = PodStatus.para_BBP + 1
+            #     print(PodStatus.distance)
+            # elif a == '3':
+            #     PodStatus.Quit = True
+            # else:
+            #     pass
+        elif PodStatus.state == PodStatus.BrakingHigh:
+            pass
+        elif PodStatus.state == PodStatus.Crawling:
+            print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
+            a = input('Enter choice: ')
+            if a == '1':
+                PodStatus.commands['Abort'] = 1
+                abort()
+            elif a == '2':
+                PodStatus.Quit = True
             else:
-                PodStatus.commands['Vent_Sol'] = 0
-                PodStatus.Vent_Sol = 1
-        elif a == '4':
-            if PodStatus.commands['Res1_Sol'] == 0:
-                PodStatus.commands['Res1_Sol'] = 1
-                if PodStatus.Vent_Sol == 1:
-                    PodStatus.sensor_data['Brake_Pressure'] = 200
-            else:
-                PodStatus.commands['Res1_Sol'] = 0
-        elif a == '5':
-            if PodStatus.commands['Res2_Sol'] == 1:
-                PodStatus.commands['Res2_Sol'] = 0
-            else:
-                PodStatus.commands['Res2_Sol'] = 1
-        elif a == '6':
-            if PodStatus.commands['MC_Pump'] == 0:
-                PodStatus.commands['MC_Pump'] = 1
-                PodStatus.MC_Pump = 1
-            else:
-                PodStatus.commands['MC_Pump'] = 0
-                PodStatus.MC_Pump = 0
-        elif a == '7':
-            PodStatus.commands['para_BBP'] = float(input("Enter BBP Distance in feet: "))
-        elif a == '8':
-            PodStatus.commands['para_max_speed'] = float(input("Enter max speed in ft/s: "))
-        elif a == '9':
-            PodStatus.commands['para_max_accel'] = float(input("Enter max accel in g: "))
-        elif a == '10':
-            PodStatus.commands['para_max_time'] = float(input("Enter max time in s: "))
-        elif a == '11':
-            PodStatus.commands['para_max_crawl_speed'] = float(input("Enter max crawl speed in ft/s: "))
-        elif a == 'L':
-            PodStatus.commands['Launch'] = 1
-        elif a == 'R':
-            PodStatus.commands['Abort'] = 0
-            PodStatus.stopped_time = -1
-            PodStatus.MET_startime = -1
-        elif a == 'Q':
-            PodStatus.Quit = True
-        elif a == 'FS':
-            PodStatus.flight_sim = True
+                pass
+        elif PodStatus.state == PodStatus.BrakingLow:
+            pass
         else:
             pass
-
-    # Commented out for Flight Simulation purposes
-    elif PodStatus.state == PodStatus.Launching:
-        pass
-        #print("\n*** MENU ***\n\t1. Abort\n\t2. Brake\n\t3. Quit")
-        #a = input('Enter choice: ')
-        #if a == '1':
-        #    PodStatus.commands['Abort'] = 1
-        #    abort()
-        #elif a == '2':
-        #     PodStatus.distance = PodStatus.para_BBP + 1
-        #     print(PodStatus.distance)
-        # elif a == '3':
-        #     PodStatus.Quit = True
-        # else:
-        #     pass
-    elif PodStatus.state == PodStatus.BrakingHigh:
-        pass
-    elif PodStatus.state == PodStatus.Crawling:
-        print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
-        a = input('Enter choice: ')
-        if a == '1':
-            PodStatus.commands['Abort'] = 1
-            abort()
-        elif a == '2':
-            PodStatus.Quit = True
-        else:
-            pass
-    elif PodStatus.state == PodStatus.BrakingLow:
-        pass
-    else:
-        pass
-    ### END TEST SCRIPT
+        ### END TEST SCRIPT
 
 def do_commands():
     """
-    This function ensures all current commands[] are run each loop.  The GUI will show the last
-    sent command as well as the current state of the commands[] dict to ensure proper operation.
-
-    During the S2A state, all commands are available to the crew through the GUI.  This allows
-    easy testing and preflight.  All flight parameters are received through this function.
+    This function ensures all current cmd_int{} are run each loop.  The GUI will show it's current commands,
+    as well as the pod's current commands.
 
     This is the ONLY function that will allow the pod to transition from S2A to Launching.
-
-    During flight, the ONLY command that the SDA will listen to is the Abort signal.
-
-    If an abort takes place, the pod will eventually arrive back to the S2A state, giving full
-    control back to the crew.
     """
 
     if PodStatus.state == 1:    # Load ALL commands for full GUI control
-        if PodStatus.commands['Abort'] == 1:
-            PodStatus.Abort = True
-            print("*** ABORT COMMAND RECEIVED ***")
-            abort()
-
-        # Allows crew to reset Abort flag.  ONLY way to reset Abort flag.  Cannot be changed in-flight.
-        elif PodStatus.commands['Abort'] == 0 and PodStatus.Abort is True:
-            PodStatus.Abort = False
-            print("Resetting Abort flag to False")
 
         ### POD WILL LAUNCH WITH THIS SECTION ###
         # Launch pod ONLY if conditions in run_state() for spacex_state are met
-        if PodStatus.commands['Launch'] == 1 and PodStatus.spacex_state == 2:
+        if PodStatus.cmd_int['Launch'] == 1 and PodStatus.spacex_state == 2:
             transition()
-        elif PodStatus.commands['Launch'] == 1 and PodStatus.spacex_state != 2:
+        elif PodStatus.cmd_ext['Launch'] == 1 and PodStatus.spacex_state != 2:
             print("Pod not configured for launch, resetting Launch command to 0.")
-            PodStatus.commands['Launch'] = 0
+            PodStatus.cmd_ext['Launch'] = 0
+            PodStatus.cmd_int['Launch'] = 0
 
-        # Turn on/off HV contactors as appropriate
-        if PodStatus.commands['HV'] != PodStatus.HV:
-            if PodStatus.HV == 0:
-                PodStatus.HV = 1
-            else:
-                PodStatus.HV = 0
+    # COMMANDS FOR ALL STATES
+    # Brake Solenoid operation
+    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol']);
+    PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol']);
+    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_sol']);
 
-        # Change Vent Solenoid
-        if PodStatus.commands['Vent_Sol'] != PodStatus.Vent_Sol:
-            if PodStatus.Vent_Sol == 0:
-                PodStatus.Vent_Sol = 1
-            else:
-                PodStatus.Vent_Sol = 0
-                PodStatus.sensor_data['Brake_Pressure'] = 0
+    # Coolant Pump
+    PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump']);
 
-        # Change Reservoir #1 Solenoid
-        if PodStatus.commands['Res1_Sol'] != PodStatus.Res1_Sol:  # If command does not equal current state
-            if PodStatus.Res1_Sol == 0:
-                ### SET RESERVOIR SOLENOID TO CLOSE
-                ## DEBUG:
-                PodStatus.Res1_Sol = 1
-            else:
-                ### SET RESERVOIR SOLENOID TO OPEN
-                ## DEBUG:
-                PodStatus.Res1_Sol = 0
+    # HV Contactors (and red LED by default)
+    PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV']);
+    PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV']);
 
-        # Change Reservoir #2 Solenoid
-        if PodStatus.commands['Res2_Sol'] != PodStatus.Res2_Sol:
-            if PodStatus.Res2_Sol == 0:
-                PodStatus.Res2_Sol = 1
-            else:
-                PodStatus.Res2_Sol = 0
+    # Isolation green LED   DEBUG NEED VAR DATA FOR BMS
+    # if PodStatus.sensor_data['BMS_something'] < 4.5:
+    #     PodStatus.sensor_poll.switchGreenLED(0);
+    # else:
+    #     PodStatus.sensor_poll.switchGreenLED(1);
 
-        # Change Coolant Pump state
-        if PodStatus.commands['MC_Pump'] != PodStatus.MC_Pump:
-            if PodStatus.MC_Pump == 0:
-                PodStatus.MC_Pump = 1
-            else:
-                PodStatus.MC_Pump = 0
-
-        # Load parameters
-        if PodStatus.commands['para_BBP'] != PodStatus.para_BBP:
-            PodStatus.para_BBP = PodStatus.commands['para_BBP']
-        if PodStatus.commands['para_max_speed'] != PodStatus.para_max_speed:
-            PodStatus.para_max_speed = PodStatus.commands['para_max_speed']
-        if PodStatus.commands['para_max_accel'] != PodStatus.para_max_accel:
-            PodStatus.para_max_accel = PodStatus.commands['para_max_accel']
-        if PodStatus.commands['para_max_time'] != PodStatus.para_max_time:
-            PodStatus.para_max_time = PodStatus.commands['para_max_time']
-        if PodStatus.commands['para_max_crawl_speed'] != PodStatus.para_max_crawl_speed:
-            PodStatus.para_max_crawl_speed = PodStatus.commands['para_max_crawl_speed']
-
-    else:
-        # Load ONLY abort command
-        if PodStatus.commands['Abort'] is True:
-            abort()
 
 def spacex_data():
     """
@@ -824,15 +780,13 @@ def spacex_data():
                              int(distance), int(speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
         sock.sendto(packet, server)
 
-def send_data(pod_status):        # Sends data to TCP (GUI) and CAN (BMS/MC)
+def send_data():        # Sends data to TCP (GUI) and CAN (BMS/MC)
 
     ### Send to CAN ###
 
     ### Send to TCP ###
+    send_server(PodStatus)
 
-    send_server(pod_status)
-
-    pass
 
 def run_state():
     """
@@ -1106,6 +1060,14 @@ if __name__ == "__main__":
         PodStatus.Quit = True
         print("Failed to init.")
 
+    print('Which GUI should I use?\n')
+    print('\t1\tConsole\n')
+    print('\t2\tExternal\n')
+    gui = input('Enter choice: ')
+    if gui != 1 or gui != 2:
+        print('Invalid choice, quitting')
+        PodStatus.Quit = True
+
     while PodStatus.Quit is False:
         write_file()
         poll_sensors()
@@ -1116,7 +1078,7 @@ if __name__ == "__main__":
         eval_abort()
         rec_data()
         spacex_data()
-        send_data(PodStatus)
+        send_data()
 
 
     # DEBUG...REMOVE BEFORE FLIGHT
