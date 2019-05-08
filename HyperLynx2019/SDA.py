@@ -743,7 +743,7 @@ def do_commands():
     # Brake Solenoid operation
     PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol']);
     PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol']);
-    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_sol']);
+    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol']);
 
     # Coolant Pump
     PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump']);
