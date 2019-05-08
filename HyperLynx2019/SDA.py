@@ -583,10 +583,6 @@ def rec_data():
         # If state = 1, then load all cmd_ext{} and para_ into the PodStatus dicts.
         # If state != 1, then *only* load the cmd_ext['Abort'] value to the PodStatus.cmd_int['Abort'] var.
 
-
-
-
-
     ###DEBUG CONSOLE GUI###
     if gui == 1:
         """
@@ -664,19 +660,19 @@ def rec_data():
                     PodStatus.commands['MC_Pump'] = 0
                     PodStatus.MC_Pump = 0
             elif a == '7':
-                PodStatus.commands['para_BBP'] = float(input("Enter BBP Distance in feet: "))
+                PodStatus.para_BBP = float(input("Enter BBP Distance in feet: "))
             elif a == '8':
-                PodStatus.commands['para_max_speed'] = float(input("Enter max speed in ft/s: "))
+                PodStatus.para_max_speed = float(input("Enter max speed in ft/s: "))
             elif a == '9':
-                PodStatus.commands['para_max_accel'] = float(input("Enter max accel in g: "))
+                PodStatus.para_max_accel = float(input("Enter max accel in g: "))
             elif a == '10':
-                PodStatus.commands['para_max_time'] = float(input("Enter max time in s: "))
+                PodStatus.para_max_time = float(input("Enter max time in s: "))
             elif a == '11':
-                PodStatus.commands['para_max_crawl_speed'] = float(input("Enter max crawl speed in ft/s: "))
+                PodStatus.para_max_crawl_speed = float(input("Enter max crawl speed in ft/s: "))
             elif a == 'L':
-                PodStatus.commands['Launch'] = 1
+                PodStatus.cmd_ext['Launch'] = 1
             elif a == 'R':
-                PodStatus.commands['Abort'] = 0
+                PodStatus.cmd_ext['Abort'] = 0
                 PodStatus.stopped_time = -1
                 PodStatus.MET_startime = -1
             elif a == 'Q':
@@ -707,7 +703,7 @@ def rec_data():
             print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
             a = input('Enter choice: ')
             if a == '1':
-                PodStatus.commands['Abort'] = 1
+                PodStatus.cmd_ext['Abort'] = 1
                 abort()
             elif a == '2':
                 PodStatus.Quit = True
