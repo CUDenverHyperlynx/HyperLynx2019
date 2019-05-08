@@ -215,6 +215,7 @@ def init():
 
     PodStatus.cmd_int = {"Abort": 0,
                          "HV": 0,
+                         'Launch': 0,
                          "Vent_Sol": 0,
                          "Res1_Sol": 0,
                          "Res2_Sol": 0,
@@ -222,6 +223,7 @@ def init():
 
     PodStatus.cmd_ext = {"Abort": 0,
                          "HV": 0,
+                         'Launch': 0,
                          "Vent_Sol": 0,
                          "Res1_Sol": 0,
                          "Res2_Sol": 0,
