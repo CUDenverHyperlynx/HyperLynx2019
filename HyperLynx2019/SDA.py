@@ -103,12 +103,6 @@ class Status():
         self.MET = 0                    # Mission Elapsed Time (since launch)
         self.MET_starttime = -1
         self.stopped_time = -1          # Time since coming to a stop
-        self.para = {'max_accel': 0,
-                     'max_speed': 0,
-                     'max_time': 0,
-                     'BBP': 0,
-                     'max_tube_length': 0,
-                     'max_crawl_speed': -1}
 
         self.para_max_accel = 0         # [g] Maximum pod acceleration for control loop
         self.para_max_speed = 0         # [ft/s] Maximum pod speed for braking point
@@ -173,6 +167,7 @@ class Status():
             file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
             file.write("\n")
         file.close()
+        print("Log file created: " + str(self.file_name))
 
 def init():
     # Create Abort Range and init sensor_data Dictionary from template file
@@ -231,12 +226,10 @@ def init():
                          "Res2_Sol": 0,
                          "MC_Pump": 0}
 
+    ## CHECK IMU INIT
     print("Checking IMUs")
     poll_sensors()
     filter_data()
-
-    ## CHECK IMU INIT
-
     if abs(PodStatus.sensor_filter['IMU1_X']['val']) < PodStatus.IMU_init_range and \
             abs(PodStatus.sensor_filter['IMU2_X']['val']) < PodStatus.IMU_init_range:
         print("Both IMUs valid.")
@@ -248,7 +241,7 @@ def init():
 
     ## Confirm boot info ##
     print("Pod init complete, State: " + str(PodStatus.state))
-    print("Log file created: " + str(PodStatus.file_name))
+
 
 def poll_sensors():
     """
@@ -278,10 +271,14 @@ def poll_sensors():
         PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
         PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
         PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
-        PodStatus.sensor_data['IMU1_Y'] = PodStatus.sensor_poll.getOrientation(1)[1]
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(1)[2]
-        PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
+        tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
+        PodStatus.sensor_data['IMU1_X'] = tempAccel1[0]
+        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[1]
+        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[2]
+        tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
+        PodStatus.sensor_data['IMU2_X'] = tempAccel2[0]
+        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[1]
+        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[2]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
         flight_sim.sim(PodStatus)
@@ -297,12 +294,14 @@ def poll_sensors():
         PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
         PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
         PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
-        PodStatus.sensor_data['IMU1_X'] = PodStatus.sensor_poll.getOrientation(1)[0]
-        PodStatus.sensor_data['IMU1_Y'] = PodStatus.sensor_poll.getOrientation(1)[1]
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(1)[2]
-        PodStatus.sensor_data['IMU2_X'] = PodStatus.sensor_poll.getOrientation(2)[0]
-        PodStatus.sensor_data['IMU2_Y'] = PodStatus.sensor_poll.getOrientation(2)[1]
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.sensor_poll.getOrientation(2)[2]
+        tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
+        PodStatus.sensor_data['IMU1_X'] = tempAccel1[0]
+        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[1]
+        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[2]
+        tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
+        PodStatus.sensor_data['IMU2_X'] = tempAccel2[0]
+        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[1]
+        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[2]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
     if abs(PodStatus.sensor_data['IMU1_Z']) > 20:
@@ -330,6 +329,7 @@ def poll_sensors():
     # Set pod state variable for brakes
     # debug line below before actual testing
     PodStatus.sensor_data['Brake_Pressure'] = 178
+
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
     else:
@@ -479,7 +479,7 @@ def sensor_fusion():
     PodStatus.true_data['stripe_dist'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
                                                     PodStatus.sensor_data['LST_Right'])
 
-    PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.true_data['stripe_dist']
+    PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.stripe_count
 
     if PodStatus.true_data['D']['val'] > 25:
         temp_count = PodStatus.true_data['D']['val'] / 100
@@ -580,7 +580,7 @@ def rec_data():
     if gui == 2:
         ### RECEIVE DATA FROM GUI ###
         # Need to receive: cmd_ext{} and para{} into temp values.
-        # If state = 1, then load all cmd_ext{} and para{} into the PodStatus dicts.
+        # If state = 1, then load all cmd_ext{} and para_ into the PodStatus dicts.
         # If state != 1, then *only* load the cmd_ext['Abort'] value to the PodStatus.cmd_int['Abort'] var.
 
 
@@ -592,11 +592,12 @@ def rec_data():
         """
         During DEBUG, this function is a mock GUI for testing SDA.
         """
-        PodStatus.para_BBP = 4150
+        PodStatus.para_BBP = 3000
         PodStatus.para_max_speed = 200
-        PodStatus.para_max_accel = 2
-        PodStatus.para_max_time = 6
+        PodStatus.para_max_accel = 0.7
+        PodStatus.para_max_time = 12
         PodStatus.para_max_crawl_speed = 20
+        PodStatus.para_max_tube_length = 4150
 
         ### TEST SCRIPT FOR FAKE COMMAND DATA / GUI
         print("\n******* POD STATUS ******\n"
@@ -745,10 +746,15 @@ def do_commands():
 
     # Coolant Pump
     PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump']);
+    if PodStatus.cmd_int['MC_Pump'] == 1: PodStatus.MC_Pump = True;
+    else: PodStatus.MC_Pump = False
 
     # HV Contactors (and red LED by default)
     PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV']);
     PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV']);
+    if PodStatus.cmd_int['HV'] == 1: PodStatus.HV = True
+    else: PodStatus.HV = False
+
 
     # Isolation green LED   DEBUG NEED VAR DATA FOR BMS
     # if PodStatus.sensor_data['BMS_something'] < 4.5:
