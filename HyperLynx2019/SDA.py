@@ -328,7 +328,7 @@ def poll_sensors():
 
     ### CONVERT DATA ###
     PodStatus.sensor_poll.statusCheck()
-    
+
     # Set pod state variable for brakes
     # debug line below before actual testing
     PodStatus.sensor_data['Brake_Pressure'] = 178
@@ -1066,12 +1066,12 @@ if __name__ == "__main__":
         print("Failed to init.")
 
     print('Which GUI should I use?\n')
-    print('\t1\tConsole\n')
-    print('\t2\tExternal\n')
+    print('\t1\tConsole')
+    print('\t2\tExternal')
     gui = str(input('Enter choice: '))
-    if gui != '1' or gui != '2':
-        print('Invalid choice, quitting')
-        PodStatus.Quit = True
+    if gui != '1' and gui != '2':
+         print('Invalid choice, quitting')
+         PodStatus.Quit = True
 
     while PodStatus.Quit is False:
         write_file()
