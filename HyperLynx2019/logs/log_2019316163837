@@ -1,0 +1,4141 @@
+"Label"	"Value"	"Fault"	"Time"
+Brake_Pressure	0	0	0.11
+SD_DriveStatus_ProgramMode	0	0	0.11
+SD_DriveStatus_EngineState	0	0	0.11
+SD_DriveStatus_SwitchState	0	0	0.11
+SD_ErrorStatus_ErrorCode	0	0	0.11
+SD_ErrorStatus_ErrorValue	0	0	0.11
+SD_ErrorStatus_ModeTimer	0	0	0.11
+SD_MotorData_MotorRPM	0	0	0.11
+SD_MotorData_MotorCurrent	0	0	0.11
+SD_MotorData_MotorVoltage	0	0	0.11
+SD_AnalogData_ExternalADC	0	0	0.11
+SD_AnalogData_ThrottleLevel	0	0	0.11
+SD_AnalogData_BrakePressure	0	0	0.11
+SD_HVBusData_Frequency	0	0	0.11
+SD_HVBusData_BusCurrent	0	0	0.11
+SD_HVBusData_BusVoltage	0	0	0.11
+SD_TempData_InternalTemp	0	0	0.11
+SD_TempData_KTY1Temp	0	0	0.11
+SD_TempData_KTY2Temp	0	0	0.11
+SD_IGBTTemp_LegATemp	0	0	0.11
+SD_IGBTTemp_LegBTemp	0	0	0.11
+SD_IGBTTemp_LegCTemp	0	0	0.11
+SD_AuxCurrent_Aux1Current	0	0	0.11
+SD_AuxCurrent_Aux2Current	0	0	0.11
+SD_AuxCurrent_Aux3Current	0	0	0.11
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.11
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.11
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.11
+BMS_RelayState	0	0	0.11
+BMS_PackCurrent	0	0	0.11
+BMS_PackVoltage	0	0	0.11
+BMS_PackStateOfCharge	0	0	0.11
+BMS_PackStateOfHealth	0	0	0.11
+BMS_CurrentLimitStatus	0	0	0.11
+BMS_InternalTemp	0	0	0.11
+BMS_HighestTemp	0	0	0.11
+BMS_HighestTempID	0	0	0.11
+BMS_LowCellVoltage	0	0	0.11
+BMS_LowCellVoltageID	0	0	0.11
+BMS_HighCellVoltage	0	0	0.11
+BMS_HighCellVoltageID	0	0	0.11
+BMS_PowerInputVoltage	0	0	0.11
+BMS_DTCStatus1	0	0	0.11
+BMS_DTCStatus2	0	0	0.11
+LVBatt_Temp	0	0	0.11
+LVBatt_Current	0	0	0.11
+LVBatt_Voltage	0	0	0.11
+RPi_Temp	0	0	0.11
+RPi_Proc_Load	0.0	0	0.11
+RPi_Disk_Space_Used	89767.80078125	1	0.11
+RPi_Disk_Space_Free	153671.1953125	1	0.11
+RPi_Mem_Free	1730.33984375	0	0.11
+RPi_Mem_Used	6366.66015625	0	0.11
+RPi_Mem_Load	78.6	0	0.11
+PV_Left_Temp	0	0	0.11
+PV_Left_Pressure	0	0	0.11
+PV_Right_Temp	0	0	0.11
+PV_Right_Pressure	0	0	0.11
+Ambient_Pressure	0	0	0.11
+IMU1_X	0	0	0.11
+IMU1_Y	0	0	0.11
+IMU1_Z	0	0	0.11
+IMU2_X	0	0	0.11
+IMU2_Y	0	0	0.11
+IMU2_Z	0	0	0.11
+IMU_bad_time_elapsed	0	0	0.11
+V_bad_time_elapsed	0	0	0.11
+LST_missed_stripe_count	0	0	0.11
+LIDAR	0	0	0.11
+GUI_Conn	0	0	0.11
+LST_Left	0	0	0.11
+LST_Right	0	0	0.11
+Abort	0		0.11
+Launch	0		0.11
+HV	0		0.11
+Vent_Sol	0		0.11
+Res1_Sol	0		0.11
+Res2_Sol	0		0.11
+MC_Pump	0		0.11
+para_BBP	0		0.11
+para_max_speed	0		0.11
+para_max_accel	0		0.11
+para_max_time	0		0.11
+para_max_crawl_speed	-1		0.11
+state	1		0.11
+spacex_state	1		0.11
+total_faults	2		0.11
+throttle	0		0.11
+distance	-1.088226		0.11
+speed	-1		0.11
+accel	0.0		0.11
+wheel_diameter	1.45		0.11
+Brake_Pressure	0	0	0.24
+SD_DriveStatus_ProgramMode	0	0	0.24
+SD_DriveStatus_EngineState	0	0	0.24
+SD_DriveStatus_SwitchState	0	0	0.24
+SD_ErrorStatus_ErrorCode	0	0	0.24
+SD_ErrorStatus_ErrorValue	0	0	0.24
+SD_ErrorStatus_ModeTimer	0	0	0.24
+SD_MotorData_MotorRPM	0	0	0.24
+SD_MotorData_MotorCurrent	0	0	0.24
+SD_MotorData_MotorVoltage	0	0	0.24
+SD_AnalogData_ExternalADC	0	0	0.24
+SD_AnalogData_ThrottleLevel	0	0	0.24
+SD_AnalogData_BrakePressure	0	0	0.24
+SD_HVBusData_Frequency	0	0	0.24
+SD_HVBusData_BusCurrent	0	0	0.24
+SD_HVBusData_BusVoltage	0	0	0.24
+SD_TempData_InternalTemp	0	0	0.24
+SD_TempData_KTY1Temp	0	0	0.24
+SD_TempData_KTY2Temp	0	0	0.24
+SD_IGBTTemp_LegATemp	0	0	0.24
+SD_IGBTTemp_LegBTemp	0	0	0.24
+SD_IGBTTemp_LegCTemp	0	0	0.24
+SD_AuxCurrent_Aux1Current	0	0	0.24
+SD_AuxCurrent_Aux2Current	0	0	0.24
+SD_AuxCurrent_Aux3Current	0	0	0.24
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.24
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.24
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.24
+BMS_RelayState	0	0	0.24
+BMS_PackCurrent	0	0	0.24
+BMS_PackVoltage	0	0	0.24
+BMS_PackStateOfCharge	0	0	0.24
+BMS_PackStateOfHealth	0	0	0.24
+BMS_CurrentLimitStatus	0	0	0.24
+BMS_InternalTemp	0	0	0.24
+BMS_HighestTemp	0	0	0.24
+BMS_HighestTempID	0	0	0.24
+BMS_LowCellVoltage	0	0	0.24
+BMS_LowCellVoltageID	0	0	0.24
+BMS_HighCellVoltage	0	0	0.24
+BMS_HighCellVoltageID	0	0	0.24
+BMS_PowerInputVoltage	0	0	0.24
+BMS_DTCStatus1	0	0	0.24
+BMS_DTCStatus2	0	0	0.24
+LVBatt_Temp	0	0	0.24
+LVBatt_Current	0	0	0.24
+LVBatt_Voltage	0	0	0.24
+RPi_Temp	0	0	0.24
+RPi_Proc_Load	0.0	0	0.24
+RPi_Disk_Space_Used	89767.8046875	1	0.24
+RPi_Disk_Space_Free	153671.19140625	1	0.24
+RPi_Mem_Free	1738.28125	0	0.24
+RPi_Mem_Used	6358.71875	0	0.25
+RPi_Mem_Load	78.5	0	0.25
+PV_Left_Temp	0	0	0.25
+PV_Left_Pressure	0	0	0.25
+PV_Right_Temp	0	0	0.25
+PV_Right_Pressure	0	0	0.25
+Ambient_Pressure	0	0	0.25
+IMU1_X	0	0	0.25
+IMU1_Y	0	0	0.25
+IMU1_Z	0	0	0.25
+IMU2_X	0	0	0.25
+IMU2_Y	0	0	0.25
+IMU2_Z	0	0	0.25
+IMU_bad_time_elapsed	0	0	0.25
+V_bad_time_elapsed	0	0	0.25
+LST_missed_stripe_count	0	0	0.25
+LIDAR	0	0	0.25
+GUI_Conn	0	0	0.25
+LST_Left	0	0	0.25
+LST_Right	0	0	0.25
+Abort	0		0.25
+Launch	0		0.25
+HV	0		0.25
+Vent_Sol	0		0.25
+Res1_Sol	0		0.25
+Res2_Sol	0		0.25
+MC_Pump	0		0.25
+para_BBP	0		0.25
+para_max_speed	0		0.25
+para_max_accel	0		0.25
+para_max_time	0		0.25
+para_max_crawl_speed	-1		0.25
+state	1		0.25
+spacex_state	1		0.25
+total_faults	2		0.25
+throttle	0		0.25
+distance	-1.2017466999999997		0.25
+speed	-1		0.25
+accel	0.0		0.25
+wheel_diameter	1.45		0.25
+Brake_Pressure	0	0	0.38
+SD_DriveStatus_ProgramMode	0	0	0.38
+SD_DriveStatus_EngineState	0	0	0.38
+SD_DriveStatus_SwitchState	0	0	0.38
+SD_ErrorStatus_ErrorCode	0	0	0.38
+SD_ErrorStatus_ErrorValue	0	0	0.38
+SD_ErrorStatus_ModeTimer	0	0	0.38
+SD_MotorData_MotorRPM	0	0	0.38
+SD_MotorData_MotorCurrent	0	0	0.38
+SD_MotorData_MotorVoltage	0	0	0.38
+SD_AnalogData_ExternalADC	0	0	0.38
+SD_AnalogData_ThrottleLevel	0	0	0.38
+SD_AnalogData_BrakePressure	0	0	0.38
+SD_HVBusData_Frequency	0	0	0.38
+SD_HVBusData_BusCurrent	0	0	0.38
+SD_HVBusData_BusVoltage	0	0	0.38
+SD_TempData_InternalTemp	0	0	0.38
+SD_TempData_KTY1Temp	0	0	0.38
+SD_TempData_KTY2Temp	0	0	0.38
+SD_IGBTTemp_LegATemp	0	0	0.38
+SD_IGBTTemp_LegBTemp	0	0	0.38
+SD_IGBTTemp_LegCTemp	0	0	0.38
+SD_AuxCurrent_Aux1Current	0	0	0.38
+SD_AuxCurrent_Aux2Current	0	0	0.38
+SD_AuxCurrent_Aux3Current	0	0	0.38
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.38
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.38
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.38
+BMS_RelayState	0	0	0.38
+BMS_PackCurrent	0	0	0.38
+BMS_PackVoltage	0	0	0.38
+BMS_PackStateOfCharge	0	0	0.38
+BMS_PackStateOfHealth	0	0	0.38
+BMS_CurrentLimitStatus	0	0	0.38
+BMS_InternalTemp	0	0	0.38
+BMS_HighestTemp	0	0	0.38
+BMS_HighestTempID	0	0	0.38
+BMS_LowCellVoltage	0	0	0.38
+BMS_LowCellVoltageID	0	0	0.38
+BMS_HighCellVoltage	0	0	0.38
+BMS_HighCellVoltageID	0	0	0.38
+BMS_PowerInputVoltage	0	0	0.38
+BMS_DTCStatus1	0	0	0.38
+BMS_DTCStatus2	0	0	0.38
+LVBatt_Temp	0	0	0.38
+LVBatt_Current	0	0	0.38
+LVBatt_Voltage	0	0	0.38
+RPi_Temp	0	0	0.38
+RPi_Proc_Load	75.0	0	0.38
+RPi_Disk_Space_Used	89767.88671875	1	0.38
+RPi_Disk_Space_Free	153671.109375	1	0.38
+RPi_Mem_Free	1727.19921875	0	0.38
+RPi_Mem_Used	6369.80078125	0	0.38
+RPi_Mem_Load	78.7	0	0.38
+PV_Left_Temp	0	0	0.38
+PV_Left_Pressure	0	0	0.38
+PV_Right_Temp	0	0	0.38
+PV_Right_Pressure	0	0	0.38
+Ambient_Pressure	0	0	0.38
+IMU1_X	0	0	0.38
+IMU1_Y	0	0	0.38
+IMU1_Z	0	0	0.38
+IMU2_X	0	0	0.38
+IMU2_Y	0	0	0.38
+IMU2_Z	0	0	0.38
+IMU_bad_time_elapsed	0	0	0.38
+V_bad_time_elapsed	0	0	0.38
+LST_missed_stripe_count	0	0	0.38
+LIDAR	0	0	0.38
+GUI_Conn	0	0	0.38
+LST_Left	0	0	0.38
+LST_Right	0	0	0.38
+Abort	0		0.38
+Launch	0		0.38
+HV	0		0.38
+Vent_Sol	0		0.38
+Res1_Sol	0		0.38
+Res2_Sol	0		0.38
+MC_Pump	0		0.38
+para_BBP	0		0.38
+para_max_speed	0		0.38
+para_max_accel	0		0.38
+para_max_time	0		0.38
+para_max_crawl_speed	-1		0.38
+state	1		0.38
+spacex_state	1		0.38
+total_faults	2		0.38
+throttle	0		0.38
+distance	-1.3656289999999998		0.38
+speed	-1		0.38
+accel	0.0		0.38
+wheel_diameter	1.45		0.38
+Brake_Pressure	0	0	0.49
+SD_DriveStatus_ProgramMode	0	0	0.49
+SD_DriveStatus_EngineState	0	0	0.49
+SD_DriveStatus_SwitchState	0	0	0.49
+SD_ErrorStatus_ErrorCode	0	0	0.49
+SD_ErrorStatus_ErrorValue	0	0	0.49
+SD_ErrorStatus_ModeTimer	0	0	0.49
+SD_MotorData_MotorRPM	0	0	0.49
+SD_MotorData_MotorCurrent	0	0	0.49
+SD_MotorData_MotorVoltage	0	0	0.49
+SD_AnalogData_ExternalADC	0	0	0.49
+SD_AnalogData_ThrottleLevel	0	0	0.49
+SD_AnalogData_BrakePressure	0	0	0.49
+SD_HVBusData_Frequency	0	0	0.49
+SD_HVBusData_BusCurrent	0	0	0.49
+SD_HVBusData_BusVoltage	0	0	0.49
+SD_TempData_InternalTemp	0	0	0.49
+SD_TempData_KTY1Temp	0	0	0.49
+SD_TempData_KTY2Temp	0	0	0.49
+SD_IGBTTemp_LegATemp	0	0	0.49
+SD_IGBTTemp_LegBTemp	0	0	0.49
+SD_IGBTTemp_LegCTemp	0	0	0.49
+SD_AuxCurrent_Aux1Current	0	0	0.49
+SD_AuxCurrent_Aux2Current	0	0	0.49
+SD_AuxCurrent_Aux3Current	0	0	0.49
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.49
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.49
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.49
+BMS_RelayState	0	0	0.49
+BMS_PackCurrent	0	0	0.49
+BMS_PackVoltage	0	0	0.49
+BMS_PackStateOfCharge	0	0	0.49
+BMS_PackStateOfHealth	0	0	0.49
+BMS_CurrentLimitStatus	0	0	0.49
+BMS_InternalTemp	0	0	0.49
+BMS_HighestTemp	0	0	0.49
+BMS_HighestTempID	0	0	0.49
+BMS_LowCellVoltage	0	0	0.49
+BMS_LowCellVoltageID	0	0	0.49
+BMS_HighCellVoltage	0	0	0.49
+BMS_HighCellVoltageID	0	0	0.49
+BMS_PowerInputVoltage	0	0	0.49
+BMS_DTCStatus1	0	0	0.49
+BMS_DTCStatus2	0	0	0.49
+LVBatt_Temp	0	0	0.49
+LVBatt_Current	0	0	0.49
+LVBatt_Voltage	0	0	0.49
+RPi_Temp	0	0	0.49
+RPi_Proc_Load	100.0	0	0.49
+RPi_Disk_Space_Used	89767.80859375	1	0.49
+RPi_Disk_Space_Free	153671.1875	1	0.49
+RPi_Mem_Free	1733.56640625	0	0.49
+RPi_Mem_Used	6363.43359375	0	0.49
+RPi_Mem_Load	78.6	0	0.49
+PV_Left_Temp	0	0	0.49
+PV_Left_Pressure	0	0	0.49
+PV_Right_Temp	0	0	0.49
+PV_Right_Pressure	0	0	0.49
+Ambient_Pressure	0	0	0.49
+IMU1_X	0	0	0.49
+IMU1_Y	0	0	0.49
+IMU1_Z	0	0	0.49
+IMU2_X	0	0	0.49
+IMU2_Y	0	0	0.49
+IMU2_Z	0	0	0.49
+IMU_bad_time_elapsed	0	0	0.49
+V_bad_time_elapsed	0	0	0.49
+LST_missed_stripe_count	0	0	0.49
+LIDAR	0	0	0.49
+GUI_Conn	0	0	0.49
+LST_Left	0	0	0.49
+LST_Right	0	0	0.49
+Abort	0		0.49
+Launch	0		0.49
+HV	0		0.49
+Vent_Sol	0		0.49
+Res1_Sol	0		0.49
+Res2_Sol	0		0.49
+MC_Pump	0		0.49
+para_BBP	0		0.49
+para_max_speed	0		0.49
+para_max_accel	0		0.49
+para_max_time	0		0.49
+para_max_crawl_speed	-1		0.49
+state	1		0.49
+spacex_state	1		0.49
+total_faults	2		0.49
+throttle	0		0.49
+distance	-1.4764635000000004		0.49
+speed	-1		0.49
+accel	0.0		0.49
+wheel_diameter	1.45		0.49
+Brake_Pressure	0	0	0.61
+SD_DriveStatus_ProgramMode	0	0	0.61
+SD_DriveStatus_EngineState	0	0	0.61
+SD_DriveStatus_SwitchState	0	0	0.61
+SD_ErrorStatus_ErrorCode	0	0	0.61
+SD_ErrorStatus_ErrorValue	0	0	0.61
+SD_ErrorStatus_ModeTimer	0	0	0.61
+SD_MotorData_MotorRPM	0	0	0.61
+SD_MotorData_MotorCurrent	0	0	0.61
+SD_MotorData_MotorVoltage	0	0	0.61
+SD_AnalogData_ExternalADC	0	0	0.61
+SD_AnalogData_ThrottleLevel	0	0	0.61
+SD_AnalogData_BrakePressure	0	0	0.61
+SD_HVBusData_Frequency	0	0	0.61
+SD_HVBusData_BusCurrent	0	0	0.61
+SD_HVBusData_BusVoltage	0	0	0.61
+SD_TempData_InternalTemp	0	0	0.61
+SD_TempData_KTY1Temp	0	0	0.61
+SD_TempData_KTY2Temp	0	0	0.61
+SD_IGBTTemp_LegATemp	0	0	0.61
+SD_IGBTTemp_LegBTemp	0	0	0.61
+SD_IGBTTemp_LegCTemp	0	0	0.61
+SD_AuxCurrent_Aux1Current	0	0	0.61
+SD_AuxCurrent_Aux2Current	0	0	0.61
+SD_AuxCurrent_Aux3Current	0	0	0.61
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.61
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.61
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.61
+BMS_RelayState	0	0	0.61
+BMS_PackCurrent	0	0	0.61
+BMS_PackVoltage	0	0	0.61
+BMS_PackStateOfCharge	0	0	0.62
+BMS_PackStateOfHealth	0	0	0.62
+BMS_CurrentLimitStatus	0	0	0.62
+BMS_InternalTemp	0	0	0.62
+BMS_HighestTemp	0	0	0.62
+BMS_HighestTempID	0	0	0.62
+BMS_LowCellVoltage	0	0	0.62
+BMS_LowCellVoltageID	0	0	0.62
+BMS_HighCellVoltage	0	0	0.62
+BMS_HighCellVoltageID	0	0	0.62
+BMS_PowerInputVoltage	0	0	0.62
+BMS_DTCStatus1	0	0	0.62
+BMS_DTCStatus2	0	0	0.62
+LVBatt_Temp	0	0	0.62
+LVBatt_Current	0	0	0.62
+LVBatt_Voltage	0	0	0.62
+RPi_Temp	0	0	0.62
+RPi_Proc_Load	0.0	0	0.62
+RPi_Disk_Space_Used	89767.81640625	1	0.62
+RPi_Disk_Space_Free	153671.1796875	1	0.62
+RPi_Mem_Free	1740.78515625	0	0.62
+RPi_Mem_Used	6356.21484375	0	0.62
+RPi_Mem_Load	78.5	0	0.62
+PV_Left_Temp	0	0	0.62
+PV_Left_Pressure	0	0	0.62
+PV_Right_Temp	0	0	0.62
+PV_Right_Pressure	0	0	0.62
+Ambient_Pressure	0	0	0.62
+IMU1_X	0	0	0.62
+IMU1_Y	0	0	0.62
+IMU1_Z	0	0	0.62
+IMU2_X	0	0	0.62
+IMU2_Y	0	0	0.62
+IMU2_Z	0	0	0.62
+IMU_bad_time_elapsed	0	0	0.62
+V_bad_time_elapsed	0	0	0.62
+LST_missed_stripe_count	0	0	0.62
+LIDAR	0	0	0.62
+GUI_Conn	0	0	0.62
+LST_Left	0	0	0.62
+LST_Right	0	0	0.62
+Abort	0		0.62
+Launch	0		0.62
+HV	0		0.62
+Vent_Sol	0		0.62
+Res1_Sol	0		0.62
+Res2_Sol	0		0.62
+MC_Pump	0		0.62
+para_BBP	0		0.62
+para_max_speed	0		0.62
+para_max_accel	0		0.62
+para_max_time	0		0.62
+para_max_crawl_speed	-1		0.62
+state	1		0.62
+spacex_state	1		0.62
+total_faults	2		0.62
+throttle	0		0.62
+distance	-1.5991879999999996		0.62
+speed	-1		0.62
+accel	0.0		0.62
+wheel_diameter	1.45		0.62
+Brake_Pressure	0	0	0.73
+SD_DriveStatus_ProgramMode	0	0	0.73
+SD_DriveStatus_EngineState	0	0	0.73
+SD_DriveStatus_SwitchState	0	0	0.73
+SD_ErrorStatus_ErrorCode	0	0	0.73
+SD_ErrorStatus_ErrorValue	0	0	0.73
+SD_ErrorStatus_ModeTimer	0	0	0.73
+SD_MotorData_MotorRPM	0	0	0.73
+SD_MotorData_MotorCurrent	0	0	0.73
+SD_MotorData_MotorVoltage	0	0	0.73
+SD_AnalogData_ExternalADC	0	0	0.73
+SD_AnalogData_ThrottleLevel	0	0	0.73
+SD_AnalogData_BrakePressure	0	0	0.73
+SD_HVBusData_Frequency	0	0	0.73
+SD_HVBusData_BusCurrent	0	0	0.73
+SD_HVBusData_BusVoltage	0	0	0.73
+SD_TempData_InternalTemp	0	0	0.73
+SD_TempData_KTY1Temp	0	0	0.73
+SD_TempData_KTY2Temp	0	0	0.73
+SD_IGBTTemp_LegATemp	0	0	0.73
+SD_IGBTTemp_LegBTemp	0	0	0.73
+SD_IGBTTemp_LegCTemp	0	0	0.73
+SD_AuxCurrent_Aux1Current	0	0	0.73
+SD_AuxCurrent_Aux2Current	0	0	0.73
+SD_AuxCurrent_Aux3Current	0	0	0.73
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.73
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.73
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.73
+BMS_RelayState	0	0	0.73
+BMS_PackCurrent	0	0	0.73
+BMS_PackVoltage	0	0	0.73
+BMS_PackStateOfCharge	0	0	0.73
+BMS_PackStateOfHealth	0	0	0.73
+BMS_CurrentLimitStatus	0	0	0.73
+BMS_InternalTemp	0	0	0.73
+BMS_HighestTemp	0	0	0.73
+BMS_HighestTempID	0	0	0.73
+BMS_LowCellVoltage	0	0	0.73
+BMS_LowCellVoltageID	0	0	0.73
+BMS_HighCellVoltage	0	0	0.73
+BMS_HighCellVoltageID	0	0	0.73
+BMS_PowerInputVoltage	0	0	0.73
+BMS_DTCStatus1	0	0	0.73
+BMS_DTCStatus2	0	0	0.73
+LVBatt_Temp	0	0	0.73
+LVBatt_Current	0	0	0.73
+LVBatt_Voltage	0	0	0.73
+RPi_Temp	0	0	0.73
+RPi_Proc_Load	0.0	0	0.73
+RPi_Disk_Space_Used	89767.81640625	1	0.73
+RPi_Disk_Space_Free	153671.1796875	1	0.73
+RPi_Mem_Free	1737.38671875	0	0.73
+RPi_Mem_Used	6359.61328125	0	0.73
+RPi_Mem_Load	78.5	0	0.73
+PV_Left_Temp	0	0	0.73
+PV_Left_Pressure	0	0	0.73
+PV_Right_Temp	0	0	0.73
+PV_Right_Pressure	0	0	0.73
+Ambient_Pressure	0	0	0.73
+IMU1_X	0	0	0.73
+IMU1_Y	0	0	0.73
+IMU1_Z	0	0	0.73
+IMU2_X	0	0	0.73
+IMU2_Y	0	0	0.73
+IMU2_Z	0	0	0.73
+IMU_bad_time_elapsed	0	0	0.73
+V_bad_time_elapsed	0	0	0.73
+LST_missed_stripe_count	0	0	0.73
+LIDAR	0	0	0.73
+GUI_Conn	0	0	0.73
+LST_Left	0	0	0.73
+LST_Right	0	0	0.73
+Abort	0		0.73
+Launch	0		0.73
+HV	0		0.73
+Vent_Sol	0		0.73
+Res1_Sol	0		0.73
+Res2_Sol	0		0.73
+MC_Pump	0		0.73
+para_BBP	0		0.73
+para_max_speed	0		0.73
+para_max_accel	0		0.73
+para_max_time	0		0.73
+para_max_crawl_speed	-1		0.73
+state	1		0.73
+spacex_state	1		0.73
+total_faults	2		0.73
+throttle	0		0.73
+distance	-1.7127813999999995		0.73
+speed	-1		0.73
+accel	0.0		0.73
+wheel_diameter	1.45		0.73
+Brake_Pressure	0	0	0.85
+SD_DriveStatus_ProgramMode	0	0	0.85
+SD_DriveStatus_EngineState	0	0	0.85
+SD_DriveStatus_SwitchState	0	0	0.85
+SD_ErrorStatus_ErrorCode	0	0	0.85
+SD_ErrorStatus_ErrorValue	0	0	0.85
+SD_ErrorStatus_ModeTimer	0	0	0.85
+SD_MotorData_MotorRPM	0	0	0.85
+SD_MotorData_MotorCurrent	0	0	0.85
+SD_MotorData_MotorVoltage	0	0	0.85
+SD_AnalogData_ExternalADC	0	0	0.85
+SD_AnalogData_ThrottleLevel	0	0	0.85
+SD_AnalogData_BrakePressure	0	0	0.85
+SD_HVBusData_Frequency	0	0	0.85
+SD_HVBusData_BusCurrent	0	0	0.85
+SD_HVBusData_BusVoltage	0	0	0.85
+SD_TempData_InternalTemp	0	0	0.85
+SD_TempData_KTY1Temp	0	0	0.85
+SD_TempData_KTY2Temp	0	0	0.85
+SD_IGBTTemp_LegATemp	0	0	0.85
+SD_IGBTTemp_LegBTemp	0	0	0.85
+SD_IGBTTemp_LegCTemp	0	0	0.85
+SD_AuxCurrent_Aux1Current	0	0	0.85
+SD_AuxCurrent_Aux2Current	0	0	0.85
+SD_AuxCurrent_Aux3Current	0	0	0.85
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.85
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.85
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.85
+BMS_RelayState	0	0	0.85
+BMS_PackCurrent	0	0	0.85
+BMS_PackVoltage	0	0	0.85
+BMS_PackStateOfCharge	0	0	0.85
+BMS_PackStateOfHealth	0	0	0.85
+BMS_CurrentLimitStatus	0	0	0.85
+BMS_InternalTemp	0	0	0.85
+BMS_HighestTemp	0	0	0.85
+BMS_HighestTempID	0	0	0.85
+BMS_LowCellVoltage	0	0	0.85
+BMS_LowCellVoltageID	0	0	0.85
+BMS_HighCellVoltage	0	0	0.85
+BMS_HighCellVoltageID	0	0	0.85
+BMS_PowerInputVoltage	0	0	0.85
+BMS_DTCStatus1	0	0	0.85
+BMS_DTCStatus2	0	0	0.85
+LVBatt_Temp	0	0	0.85
+LVBatt_Current	0	0	0.85
+LVBatt_Voltage	0	0	0.85
+RPi_Temp	0	0	0.85
+RPi_Proc_Load	0.0	0	0.85
+RPi_Disk_Space_Used	89767.81640625	1	0.85
+RPi_Disk_Space_Free	153671.1796875	1	0.85
+RPi_Mem_Free	1739.28125	0	0.85
+RPi_Mem_Used	6357.71875	0	0.85
+RPi_Mem_Load	78.5	0	0.85
+PV_Left_Temp	0	0	0.85
+PV_Left_Pressure	0	0	0.85
+PV_Right_Temp	0	0	0.85
+PV_Right_Pressure	0	0	0.85
+Ambient_Pressure	0	0	0.85
+IMU1_X	0	0	0.85
+IMU1_Y	0	0	0.85
+IMU1_Z	0	0	0.85
+IMU2_X	0	0	0.85
+IMU2_Y	0	0	0.85
+IMU2_Z	0	0	0.85
+IMU_bad_time_elapsed	0	0	0.85
+V_bad_time_elapsed	0	0	0.85
+LST_missed_stripe_count	0	0	0.85
+LIDAR	0	0	0.85
+GUI_Conn	0	0	0.85
+LST_Left	0	0	0.85
+LST_Right	0	0	0.85
+Abort	0		0.85
+Launch	0		0.85
+HV	0		0.85
+Vent_Sol	0		0.85
+Res1_Sol	0		0.85
+Res2_Sol	0		0.85
+MC_Pump	0		0.85
+para_BBP	0		0.85
+para_max_speed	0		0.85
+para_max_accel	0		0.85
+para_max_time	0		0.86
+para_max_crawl_speed	-1		0.86
+state	1		0.86
+spacex_state	1		0.86
+total_faults	2		0.86
+throttle	0		0.86
+distance	-1.8325276999999993		0.86
+speed	-1		0.86
+accel	0.0		0.86
+wheel_diameter	1.45		0.86
+Brake_Pressure	0	0	0.98
+SD_DriveStatus_ProgramMode	0	0	0.98
+SD_DriveStatus_EngineState	0	0	0.98
+SD_DriveStatus_SwitchState	0	0	0.98
+SD_ErrorStatus_ErrorCode	0	0	0.98
+SD_ErrorStatus_ErrorValue	0	0	0.98
+SD_ErrorStatus_ModeTimer	0	0	0.98
+SD_MotorData_MotorRPM	0	0	0.98
+SD_MotorData_MotorCurrent	0	0	0.98
+SD_MotorData_MotorVoltage	0	0	0.98
+SD_AnalogData_ExternalADC	0	0	0.98
+SD_AnalogData_ThrottleLevel	0	0	0.98
+SD_AnalogData_BrakePressure	0	0	0.98
+SD_HVBusData_Frequency	0	0	0.98
+SD_HVBusData_BusCurrent	0	0	0.98
+SD_HVBusData_BusVoltage	0	0	0.98
+SD_TempData_InternalTemp	0	0	0.98
+SD_TempData_KTY1Temp	0	0	0.98
+SD_TempData_KTY2Temp	0	0	0.98
+SD_IGBTTemp_LegATemp	0	0	0.98
+SD_IGBTTemp_LegBTemp	0	0	0.98
+SD_IGBTTemp_LegCTemp	0	0	0.98
+SD_AuxCurrent_Aux1Current	0	0	0.98
+SD_AuxCurrent_Aux2Current	0	0	0.98
+SD_AuxCurrent_Aux3Current	0	0	0.98
+SD_PhaseVoltage_PhaseAVoltage	0	0	0.98
+SD_PhaseVoltage_PhaseBVoltage	0	0	0.98
+SD_PhaseVoltage_PhaseCVoltage	0	0	0.98
+BMS_RelayState	0	0	0.98
+BMS_PackCurrent	0	0	0.98
+BMS_PackVoltage	0	0	0.98
+BMS_PackStateOfCharge	0	0	0.98
+BMS_PackStateOfHealth	0	0	0.98
+BMS_CurrentLimitStatus	0	0	0.98
+BMS_InternalTemp	0	0	0.98
+BMS_HighestTemp	0	0	0.98
+BMS_HighestTempID	0	0	0.98
+BMS_LowCellVoltage	0	0	0.98
+BMS_LowCellVoltageID	0	0	0.98
+BMS_HighCellVoltage	0	0	0.98
+BMS_HighCellVoltageID	0	0	0.98
+BMS_PowerInputVoltage	0	0	0.98
+BMS_DTCStatus1	0	0	0.98
+BMS_DTCStatus2	0	0	0.98
+LVBatt_Temp	0	0	0.98
+LVBatt_Current	0	0	0.98
+LVBatt_Voltage	0	0	0.98
+RPi_Temp	0	0	0.98
+RPi_Proc_Load	100.0	0	0.98
+RPi_Disk_Space_Used	89767.8203125	1	0.98
+RPi_Disk_Space_Free	153671.17578125	1	0.98
+RPi_Mem_Free	1737.14453125	0	0.98
+RPi_Mem_Used	6359.85546875	0	0.98
+RPi_Mem_Load	78.5	0	0.98
+PV_Left_Temp	0	0	0.98
+PV_Left_Pressure	0	0	0.98
+PV_Right_Temp	0	0	0.98
+PV_Right_Pressure	0	0	0.98
+Ambient_Pressure	0	0	0.98
+IMU1_X	0	0	0.98
+IMU1_Y	0	0	0.98
+IMU1_Z	0	0	0.98
+IMU2_X	0	0	0.98
+IMU2_Y	0	0	0.98
+IMU2_Z	0	0	0.98
+IMU_bad_time_elapsed	0	0	0.98
+V_bad_time_elapsed	0	0	0.98
+LST_missed_stripe_count	0	0	0.98
+LIDAR	0	0	0.98
+GUI_Conn	0	0	0.98
+LST_Left	0	0	0.98
+LST_Right	0	0	0.98
+Abort	0		0.98
+Launch	0		0.98
+HV	0		0.98
+Vent_Sol	0		0.98
+Res1_Sol	0		0.98
+Res2_Sol	0		0.98
+MC_Pump	0		0.98
+para_BBP	0		0.98
+para_max_speed	0		0.98
+para_max_accel	0		0.98
+para_max_time	0		0.98
+para_max_crawl_speed	-1		0.98
+state	1		0.98
+spacex_state	1		0.98
+total_faults	2		0.98
+throttle	0		0.98
+distance	-1.960907399999999		0.98
+speed	-1		0.98
+accel	0.0		0.98
+wheel_diameter	1.45		0.98
+Brake_Pressure	0	0	1.1
+SD_DriveStatus_ProgramMode	0	0	1.1
+SD_DriveStatus_EngineState	0	0	1.1
+SD_DriveStatus_SwitchState	0	0	1.1
+SD_ErrorStatus_ErrorCode	0	0	1.1
+SD_ErrorStatus_ErrorValue	0	0	1.1
+SD_ErrorStatus_ModeTimer	0	0	1.1
+SD_MotorData_MotorRPM	0	0	1.1
+SD_MotorData_MotorCurrent	0	0	1.1
+SD_MotorData_MotorVoltage	0	0	1.1
+SD_AnalogData_ExternalADC	0	0	1.1
+SD_AnalogData_ThrottleLevel	0	0	1.1
+SD_AnalogData_BrakePressure	0	0	1.1
+SD_HVBusData_Frequency	0	0	1.1
+SD_HVBusData_BusCurrent	0	0	1.1
+SD_HVBusData_BusVoltage	0	0	1.1
+SD_TempData_InternalTemp	0	0	1.1
+SD_TempData_KTY1Temp	0	0	1.1
+SD_TempData_KTY2Temp	0	0	1.1
+SD_IGBTTemp_LegATemp	0	0	1.1
+SD_IGBTTemp_LegBTemp	0	0	1.1
+SD_IGBTTemp_LegCTemp	0	0	1.1
+SD_AuxCurrent_Aux1Current	0	0	1.1
+SD_AuxCurrent_Aux2Current	0	0	1.1
+SD_AuxCurrent_Aux3Current	0	0	1.1
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.1
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.1
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.1
+BMS_RelayState	0	0	1.1
+BMS_PackCurrent	0	0	1.1
+BMS_PackVoltage	0	0	1.1
+BMS_PackStateOfCharge	0	0	1.1
+BMS_PackStateOfHealth	0	0	1.1
+BMS_CurrentLimitStatus	0	0	1.1
+BMS_InternalTemp	0	0	1.1
+BMS_HighestTemp	0	0	1.1
+BMS_HighestTempID	0	0	1.1
+BMS_LowCellVoltage	0	0	1.1
+BMS_LowCellVoltageID	0	0	1.1
+BMS_HighCellVoltage	0	0	1.1
+BMS_HighCellVoltageID	0	0	1.1
+BMS_PowerInputVoltage	0	0	1.1
+BMS_DTCStatus1	0	0	1.1
+BMS_DTCStatus2	0	0	1.1
+LVBatt_Temp	0	0	1.1
+LVBatt_Current	0	0	1.1
+LVBatt_Voltage	0	0	1.1
+RPi_Temp	0	0	1.1
+RPi_Proc_Load	100.0	0	1.1
+RPi_Disk_Space_Used	89767.8203125	1	1.1
+RPi_Disk_Space_Free	153671.17578125	1	1.1
+RPi_Mem_Free	1738.1796875	0	1.1
+RPi_Mem_Used	6358.8203125	0	1.1
+RPi_Mem_Load	78.5	0	1.1
+PV_Left_Temp	0	0	1.1
+PV_Left_Pressure	0	0	1.1
+PV_Right_Temp	0	0	1.1
+PV_Right_Pressure	0	0	1.1
+Ambient_Pressure	0	0	1.1
+IMU1_X	0	0	1.1
+IMU1_Y	0	0	1.1
+IMU1_Z	0	0	1.1
+IMU2_X	0	0	1.1
+IMU2_Y	0	0	1.1
+IMU2_Z	0	0	1.1
+IMU_bad_time_elapsed	0	0	1.1
+V_bad_time_elapsed	0	0	1.1
+LST_missed_stripe_count	0	0	1.1
+LIDAR	0	0	1.1
+GUI_Conn	0	0	1.1
+LST_Left	0	0	1.1
+LST_Right	0	0	1.1
+Abort	0		1.1
+Launch	0		1.11
+HV	0		1.11
+Vent_Sol	0		1.11
+Res1_Sol	0		1.11
+Res2_Sol	0		1.11
+MC_Pump	0		1.11
+para_BBP	0		1.11
+para_max_speed	0		1.11
+para_max_accel	0		1.11
+para_max_time	0		1.11
+para_max_crawl_speed	-1		1.11
+state	1		1.11
+spacex_state	1		1.11
+total_faults	2		1.11
+throttle	0		1.11
+distance	-2.0714171999999995		1.11
+speed	-1		1.11
+accel	0.0		1.11
+wheel_diameter	1.45		1.11
+Brake_Pressure	0	0	1.24
+SD_DriveStatus_ProgramMode	0	0	1.24
+SD_DriveStatus_EngineState	0	0	1.24
+SD_DriveStatus_SwitchState	0	0	1.24
+SD_ErrorStatus_ErrorCode	0	0	1.24
+SD_ErrorStatus_ErrorValue	0	0	1.24
+SD_ErrorStatus_ModeTimer	0	0	1.24
+SD_MotorData_MotorRPM	0	0	1.24
+SD_MotorData_MotorCurrent	0	0	1.24
+SD_MotorData_MotorVoltage	0	0	1.24
+SD_AnalogData_ExternalADC	0	0	1.24
+SD_AnalogData_ThrottleLevel	0	0	1.24
+SD_AnalogData_BrakePressure	0	0	1.24
+SD_HVBusData_Frequency	0	0	1.24
+SD_HVBusData_BusCurrent	0	0	1.24
+SD_HVBusData_BusVoltage	0	0	1.24
+SD_TempData_InternalTemp	0	0	1.24
+SD_TempData_KTY1Temp	0	0	1.24
+SD_TempData_KTY2Temp	0	0	1.24
+SD_IGBTTemp_LegATemp	0	0	1.24
+SD_IGBTTemp_LegBTemp	0	0	1.24
+SD_IGBTTemp_LegCTemp	0	0	1.24
+SD_AuxCurrent_Aux1Current	0	0	1.24
+SD_AuxCurrent_Aux2Current	0	0	1.24
+SD_AuxCurrent_Aux3Current	0	0	1.24
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.24
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.24
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.24
+BMS_RelayState	0	0	1.24
+BMS_PackCurrent	0	0	1.24
+BMS_PackVoltage	0	0	1.24
+BMS_PackStateOfCharge	0	0	1.24
+BMS_PackStateOfHealth	0	0	1.24
+BMS_CurrentLimitStatus	0	0	1.24
+BMS_InternalTemp	0	0	1.24
+BMS_HighestTemp	0	0	1.24
+BMS_HighestTempID	0	0	1.24
+BMS_LowCellVoltage	0	0	1.24
+BMS_LowCellVoltageID	0	0	1.24
+BMS_HighCellVoltage	0	0	1.24
+BMS_HighCellVoltageID	0	0	1.24
+BMS_PowerInputVoltage	0	0	1.24
+BMS_DTCStatus1	0	0	1.24
+BMS_DTCStatus2	0	0	1.24
+LVBatt_Temp	0	0	1.24
+LVBatt_Current	0	0	1.24
+LVBatt_Voltage	0	0	1.24
+RPi_Temp	0	0	1.24
+RPi_Proc_Load	0.0	0	1.24
+RPi_Disk_Space_Used	89767.82421875	1	1.24
+RPi_Disk_Space_Free	153671.171875	1	1.24
+RPi_Mem_Free	1739.453125	0	1.24
+RPi_Mem_Used	6357.546875	0	1.24
+RPi_Mem_Load	78.5	0	1.24
+PV_Left_Temp	0	0	1.24
+PV_Left_Pressure	0	0	1.24
+PV_Right_Temp	0	0	1.24
+PV_Right_Pressure	0	0	1.24
+Ambient_Pressure	0	0	1.24
+IMU1_X	0	0	1.24
+IMU1_Y	0	0	1.24
+IMU1_Z	0	0	1.24
+IMU2_X	0	0	1.24
+IMU2_Y	0	0	1.24
+IMU2_Z	0	0	1.24
+IMU_bad_time_elapsed	0	0	1.24
+V_bad_time_elapsed	0	0	1.24
+LST_missed_stripe_count	0	0	1.24
+LIDAR	0	0	1.24
+GUI_Conn	0	0	1.24
+LST_Left	0	0	1.24
+LST_Right	0	0	1.24
+Abort	0		1.24
+Launch	0		1.24
+HV	0		1.24
+Vent_Sol	0		1.24
+Res1_Sol	0		1.24
+Res2_Sol	0		1.24
+MC_Pump	0		1.24
+para_BBP	0		1.24
+para_max_speed	0		1.24
+para_max_accel	0		1.24
+para_max_time	0		1.24
+para_max_crawl_speed	-1		1.24
+state	1		1.24
+spacex_state	1		1.24
+total_faults	2		1.24
+throttle	0		1.24
+distance	-2.2199940999999983		1.24
+speed	-1		1.24
+accel	0.0		1.24
+wheel_diameter	1.45		1.24
+Brake_Pressure	0	0	1.35
+SD_DriveStatus_ProgramMode	0	0	1.35
+SD_DriveStatus_EngineState	0	0	1.35
+SD_DriveStatus_SwitchState	0	0	1.35
+SD_ErrorStatus_ErrorCode	0	0	1.35
+SD_ErrorStatus_ErrorValue	0	0	1.35
+SD_ErrorStatus_ModeTimer	0	0	1.35
+SD_MotorData_MotorRPM	0	0	1.35
+SD_MotorData_MotorCurrent	0	0	1.35
+SD_MotorData_MotorVoltage	0	0	1.35
+SD_AnalogData_ExternalADC	0	0	1.35
+SD_AnalogData_ThrottleLevel	0	0	1.35
+SD_AnalogData_BrakePressure	0	0	1.35
+SD_HVBusData_Frequency	0	0	1.35
+SD_HVBusData_BusCurrent	0	0	1.35
+SD_HVBusData_BusVoltage	0	0	1.35
+SD_TempData_InternalTemp	0	0	1.35
+SD_TempData_KTY1Temp	0	0	1.35
+SD_TempData_KTY2Temp	0	0	1.35
+SD_IGBTTemp_LegATemp	0	0	1.35
+SD_IGBTTemp_LegBTemp	0	0	1.35
+SD_IGBTTemp_LegCTemp	0	0	1.35
+SD_AuxCurrent_Aux1Current	0	0	1.35
+SD_AuxCurrent_Aux2Current	0	0	1.35
+SD_AuxCurrent_Aux3Current	0	0	1.35
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.35
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.35
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.35
+BMS_RelayState	0	0	1.35
+BMS_PackCurrent	0	0	1.35
+BMS_PackVoltage	0	0	1.35
+BMS_PackStateOfCharge	0	0	1.35
+BMS_PackStateOfHealth	0	0	1.36
+BMS_CurrentLimitStatus	0	0	1.36
+BMS_InternalTemp	0	0	1.36
+BMS_HighestTemp	0	0	1.36
+BMS_HighestTempID	0	0	1.36
+BMS_LowCellVoltage	0	0	1.36
+BMS_LowCellVoltageID	0	0	1.36
+BMS_HighCellVoltage	0	0	1.36
+BMS_HighCellVoltageID	0	0	1.36
+BMS_PowerInputVoltage	0	0	1.36
+BMS_DTCStatus1	0	0	1.36
+BMS_DTCStatus2	0	0	1.36
+LVBatt_Temp	0	0	1.36
+LVBatt_Current	0	0	1.36
+LVBatt_Voltage	0	0	1.36
+RPi_Temp	0	0	1.36
+RPi_Proc_Load	100.0	0	1.36
+RPi_Disk_Space_Used	89767.828125	1	1.36
+RPi_Disk_Space_Free	153671.16796875	1	1.36
+RPi_Mem_Free	1742.8203125	0	1.36
+RPi_Mem_Used	6354.1796875	0	1.36
+RPi_Mem_Load	78.5	0	1.36
+PV_Left_Temp	0	0	1.36
+PV_Left_Pressure	0	0	1.36
+PV_Right_Temp	0	0	1.36
+PV_Right_Pressure	0	0	1.36
+Ambient_Pressure	0	0	1.36
+IMU1_X	0	0	1.36
+IMU1_Y	0	0	1.36
+IMU1_Z	0	0	1.36
+IMU2_X	0	0	1.36
+IMU2_Y	0	0	1.36
+IMU2_Z	0	0	1.36
+IMU_bad_time_elapsed	0	0	1.36
+V_bad_time_elapsed	0	0	1.36
+LST_missed_stripe_count	0	0	1.36
+LIDAR	0	0	1.36
+GUI_Conn	0	0	1.36
+LST_Left	0	0	1.36
+LST_Right	0	0	1.36
+Abort	0		1.36
+Launch	0		1.36
+HV	0		1.36
+Vent_Sol	0		1.36
+Res1_Sol	0		1.36
+Res2_Sol	0		1.36
+MC_Pump	0		1.36
+para_BBP	0		1.36
+para_max_speed	0		1.36
+para_max_accel	0		1.36
+para_max_time	0		1.36
+para_max_crawl_speed	-1		1.36
+state	1		1.36
+spacex_state	1		1.36
+total_faults	2		1.36
+throttle	0		1.36
+distance	-2.336313399999998		1.36
+speed	-1		1.36
+accel	0.0		1.36
+wheel_diameter	1.45		1.36
+Brake_Pressure	0	0	1.49
+SD_DriveStatus_ProgramMode	0	0	1.49
+SD_DriveStatus_EngineState	0	0	1.49
+SD_DriveStatus_SwitchState	0	0	1.49
+SD_ErrorStatus_ErrorCode	0	0	1.49
+SD_ErrorStatus_ErrorValue	0	0	1.49
+SD_ErrorStatus_ModeTimer	0	0	1.49
+SD_MotorData_MotorRPM	0	0	1.49
+SD_MotorData_MotorCurrent	0	0	1.49
+SD_MotorData_MotorVoltage	0	0	1.49
+SD_AnalogData_ExternalADC	0	0	1.49
+SD_AnalogData_ThrottleLevel	0	0	1.49
+SD_AnalogData_BrakePressure	0	0	1.49
+SD_HVBusData_Frequency	0	0	1.49
+SD_HVBusData_BusCurrent	0	0	1.49
+SD_HVBusData_BusVoltage	0	0	1.49
+SD_TempData_InternalTemp	0	0	1.49
+SD_TempData_KTY1Temp	0	0	1.49
+SD_TempData_KTY2Temp	0	0	1.49
+SD_IGBTTemp_LegATemp	0	0	1.49
+SD_IGBTTemp_LegBTemp	0	0	1.49
+SD_IGBTTemp_LegCTemp	0	0	1.49
+SD_AuxCurrent_Aux1Current	0	0	1.49
+SD_AuxCurrent_Aux2Current	0	0	1.49
+SD_AuxCurrent_Aux3Current	0	0	1.49
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.49
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.49
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.49
+BMS_RelayState	0	0	1.49
+BMS_PackCurrent	0	0	1.49
+BMS_PackVoltage	0	0	1.49
+BMS_PackStateOfCharge	0	0	1.49
+BMS_PackStateOfHealth	0	0	1.49
+BMS_CurrentLimitStatus	0	0	1.49
+BMS_InternalTemp	0	0	1.49
+BMS_HighestTemp	0	0	1.49
+BMS_HighestTempID	0	0	1.49
+BMS_LowCellVoltage	0	0	1.49
+BMS_LowCellVoltageID	0	0	1.49
+BMS_HighCellVoltage	0	0	1.49
+BMS_HighCellVoltageID	0	0	1.49
+BMS_PowerInputVoltage	0	0	1.49
+BMS_DTCStatus1	0	0	1.49
+BMS_DTCStatus2	0	0	1.49
+LVBatt_Temp	0	0	1.49
+LVBatt_Current	0	0	1.49
+LVBatt_Voltage	0	0	1.49
+RPi_Temp	0	0	1.49
+RPi_Proc_Load	75.0	0	1.49
+RPi_Disk_Space_Used	89767.828125	1	1.49
+RPi_Disk_Space_Free	153671.16796875	1	1.49
+RPi_Mem_Free	1734.69140625	0	1.49
+RPi_Mem_Used	6362.30859375	0	1.49
+RPi_Mem_Load	78.6	0	1.49
+PV_Left_Temp	0	0	1.49
+PV_Left_Pressure	0	0	1.49
+PV_Right_Temp	0	0	1.49
+PV_Right_Pressure	0	0	1.49
+Ambient_Pressure	0	0	1.49
+IMU1_X	0	0	1.49
+IMU1_Y	0	0	1.49
+IMU1_Z	0	0	1.49
+IMU2_X	0	0	1.49
+IMU2_Y	0	0	1.49
+IMU2_Z	0	0	1.49
+IMU_bad_time_elapsed	0	0	1.49
+V_bad_time_elapsed	0	0	1.49
+LST_missed_stripe_count	0	0	1.49
+LIDAR	0	0	1.49
+GUI_Conn	0	0	1.49
+LST_Left	0	0	1.49
+LST_Right	0	0	1.49
+Abort	0		1.49
+Launch	0		1.49
+HV	0		1.49
+Vent_Sol	0		1.49
+Res1_Sol	0		1.49
+Res2_Sol	0		1.49
+MC_Pump	0		1.49
+para_BBP	0		1.49
+para_max_speed	0		1.49
+para_max_accel	0		1.49
+para_max_time	0		1.49
+para_max_crawl_speed	-1		1.49
+state	1		1.49
+spacex_state	1		1.49
+total_faults	2		1.49
+throttle	0		1.49
+distance	-2.4753519999999973		1.49
+speed	-1		1.49
+accel	0.0		1.49
+wheel_diameter	1.45		1.49
+Brake_Pressure	0	0	1.61
+SD_DriveStatus_ProgramMode	0	0	1.61
+SD_DriveStatus_EngineState	0	0	1.61
+SD_DriveStatus_SwitchState	0	0	1.61
+SD_ErrorStatus_ErrorCode	0	0	1.61
+SD_ErrorStatus_ErrorValue	0	0	1.61
+SD_ErrorStatus_ModeTimer	0	0	1.61
+SD_MotorData_MotorRPM	0	0	1.61
+SD_MotorData_MotorCurrent	0	0	1.61
+SD_MotorData_MotorVoltage	0	0	1.61
+SD_AnalogData_ExternalADC	0	0	1.61
+SD_AnalogData_ThrottleLevel	0	0	1.61
+SD_AnalogData_BrakePressure	0	0	1.61
+SD_HVBusData_Frequency	0	0	1.61
+SD_HVBusData_BusCurrent	0	0	1.61
+SD_HVBusData_BusVoltage	0	0	1.61
+SD_TempData_InternalTemp	0	0	1.61
+SD_TempData_KTY1Temp	0	0	1.61
+SD_TempData_KTY2Temp	0	0	1.61
+SD_IGBTTemp_LegATemp	0	0	1.61
+SD_IGBTTemp_LegBTemp	0	0	1.61
+SD_IGBTTemp_LegCTemp	0	0	1.61
+SD_AuxCurrent_Aux1Current	0	0	1.61
+SD_AuxCurrent_Aux2Current	0	0	1.61
+SD_AuxCurrent_Aux3Current	0	0	1.61
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.61
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.61
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.61
+BMS_RelayState	0	0	1.61
+BMS_PackCurrent	0	0	1.61
+BMS_PackVoltage	0	0	1.61
+BMS_PackStateOfCharge	0	0	1.61
+BMS_PackStateOfHealth	0	0	1.61
+BMS_CurrentLimitStatus	0	0	1.61
+BMS_InternalTemp	0	0	1.61
+BMS_HighestTemp	0	0	1.61
+BMS_HighestTempID	0	0	1.61
+BMS_LowCellVoltage	0	0	1.61
+BMS_LowCellVoltageID	0	0	1.61
+BMS_HighCellVoltage	0	0	1.61
+BMS_HighCellVoltageID	0	0	1.61
+BMS_PowerInputVoltage	0	0	1.61
+BMS_DTCStatus1	0	0	1.61
+BMS_DTCStatus2	0	0	1.61
+LVBatt_Temp	0	0	1.61
+LVBatt_Current	0	0	1.61
+LVBatt_Voltage	0	0	1.61
+RPi_Temp	0	0	1.61
+RPi_Proc_Load	0.0	0	1.61
+RPi_Disk_Space_Used	89767.83203125	1	1.61
+RPi_Disk_Space_Free	153671.1640625	1	1.61
+RPi_Mem_Free	1727.0625	0	1.61
+RPi_Mem_Used	6369.9375	0	1.61
+RPi_Mem_Load	78.7	0	1.61
+PV_Left_Temp	0	0	1.61
+PV_Left_Pressure	0	0	1.61
+PV_Right_Temp	0	0	1.61
+PV_Right_Pressure	0	0	1.61
+Ambient_Pressure	0	0	1.61
+IMU1_X	0	0	1.61
+IMU1_Y	0	0	1.61
+IMU1_Z	0	0	1.61
+IMU2_X	0	0	1.61
+IMU2_Y	0	0	1.61
+IMU2_Z	0	0	1.61
+IMU_bad_time_elapsed	0	0	1.61
+V_bad_time_elapsed	0	0	1.61
+LST_missed_stripe_count	0	0	1.61
+LIDAR	0	0	1.61
+GUI_Conn	0	0	1.61
+LST_Left	0	0	1.61
+LST_Right	0	0	1.61
+Abort	0		1.61
+Launch	0		1.61
+HV	0		1.61
+Vent_Sol	0		1.61
+Res1_Sol	0		1.61
+Res2_Sol	0		1.61
+MC_Pump	0		1.61
+para_BBP	0		1.61
+para_max_speed	0		1.61
+para_max_accel	0		1.61
+para_max_time	0		1.61
+para_max_crawl_speed	-1		1.61
+state	1		1.61
+spacex_state	1		1.61
+total_faults	2		1.61
+throttle	0		1.61
+distance	-2.5878621999999973		1.61
+speed	-1		1.61
+accel	0.0		1.61
+wheel_diameter	1.45		1.61
+Brake_Pressure	0	0	1.73
+SD_DriveStatus_ProgramMode	0	0	1.73
+SD_DriveStatus_EngineState	0	0	1.73
+SD_DriveStatus_SwitchState	0	0	1.73
+SD_ErrorStatus_ErrorCode	0	0	1.73
+SD_ErrorStatus_ErrorValue	0	0	1.73
+SD_ErrorStatus_ModeTimer	0	0	1.73
+SD_MotorData_MotorRPM	0	0	1.73
+SD_MotorData_MotorCurrent	0	0	1.73
+SD_MotorData_MotorVoltage	0	0	1.73
+SD_AnalogData_ExternalADC	0	0	1.73
+SD_AnalogData_ThrottleLevel	0	0	1.73
+SD_AnalogData_BrakePressure	0	0	1.73
+SD_HVBusData_Frequency	0	0	1.73
+SD_HVBusData_BusCurrent	0	0	1.73
+SD_HVBusData_BusVoltage	0	0	1.73
+SD_TempData_InternalTemp	0	0	1.73
+SD_TempData_KTY1Temp	0	0	1.73
+SD_TempData_KTY2Temp	0	0	1.73
+SD_IGBTTemp_LegATemp	0	0	1.73
+SD_IGBTTemp_LegBTemp	0	0	1.73
+SD_IGBTTemp_LegCTemp	0	0	1.73
+SD_AuxCurrent_Aux1Current	0	0	1.73
+SD_AuxCurrent_Aux2Current	0	0	1.73
+SD_AuxCurrent_Aux3Current	0	0	1.73
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.73
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.73
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.73
+BMS_RelayState	0	0	1.73
+BMS_PackCurrent	0	0	1.73
+BMS_PackVoltage	0	0	1.73
+BMS_PackStateOfCharge	0	0	1.73
+BMS_PackStateOfHealth	0	0	1.73
+BMS_CurrentLimitStatus	0	0	1.73
+BMS_InternalTemp	0	0	1.73
+BMS_HighestTemp	0	0	1.73
+BMS_HighestTempID	0	0	1.73
+BMS_LowCellVoltage	0	0	1.73
+BMS_LowCellVoltageID	0	0	1.73
+BMS_HighCellVoltage	0	0	1.73
+BMS_HighCellVoltageID	0	0	1.73
+BMS_PowerInputVoltage	0	0	1.73
+BMS_DTCStatus1	0	0	1.73
+BMS_DTCStatus2	0	0	1.73
+LVBatt_Temp	0	0	1.73
+LVBatt_Current	0	0	1.73
+LVBatt_Voltage	0	0	1.73
+RPi_Temp	0	0	1.73
+RPi_Proc_Load	0.0	0	1.73
+RPi_Disk_Space_Used	89767.8359375	1	1.73
+RPi_Disk_Space_Free	153671.16015625	1	1.73
+RPi_Mem_Free	1734.69921875	0	1.73
+RPi_Mem_Used	6362.30078125	0	1.73
+RPi_Mem_Load	78.6	0	1.73
+PV_Left_Temp	0	0	1.73
+PV_Left_Pressure	0	0	1.73
+PV_Right_Temp	0	0	1.73
+PV_Right_Pressure	0	0	1.73
+Ambient_Pressure	0	0	1.73
+IMU1_X	0	0	1.73
+IMU1_Y	0	0	1.73
+IMU1_Z	0	0	1.73
+IMU2_X	0	0	1.73
+IMU2_Y	0	0	1.73
+IMU2_Z	0	0	1.73
+IMU_bad_time_elapsed	0	0	1.73
+V_bad_time_elapsed	0	0	1.73
+LST_missed_stripe_count	0	0	1.73
+LIDAR	0	0	1.73
+GUI_Conn	0	0	1.73
+LST_Left	0	0	1.73
+LST_Right	0	0	1.73
+Abort	0		1.73
+Launch	0		1.73
+HV	0		1.73
+Vent_Sol	0		1.73
+Res1_Sol	0		1.73
+Res2_Sol	0		1.73
+MC_Pump	0		1.73
+para_BBP	0		1.73
+para_max_speed	0		1.73
+para_max_accel	0		1.73
+para_max_time	0		1.73
+para_max_crawl_speed	-1		1.73
+state	1		1.73
+spacex_state	1		1.73
+total_faults	2		1.73
+throttle	0		1.73
+distance	-2.706800699999996		1.73
+speed	-1		1.73
+accel	0.0		1.73
+wheel_diameter	1.45		1.73
+Brake_Pressure	0	0	1.85
+SD_DriveStatus_ProgramMode	0	0	1.85
+SD_DriveStatus_EngineState	0	0	1.85
+SD_DriveStatus_SwitchState	0	0	1.85
+SD_ErrorStatus_ErrorCode	0	0	1.85
+SD_ErrorStatus_ErrorValue	0	0	1.85
+SD_ErrorStatus_ModeTimer	0	0	1.85
+SD_MotorData_MotorRPM	0	0	1.85
+SD_MotorData_MotorCurrent	0	0	1.85
+SD_MotorData_MotorVoltage	0	0	1.85
+SD_AnalogData_ExternalADC	0	0	1.85
+SD_AnalogData_ThrottleLevel	0	0	1.85
+SD_AnalogData_BrakePressure	0	0	1.85
+SD_HVBusData_Frequency	0	0	1.85
+SD_HVBusData_BusCurrent	0	0	1.85
+SD_HVBusData_BusVoltage	0	0	1.85
+SD_TempData_InternalTemp	0	0	1.85
+SD_TempData_KTY1Temp	0	0	1.85
+SD_TempData_KTY2Temp	0	0	1.85
+SD_IGBTTemp_LegATemp	0	0	1.85
+SD_IGBTTemp_LegBTemp	0	0	1.85
+SD_IGBTTemp_LegCTemp	0	0	1.85
+SD_AuxCurrent_Aux1Current	0	0	1.85
+SD_AuxCurrent_Aux2Current	0	0	1.85
+SD_AuxCurrent_Aux3Current	0	0	1.85
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.85
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.85
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.85
+BMS_RelayState	0	0	1.85
+BMS_PackCurrent	0	0	1.85
+BMS_PackVoltage	0	0	1.85
+BMS_PackStateOfCharge	0	0	1.85
+BMS_PackStateOfHealth	0	0	1.85
+BMS_CurrentLimitStatus	0	0	1.85
+BMS_InternalTemp	0	0	1.85
+BMS_HighestTemp	0	0	1.85
+BMS_HighestTempID	0	0	1.85
+BMS_LowCellVoltage	0	0	1.85
+BMS_LowCellVoltageID	0	0	1.85
+BMS_HighCellVoltage	0	0	1.85
+BMS_HighCellVoltageID	0	0	1.85
+BMS_PowerInputVoltage	0	0	1.85
+BMS_DTCStatus1	0	0	1.85
+BMS_DTCStatus2	0	0	1.85
+LVBatt_Temp	0	0	1.85
+LVBatt_Current	0	0	1.85
+LVBatt_Voltage	0	0	1.85
+RPi_Temp	0	0	1.85
+RPi_Proc_Load	0.0	0	1.85
+RPi_Disk_Space_Used	89767.8359375	1	1.85
+RPi_Disk_Space_Free	153671.16015625	1	1.85
+RPi_Mem_Free	1726.97265625	0	1.85
+RPi_Mem_Used	6370.02734375	0	1.85
+RPi_Mem_Load	78.7	0	1.85
+PV_Left_Temp	0	0	1.85
+PV_Left_Pressure	0	0	1.85
+PV_Right_Temp	0	0	1.85
+PV_Right_Pressure	0	0	1.85
+Ambient_Pressure	0	0	1.85
+IMU1_X	0	0	1.85
+IMU1_Y	0	0	1.85
+IMU1_Z	0	0	1.85
+IMU2_X	0	0	1.85
+IMU2_Y	0	0	1.85
+IMU2_Z	0	0	1.85
+IMU_bad_time_elapsed	0	0	1.85
+V_bad_time_elapsed	0	0	1.85
+LST_missed_stripe_count	0	0	1.85
+LIDAR	0	0	1.85
+GUI_Conn	0	0	1.85
+LST_Left	0	0	1.85
+LST_Right	0	0	1.85
+Abort	0		1.85
+Launch	0		1.85
+HV	0		1.85
+Vent_Sol	0		1.85
+Res1_Sol	0		1.85
+Res2_Sol	0		1.85
+MC_Pump	0		1.85
+para_BBP	0		1.85
+para_max_speed	0		1.85
+para_max_accel	0		1.85
+para_max_time	0		1.85
+para_max_crawl_speed	-1		1.85
+state	1		1.85
+spacex_state	1		1.85
+total_faults	2		1.85
+throttle	0		1.85
+distance	-2.837001499999996		1.85
+speed	-1		1.85
+accel	0.0		1.85
+wheel_diameter	1.45		1.85
+Brake_Pressure	0	0	1.97
+SD_DriveStatus_ProgramMode	0	0	1.97
+SD_DriveStatus_EngineState	0	0	1.97
+SD_DriveStatus_SwitchState	0	0	1.97
+SD_ErrorStatus_ErrorCode	0	0	1.97
+SD_ErrorStatus_ErrorValue	0	0	1.97
+SD_ErrorStatus_ModeTimer	0	0	1.97
+SD_MotorData_MotorRPM	0	0	1.97
+SD_MotorData_MotorCurrent	0	0	1.97
+SD_MotorData_MotorVoltage	0	0	1.97
+SD_AnalogData_ExternalADC	0	0	1.97
+SD_AnalogData_ThrottleLevel	0	0	1.97
+SD_AnalogData_BrakePressure	0	0	1.97
+SD_HVBusData_Frequency	0	0	1.97
+SD_HVBusData_BusCurrent	0	0	1.97
+SD_HVBusData_BusVoltage	0	0	1.97
+SD_TempData_InternalTemp	0	0	1.97
+SD_TempData_KTY1Temp	0	0	1.97
+SD_TempData_KTY2Temp	0	0	1.97
+SD_IGBTTemp_LegATemp	0	0	1.97
+SD_IGBTTemp_LegBTemp	0	0	1.97
+SD_IGBTTemp_LegCTemp	0	0	1.97
+SD_AuxCurrent_Aux1Current	0	0	1.97
+SD_AuxCurrent_Aux2Current	0	0	1.97
+SD_AuxCurrent_Aux3Current	0	0	1.97
+SD_PhaseVoltage_PhaseAVoltage	0	0	1.97
+SD_PhaseVoltage_PhaseBVoltage	0	0	1.97
+SD_PhaseVoltage_PhaseCVoltage	0	0	1.97
+BMS_RelayState	0	0	1.97
+BMS_PackCurrent	0	0	1.97
+BMS_PackVoltage	0	0	1.97
+BMS_PackStateOfCharge	0	0	1.97
+BMS_PackStateOfHealth	0	0	1.97
+BMS_CurrentLimitStatus	0	0	1.97
+BMS_InternalTemp	0	0	1.97
+BMS_HighestTemp	0	0	1.97
+BMS_HighestTempID	0	0	1.97
+BMS_LowCellVoltage	0	0	1.97
+BMS_LowCellVoltageID	0	0	1.97
+BMS_HighCellVoltage	0	0	1.97
+BMS_HighCellVoltageID	0	0	1.97
+BMS_PowerInputVoltage	0	0	1.97
+BMS_DTCStatus1	0	0	1.97
+BMS_DTCStatus2	0	0	1.97
+LVBatt_Temp	0	0	1.97
+LVBatt_Current	0	0	1.97
+LVBatt_Voltage	0	0	1.97
+RPi_Temp	0	0	1.97
+RPi_Proc_Load	0.0	0	1.97
+RPi_Disk_Space_Used	89767.83984375	1	1.97
+RPi_Disk_Space_Free	153671.15625	1	1.97
+RPi_Mem_Free	1726.98828125	0	1.97
+RPi_Mem_Used	6370.01171875	0	1.97
+RPi_Mem_Load	78.7	0	1.97
+PV_Left_Temp	0	0	1.97
+PV_Left_Pressure	0	0	1.97
+PV_Right_Temp	0	0	1.97
+PV_Right_Pressure	0	0	1.97
+Ambient_Pressure	0	0	1.97
+IMU1_X	0	0	1.97
+IMU1_Y	0	0	1.97
+IMU1_Z	0	0	1.97
+IMU2_X	0	0	1.97
+IMU2_Y	0	0	1.97
+IMU2_Z	0	0	1.97
+IMU_bad_time_elapsed	0	0	1.97
+V_bad_time_elapsed	0	0	1.97
+LST_missed_stripe_count	0	0	1.97
+LIDAR	0	0	1.97
+GUI_Conn	0	0	1.97
+LST_Left	0	0	1.97
+LST_Right	0	0	1.97
+Abort	0		1.97
+Launch	0		1.97
+HV	0		1.97
+Vent_Sol	0		1.97
+Res1_Sol	0		1.97
+Res2_Sol	0		1.97
+MC_Pump	0		1.97
+para_BBP	0		1.97
+para_max_speed	0		1.97
+para_max_accel	0		1.97
+para_max_time	0		1.97
+para_max_crawl_speed	-1		1.97
+state	1		1.97
+spacex_state	1		1.97
+total_faults	2		1.97
+throttle	0		1.97
+distance	-2.9482841999999962		1.97
+speed	-1		1.97
+accel	0.0		1.97
+wheel_diameter	1.45		1.97
+Brake_Pressure	0	0	2.08
+SD_DriveStatus_ProgramMode	0	0	2.08
+SD_DriveStatus_EngineState	0	0	2.08
+SD_DriveStatus_SwitchState	0	0	2.08
+SD_ErrorStatus_ErrorCode	0	0	2.08
+SD_ErrorStatus_ErrorValue	0	0	2.08
+SD_ErrorStatus_ModeTimer	0	0	2.08
+SD_MotorData_MotorRPM	0	0	2.08
+SD_MotorData_MotorCurrent	0	0	2.08
+SD_MotorData_MotorVoltage	0	0	2.08
+SD_AnalogData_ExternalADC	0	0	2.08
+SD_AnalogData_ThrottleLevel	0	0	2.08
+SD_AnalogData_BrakePressure	0	0	2.08
+SD_HVBusData_Frequency	0	0	2.08
+SD_HVBusData_BusCurrent	0	0	2.08
+SD_HVBusData_BusVoltage	0	0	2.08
+SD_TempData_InternalTemp	0	0	2.08
+SD_TempData_KTY1Temp	0	0	2.08
+SD_TempData_KTY2Temp	0	0	2.08
+SD_IGBTTemp_LegATemp	0	0	2.08
+SD_IGBTTemp_LegBTemp	0	0	2.08
+SD_IGBTTemp_LegCTemp	0	0	2.08
+SD_AuxCurrent_Aux1Current	0	0	2.08
+SD_AuxCurrent_Aux2Current	0	0	2.08
+SD_AuxCurrent_Aux3Current	0	0	2.08
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.08
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.08
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.08
+BMS_RelayState	0	0	2.08
+BMS_PackCurrent	0	0	2.08
+BMS_PackVoltage	0	0	2.08
+BMS_PackStateOfCharge	0	0	2.08
+BMS_PackStateOfHealth	0	0	2.08
+BMS_CurrentLimitStatus	0	0	2.08
+BMS_InternalTemp	0	0	2.08
+BMS_HighestTemp	0	0	2.08
+BMS_HighestTempID	0	0	2.08
+BMS_LowCellVoltage	0	0	2.08
+BMS_LowCellVoltageID	0	0	2.08
+BMS_HighCellVoltage	0	0	2.08
+BMS_HighCellVoltageID	0	0	2.08
+BMS_PowerInputVoltage	0	0	2.08
+BMS_DTCStatus1	0	0	2.08
+BMS_DTCStatus2	0	0	2.08
+LVBatt_Temp	0	0	2.08
+LVBatt_Current	0	0	2.08
+LVBatt_Voltage	0	0	2.08
+RPi_Temp	0	0	2.08
+RPi_Proc_Load	0.0	0	2.08
+RPi_Disk_Space_Used	89767.83984375	1	2.08
+RPi_Disk_Space_Free	153671.15625	1	2.08
+RPi_Mem_Free	1726.98828125	0	2.08
+RPi_Mem_Used	6370.01171875	0	2.08
+RPi_Mem_Load	78.7	0	2.08
+PV_Left_Temp	0	0	2.08
+PV_Left_Pressure	0	0	2.08
+PV_Right_Temp	0	0	2.08
+PV_Right_Pressure	0	0	2.08
+Ambient_Pressure	0	0	2.08
+IMU1_X	0	0	2.08
+IMU1_Y	0	0	2.08
+IMU1_Z	0	0	2.08
+IMU2_X	0	0	2.08
+IMU2_Y	0	0	2.08
+IMU2_Z	0	0	2.08
+IMU_bad_time_elapsed	0	0	2.08
+V_bad_time_elapsed	0	0	2.08
+LST_missed_stripe_count	0	0	2.08
+LIDAR	0	0	2.08
+GUI_Conn	0	0	2.08
+LST_Left	0	0	2.08
+LST_Right	0	0	2.08
+Abort	0		2.08
+Launch	0		2.08
+HV	0		2.08
+Vent_Sol	0		2.08
+Res1_Sol	0		2.08
+Res2_Sol	0		2.08
+MC_Pump	0		2.08
+para_BBP	0		2.08
+para_max_speed	0		2.08
+para_max_accel	0		2.08
+para_max_time	0		2.08
+para_max_crawl_speed	-1		2.08
+state	1		2.08
+spacex_state	1		2.08
+total_faults	2		2.08
+throttle	0		2.08
+distance	-3.065296699999996		2.08
+speed	-1		2.08
+accel	0.0		2.08
+wheel_diameter	1.45		2.08
+Brake_Pressure	0	0	2.19
+SD_DriveStatus_ProgramMode	0	0	2.19
+SD_DriveStatus_EngineState	0	0	2.19
+SD_DriveStatus_SwitchState	0	0	2.19
+SD_ErrorStatus_ErrorCode	0	0	2.19
+SD_ErrorStatus_ErrorValue	0	0	2.19
+SD_ErrorStatus_ModeTimer	0	0	2.19
+SD_MotorData_MotorRPM	0	0	2.19
+SD_MotorData_MotorCurrent	0	0	2.19
+SD_MotorData_MotorVoltage	0	0	2.19
+SD_AnalogData_ExternalADC	0	0	2.19
+SD_AnalogData_ThrottleLevel	0	0	2.19
+SD_AnalogData_BrakePressure	0	0	2.19
+SD_HVBusData_Frequency	0	0	2.19
+SD_HVBusData_BusCurrent	0	0	2.19
+SD_HVBusData_BusVoltage	0	0	2.19
+SD_TempData_InternalTemp	0	0	2.19
+SD_TempData_KTY1Temp	0	0	2.19
+SD_TempData_KTY2Temp	0	0	2.19
+SD_IGBTTemp_LegATemp	0	0	2.19
+SD_IGBTTemp_LegBTemp	0	0	2.19
+SD_IGBTTemp_LegCTemp	0	0	2.19
+SD_AuxCurrent_Aux1Current	0	0	2.19
+SD_AuxCurrent_Aux2Current	0	0	2.19
+SD_AuxCurrent_Aux3Current	0	0	2.19
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.19
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.19
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.19
+BMS_RelayState	0	0	2.19
+BMS_PackCurrent	0	0	2.19
+BMS_PackVoltage	0	0	2.19
+BMS_PackStateOfCharge	0	0	2.19
+BMS_PackStateOfHealth	0	0	2.19
+BMS_CurrentLimitStatus	0	0	2.19
+BMS_InternalTemp	0	0	2.19
+BMS_HighestTemp	0	0	2.19
+BMS_HighestTempID	0	0	2.19
+BMS_LowCellVoltage	0	0	2.19
+BMS_LowCellVoltageID	0	0	2.19
+BMS_HighCellVoltage	0	0	2.19
+BMS_HighCellVoltageID	0	0	2.19
+BMS_PowerInputVoltage	0	0	2.19
+BMS_DTCStatus1	0	0	2.19
+BMS_DTCStatus2	0	0	2.19
+LVBatt_Temp	0	0	2.19
+LVBatt_Current	0	0	2.19
+LVBatt_Voltage	0	0	2.19
+RPi_Temp	0	0	2.19
+RPi_Proc_Load	0.0	0	2.19
+RPi_Disk_Space_Used	89767.84375	1	2.19
+RPi_Disk_Space_Free	153671.15234375	1	2.19
+RPi_Mem_Free	1726.98828125	0	2.19
+RPi_Mem_Used	6370.01171875	0	2.19
+RPi_Mem_Load	78.7	0	2.19
+PV_Left_Temp	0	0	2.19
+PV_Left_Pressure	0	0	2.19
+PV_Right_Temp	0	0	2.19
+PV_Right_Pressure	0	0	2.19
+Ambient_Pressure	0	0	2.19
+IMU1_X	0	0	2.19
+IMU1_Y	0	0	2.19
+IMU1_Z	0	0	2.19
+IMU2_X	0	0	2.19
+IMU2_Y	0	0	2.19
+IMU2_Z	0	0	2.19
+IMU_bad_time_elapsed	0	0	2.19
+V_bad_time_elapsed	0	0	2.19
+LST_missed_stripe_count	0	0	2.19
+LIDAR	0	0	2.19
+GUI_Conn	0	0	2.19
+LST_Left	0	0	2.19
+LST_Right	0	0	2.19
+Abort	0		2.19
+Launch	0		2.19
+HV	0		2.19
+Vent_Sol	0		2.19
+Res1_Sol	0		2.19
+Res2_Sol	0		2.19
+MC_Pump	0		2.19
+para_BBP	0		2.19
+para_max_speed	0		2.19
+para_max_accel	0		2.19
+para_max_time	0		2.19
+para_max_crawl_speed	-1		2.19
+state	1		2.19
+spacex_state	1		2.19
+total_faults	2		2.19
+throttle	0		2.19
+distance	-3.1802860999999965		2.19
+speed	-1		2.19
+accel	0.0		2.19
+wheel_diameter	1.45		2.19
+Brake_Pressure	0	0	2.31
+SD_DriveStatus_ProgramMode	0	0	2.31
+SD_DriveStatus_EngineState	0	0	2.31
+SD_DriveStatus_SwitchState	0	0	2.31
+SD_ErrorStatus_ErrorCode	0	0	2.31
+SD_ErrorStatus_ErrorValue	0	0	2.31
+SD_ErrorStatus_ModeTimer	0	0	2.31
+SD_MotorData_MotorRPM	0	0	2.31
+SD_MotorData_MotorCurrent	0	0	2.31
+SD_MotorData_MotorVoltage	0	0	2.31
+SD_AnalogData_ExternalADC	0	0	2.31
+SD_AnalogData_ThrottleLevel	0	0	2.31
+SD_AnalogData_BrakePressure	0	0	2.31
+SD_HVBusData_Frequency	0	0	2.31
+SD_HVBusData_BusCurrent	0	0	2.31
+SD_HVBusData_BusVoltage	0	0	2.31
+SD_TempData_InternalTemp	0	0	2.31
+SD_TempData_KTY1Temp	0	0	2.31
+SD_TempData_KTY2Temp	0	0	2.31
+SD_IGBTTemp_LegATemp	0	0	2.31
+SD_IGBTTemp_LegBTemp	0	0	2.31
+SD_IGBTTemp_LegCTemp	0	0	2.31
+SD_AuxCurrent_Aux1Current	0	0	2.31
+SD_AuxCurrent_Aux2Current	0	0	2.31
+SD_AuxCurrent_Aux3Current	0	0	2.31
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.31
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.31
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.31
+BMS_RelayState	0	0	2.31
+BMS_PackCurrent	0	0	2.31
+BMS_PackVoltage	0	0	2.31
+BMS_PackStateOfCharge	0	0	2.31
+BMS_PackStateOfHealth	0	0	2.31
+BMS_CurrentLimitStatus	0	0	2.31
+BMS_InternalTemp	0	0	2.31
+BMS_HighestTemp	0	0	2.31
+BMS_HighestTempID	0	0	2.31
+BMS_LowCellVoltage	0	0	2.31
+BMS_LowCellVoltageID	0	0	2.31
+BMS_HighCellVoltage	0	0	2.31
+BMS_HighCellVoltageID	0	0	2.31
+BMS_PowerInputVoltage	0	0	2.31
+BMS_DTCStatus1	0	0	2.31
+BMS_DTCStatus2	0	0	2.31
+LVBatt_Temp	0	0	2.31
+LVBatt_Current	0	0	2.31
+LVBatt_Voltage	0	0	2.31
+RPi_Temp	0	0	2.31
+RPi_Proc_Load	0.0	0	2.31
+RPi_Disk_Space_Used	89767.84765625	1	2.31
+RPi_Disk_Space_Free	153671.1484375	1	2.31
+RPi_Mem_Free	1726.9921875	0	2.31
+RPi_Mem_Used	6370.0078125	0	2.31
+RPi_Mem_Load	78.7	0	2.31
+PV_Left_Temp	0	0	2.31
+PV_Left_Pressure	0	0	2.31
+PV_Right_Temp	0	0	2.31
+PV_Right_Pressure	0	0	2.31
+Ambient_Pressure	0	0	2.31
+IMU1_X	0	0	2.31
+IMU1_Y	0	0	2.31
+IMU1_Z	0	0	2.31
+IMU2_X	0	0	2.31
+IMU2_Y	0	0	2.31
+IMU2_Z	0	0	2.31
+IMU_bad_time_elapsed	0	0	2.31
+V_bad_time_elapsed	0	0	2.32
+LST_missed_stripe_count	0	0	2.32
+LIDAR	0	0	2.32
+GUI_Conn	0	0	2.32
+LST_Left	0	0	2.32
+LST_Right	0	0	2.32
+Abort	0		2.32
+Launch	0		2.32
+HV	0		2.32
+Vent_Sol	0		2.32
+Res1_Sol	0		2.32
+Res2_Sol	0		2.32
+MC_Pump	0		2.32
+para_BBP	0		2.32
+para_max_speed	0		2.32
+para_max_accel	0		2.32
+para_max_time	0		2.32
+para_max_crawl_speed	-1		2.32
+state	1		2.32
+spacex_state	1		2.32
+total_faults	2		2.32
+throttle	0		2.32
+distance	-3.286737699999996		2.32
+speed	-1		2.32
+accel	0.0		2.32
+wheel_diameter	1.45		2.32
+Brake_Pressure	0	0	2.44
+SD_DriveStatus_ProgramMode	0	0	2.44
+SD_DriveStatus_EngineState	0	0	2.44
+SD_DriveStatus_SwitchState	0	0	2.44
+SD_ErrorStatus_ErrorCode	0	0	2.44
+SD_ErrorStatus_ErrorValue	0	0	2.44
+SD_ErrorStatus_ModeTimer	0	0	2.44
+SD_MotorData_MotorRPM	0	0	2.44
+SD_MotorData_MotorCurrent	0	0	2.44
+SD_MotorData_MotorVoltage	0	0	2.44
+SD_AnalogData_ExternalADC	0	0	2.44
+SD_AnalogData_ThrottleLevel	0	0	2.44
+SD_AnalogData_BrakePressure	0	0	2.44
+SD_HVBusData_Frequency	0	0	2.44
+SD_HVBusData_BusCurrent	0	0	2.44
+SD_HVBusData_BusVoltage	0	0	2.44
+SD_TempData_InternalTemp	0	0	2.44
+SD_TempData_KTY1Temp	0	0	2.44
+SD_TempData_KTY2Temp	0	0	2.44
+SD_IGBTTemp_LegATemp	0	0	2.44
+SD_IGBTTemp_LegBTemp	0	0	2.44
+SD_IGBTTemp_LegCTemp	0	0	2.44
+SD_AuxCurrent_Aux1Current	0	0	2.44
+SD_AuxCurrent_Aux2Current	0	0	2.44
+SD_AuxCurrent_Aux3Current	0	0	2.44
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.44
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.44
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.44
+BMS_RelayState	0	0	2.44
+BMS_PackCurrent	0	0	2.44
+BMS_PackVoltage	0	0	2.44
+BMS_PackStateOfCharge	0	0	2.44
+BMS_PackStateOfHealth	0	0	2.44
+BMS_CurrentLimitStatus	0	0	2.44
+BMS_InternalTemp	0	0	2.44
+BMS_HighestTemp	0	0	2.44
+BMS_HighestTempID	0	0	2.44
+BMS_LowCellVoltage	0	0	2.44
+BMS_LowCellVoltageID	0	0	2.44
+BMS_HighCellVoltage	0	0	2.44
+BMS_HighCellVoltageID	0	0	2.44
+BMS_PowerInputVoltage	0	0	2.44
+BMS_DTCStatus1	0	0	2.44
+BMS_DTCStatus2	0	0	2.44
+LVBatt_Temp	0	0	2.44
+LVBatt_Current	0	0	2.44
+LVBatt_Voltage	0	0	2.44
+RPi_Temp	0	0	2.44
+RPi_Proc_Load	0.0	0	2.44
+RPi_Disk_Space_Used	89767.84765625	1	2.44
+RPi_Disk_Space_Free	153671.1484375	1	2.44
+RPi_Mem_Free	1727.62890625	0	2.44
+RPi_Mem_Used	6369.37109375	0	2.44
+RPi_Mem_Load	78.7	0	2.44
+PV_Left_Temp	0	0	2.44
+PV_Left_Pressure	0	0	2.44
+PV_Right_Temp	0	0	2.44
+PV_Right_Pressure	0	0	2.44
+Ambient_Pressure	0	0	2.44
+IMU1_X	0	0	2.44
+IMU1_Y	0	0	2.44
+IMU1_Z	0	0	2.44
+IMU2_X	0	0	2.44
+IMU2_Y	0	0	2.44
+IMU2_Z	0	0	2.44
+IMU_bad_time_elapsed	0	0	2.44
+V_bad_time_elapsed	0	0	2.44
+LST_missed_stripe_count	0	0	2.44
+LIDAR	0	0	2.44
+GUI_Conn	0	0	2.44
+LST_Left	0	0	2.44
+LST_Right	0	0	2.44
+Abort	0		2.44
+Launch	0		2.44
+HV	0		2.44
+Vent_Sol	0		2.44
+Res1_Sol	0		2.44
+Res2_Sol	0		2.44
+MC_Pump	0		2.44
+para_BBP	0		2.44
+para_max_speed	0		2.44
+para_max_accel	0		2.44
+para_max_time	0		2.44
+para_max_crawl_speed	-1		2.44
+state	1		2.44
+spacex_state	1		2.44
+total_faults	2		2.44
+throttle	0		2.44
+distance	-3.4224003999999963		2.44
+speed	-1		2.44
+accel	0.0		2.44
+wheel_diameter	1.45		2.44
+Brake_Pressure	0	0	2.55
+SD_DriveStatus_ProgramMode	0	0	2.55
+SD_DriveStatus_EngineState	0	0	2.55
+SD_DriveStatus_SwitchState	0	0	2.55
+SD_ErrorStatus_ErrorCode	0	0	2.55
+SD_ErrorStatus_ErrorValue	0	0	2.55
+SD_ErrorStatus_ModeTimer	0	0	2.55
+SD_MotorData_MotorRPM	0	0	2.55
+SD_MotorData_MotorCurrent	0	0	2.55
+SD_MotorData_MotorVoltage	0	0	2.55
+SD_AnalogData_ExternalADC	0	0	2.55
+SD_AnalogData_ThrottleLevel	0	0	2.55
+SD_AnalogData_BrakePressure	0	0	2.55
+SD_HVBusData_Frequency	0	0	2.55
+SD_HVBusData_BusCurrent	0	0	2.55
+SD_HVBusData_BusVoltage	0	0	2.55
+SD_TempData_InternalTemp	0	0	2.55
+SD_TempData_KTY1Temp	0	0	2.55
+SD_TempData_KTY2Temp	0	0	2.55
+SD_IGBTTemp_LegATemp	0	0	2.55
+SD_IGBTTemp_LegBTemp	0	0	2.55
+SD_IGBTTemp_LegCTemp	0	0	2.55
+SD_AuxCurrent_Aux1Current	0	0	2.55
+SD_AuxCurrent_Aux2Current	0	0	2.55
+SD_AuxCurrent_Aux3Current	0	0	2.55
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.55
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.55
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.55
+BMS_RelayState	0	0	2.55
+BMS_PackCurrent	0	0	2.55
+BMS_PackVoltage	0	0	2.55
+BMS_PackStateOfCharge	0	0	2.55
+BMS_PackStateOfHealth	0	0	2.55
+BMS_CurrentLimitStatus	0	0	2.55
+BMS_InternalTemp	0	0	2.55
+BMS_HighestTemp	0	0	2.55
+BMS_HighestTempID	0	0	2.55
+BMS_LowCellVoltage	0	0	2.55
+BMS_LowCellVoltageID	0	0	2.55
+BMS_HighCellVoltage	0	0	2.55
+BMS_HighCellVoltageID	0	0	2.55
+BMS_PowerInputVoltage	0	0	2.55
+BMS_DTCStatus1	0	0	2.55
+BMS_DTCStatus2	0	0	2.55
+LVBatt_Temp	0	0	2.55
+LVBatt_Current	0	0	2.55
+LVBatt_Voltage	0	0	2.55
+RPi_Temp	0	0	2.55
+RPi_Proc_Load	0.0	0	2.55
+RPi_Disk_Space_Used	89767.85546875	1	2.55
+RPi_Disk_Space_Free	153671.140625	1	2.55
+RPi_Mem_Free	1727.609375	0	2.55
+RPi_Mem_Used	6369.390625	0	2.55
+RPi_Mem_Load	78.7	0	2.55
+PV_Left_Temp	0	0	2.55
+PV_Left_Pressure	0	0	2.55
+PV_Right_Temp	0	0	2.55
+PV_Right_Pressure	0	0	2.55
+Ambient_Pressure	0	0	2.55
+IMU1_X	0	0	2.55
+IMU1_Y	0	0	2.55
+IMU1_Z	0	0	2.55
+IMU2_X	0	0	2.55
+IMU2_Y	0	0	2.55
+IMU2_Z	0	0	2.55
+IMU_bad_time_elapsed	0	0	2.55
+V_bad_time_elapsed	0	0	2.55
+LST_missed_stripe_count	0	0	2.55
+LIDAR	0	0	2.55
+GUI_Conn	0	0	2.55
+LST_Left	0	0	2.55
+LST_Right	0	0	2.55
+Abort	0		2.55
+Launch	0		2.55
+HV	0		2.55
+Vent_Sol	0		2.55
+Res1_Sol	0		2.55
+Res2_Sol	0		2.55
+MC_Pump	0		2.55
+para_BBP	0		2.55
+para_max_speed	0		2.55
+para_max_accel	0		2.55
+para_max_time	0		2.55
+para_max_crawl_speed	-1		2.55
+state	1		2.55
+spacex_state	1		2.55
+total_faults	2		2.55
+throttle	0		2.55
+distance	-3.5369256999999963		2.55
+speed	-1		2.55
+accel	0.0		2.55
+wheel_diameter	1.45		2.55
+Brake_Pressure	0	0	2.66
+SD_DriveStatus_ProgramMode	0	0	2.66
+SD_DriveStatus_EngineState	0	0	2.66
+SD_DriveStatus_SwitchState	0	0	2.66
+SD_ErrorStatus_ErrorCode	0	0	2.66
+SD_ErrorStatus_ErrorValue	0	0	2.66
+SD_ErrorStatus_ModeTimer	0	0	2.66
+SD_MotorData_MotorRPM	0	0	2.66
+SD_MotorData_MotorCurrent	0	0	2.66
+SD_MotorData_MotorVoltage	0	0	2.66
+SD_AnalogData_ExternalADC	0	0	2.66
+SD_AnalogData_ThrottleLevel	0	0	2.66
+SD_AnalogData_BrakePressure	0	0	2.66
+SD_HVBusData_Frequency	0	0	2.66
+SD_HVBusData_BusCurrent	0	0	2.66
+SD_HVBusData_BusVoltage	0	0	2.66
+SD_TempData_InternalTemp	0	0	2.66
+SD_TempData_KTY1Temp	0	0	2.66
+SD_TempData_KTY2Temp	0	0	2.66
+SD_IGBTTemp_LegATemp	0	0	2.66
+SD_IGBTTemp_LegBTemp	0	0	2.66
+SD_IGBTTemp_LegCTemp	0	0	2.66
+SD_AuxCurrent_Aux1Current	0	0	2.66
+SD_AuxCurrent_Aux2Current	0	0	2.66
+SD_AuxCurrent_Aux3Current	0	0	2.66
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.66
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.66
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.66
+BMS_RelayState	0	0	2.66
+BMS_PackCurrent	0	0	2.66
+BMS_PackVoltage	0	0	2.66
+BMS_PackStateOfCharge	0	0	2.66
+BMS_PackStateOfHealth	0	0	2.66
+BMS_CurrentLimitStatus	0	0	2.66
+BMS_InternalTemp	0	0	2.66
+BMS_HighestTemp	0	0	2.66
+BMS_HighestTempID	0	0	2.66
+BMS_LowCellVoltage	0	0	2.66
+BMS_LowCellVoltageID	0	0	2.66
+BMS_HighCellVoltage	0	0	2.66
+BMS_HighCellVoltageID	0	0	2.66
+BMS_PowerInputVoltage	0	0	2.66
+BMS_DTCStatus1	0	0	2.66
+BMS_DTCStatus2	0	0	2.66
+LVBatt_Temp	0	0	2.66
+LVBatt_Current	0	0	2.66
+LVBatt_Voltage	0	0	2.66
+RPi_Temp	0	0	2.66
+RPi_Proc_Load	0.0	0	2.66
+RPi_Disk_Space_Used	89767.859375	1	2.66
+RPi_Disk_Space_Free	153671.13671875	1	2.66
+RPi_Mem_Free	1731.51953125	0	2.66
+RPi_Mem_Used	6365.48046875	0	2.66
+RPi_Mem_Load	78.6	0	2.66
+PV_Left_Temp	0	0	2.66
+PV_Left_Pressure	0	0	2.66
+PV_Right_Temp	0	0	2.66
+PV_Right_Pressure	0	0	2.66
+Ambient_Pressure	0	0	2.66
+IMU1_X	0	0	2.66
+IMU1_Y	0	0	2.66
+IMU1_Z	0	0	2.66
+IMU2_X	0	0	2.66
+IMU2_Y	0	0	2.66
+IMU2_Z	0	0	2.66
+IMU_bad_time_elapsed	0	0	2.66
+V_bad_time_elapsed	0	0	2.66
+LST_missed_stripe_count	0	0	2.66
+LIDAR	0	0	2.66
+GUI_Conn	0	0	2.66
+LST_Left	0	0	2.66
+LST_Right	0	0	2.66
+Abort	0		2.66
+Launch	0		2.66
+HV	0		2.66
+Vent_Sol	0		2.66
+Res1_Sol	0		2.66
+Res2_Sol	0		2.66
+MC_Pump	0		2.66
+para_BBP	0		2.66
+para_max_speed	0		2.66
+para_max_accel	0		2.66
+para_max_time	0		2.66
+para_max_crawl_speed	-1		2.66
+state	1		2.66
+spacex_state	1		2.66
+total_faults	2		2.66
+throttle	0		2.66
+distance	-3.6489248999999964		2.66
+speed	-1		2.66
+accel	0.0		2.66
+wheel_diameter	1.45		2.66
+Brake_Pressure	0	0	2.77
+SD_DriveStatus_ProgramMode	0	0	2.77
+SD_DriveStatus_EngineState	0	0	2.77
+SD_DriveStatus_SwitchState	0	0	2.77
+SD_ErrorStatus_ErrorCode	0	0	2.77
+SD_ErrorStatus_ErrorValue	0	0	2.77
+SD_ErrorStatus_ModeTimer	0	0	2.77
+SD_MotorData_MotorRPM	0	0	2.77
+SD_MotorData_MotorCurrent	0	0	2.77
+SD_MotorData_MotorVoltage	0	0	2.77
+SD_AnalogData_ExternalADC	0	0	2.77
+SD_AnalogData_ThrottleLevel	0	0	2.77
+SD_AnalogData_BrakePressure	0	0	2.77
+SD_HVBusData_Frequency	0	0	2.77
+SD_HVBusData_BusCurrent	0	0	2.77
+SD_HVBusData_BusVoltage	0	0	2.77
+SD_TempData_InternalTemp	0	0	2.77
+SD_TempData_KTY1Temp	0	0	2.77
+SD_TempData_KTY2Temp	0	0	2.77
+SD_IGBTTemp_LegATemp	0	0	2.77
+SD_IGBTTemp_LegBTemp	0	0	2.77
+SD_IGBTTemp_LegCTemp	0	0	2.77
+SD_AuxCurrent_Aux1Current	0	0	2.77
+SD_AuxCurrent_Aux2Current	0	0	2.77
+SD_AuxCurrent_Aux3Current	0	0	2.77
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.77
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.77
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.77
+BMS_RelayState	0	0	2.77
+BMS_PackCurrent	0	0	2.77
+BMS_PackVoltage	0	0	2.77
+BMS_PackStateOfCharge	0	0	2.77
+BMS_PackStateOfHealth	0	0	2.77
+BMS_CurrentLimitStatus	0	0	2.77
+BMS_InternalTemp	0	0	2.77
+BMS_HighestTemp	0	0	2.77
+BMS_HighestTempID	0	0	2.77
+BMS_LowCellVoltage	0	0	2.77
+BMS_LowCellVoltageID	0	0	2.77
+BMS_HighCellVoltage	0	0	2.77
+BMS_HighCellVoltageID	0	0	2.77
+BMS_PowerInputVoltage	0	0	2.77
+BMS_DTCStatus1	0	0	2.77
+BMS_DTCStatus2	0	0	2.77
+LVBatt_Temp	0	0	2.77
+LVBatt_Current	0	0	2.77
+LVBatt_Voltage	0	0	2.77
+RPi_Temp	0	0	2.77
+RPi_Proc_Load	0.0	0	2.77
+RPi_Disk_Space_Used	89767.85546875	1	2.77
+RPi_Disk_Space_Free	153671.140625	1	2.77
+RPi_Mem_Free	1730.3203125	0	2.77
+RPi_Mem_Used	6366.6796875	0	2.77
+RPi_Mem_Load	78.6	0	2.77
+PV_Left_Temp	0	0	2.77
+PV_Left_Pressure	0	0	2.77
+PV_Right_Temp	0	0	2.77
+PV_Right_Pressure	0	0	2.77
+Ambient_Pressure	0	0	2.77
+IMU1_X	0	0	2.77
+IMU1_Y	0	0	2.77
+IMU1_Z	0	0	2.77
+IMU2_X	0	0	2.77
+IMU2_Y	0	0	2.77
+IMU2_Z	0	0	2.77
+IMU_bad_time_elapsed	0	0	2.77
+V_bad_time_elapsed	0	0	2.77
+LST_missed_stripe_count	0	0	2.77
+LIDAR	0	0	2.77
+GUI_Conn	0	0	2.77
+LST_Left	0	0	2.77
+LST_Right	0	0	2.77
+Abort	0		2.77
+Launch	0		2.77
+HV	0		2.77
+Vent_Sol	0		2.77
+Res1_Sol	0		2.77
+Res2_Sol	0		2.77
+MC_Pump	0		2.77
+para_BBP	0		2.77
+para_max_speed	0		2.77
+para_max_accel	0		2.77
+para_max_time	0		2.77
+para_max_crawl_speed	-1		2.77
+state	1		2.77
+spacex_state	1		2.77
+total_faults	2		2.77
+throttle	0		2.77
+distance	-3.7546401999999963		2.77
+speed	-1		2.77
+accel	0.0		2.77
+wheel_diameter	1.45		2.77
+Brake_Pressure	0	0	2.89
+SD_DriveStatus_ProgramMode	0	0	2.89
+SD_DriveStatus_EngineState	0	0	2.89
+SD_DriveStatus_SwitchState	0	0	2.89
+SD_ErrorStatus_ErrorCode	0	0	2.89
+SD_ErrorStatus_ErrorValue	0	0	2.89
+SD_ErrorStatus_ModeTimer	0	0	2.89
+SD_MotorData_MotorRPM	0	0	2.89
+SD_MotorData_MotorCurrent	0	0	2.89
+SD_MotorData_MotorVoltage	0	0	2.89
+SD_AnalogData_ExternalADC	0	0	2.89
+SD_AnalogData_ThrottleLevel	0	0	2.89
+SD_AnalogData_BrakePressure	0	0	2.89
+SD_HVBusData_Frequency	0	0	2.89
+SD_HVBusData_BusCurrent	0	0	2.89
+SD_HVBusData_BusVoltage	0	0	2.89
+SD_TempData_InternalTemp	0	0	2.89
+SD_TempData_KTY1Temp	0	0	2.89
+SD_TempData_KTY2Temp	0	0	2.89
+SD_IGBTTemp_LegATemp	0	0	2.89
+SD_IGBTTemp_LegBTemp	0	0	2.89
+SD_IGBTTemp_LegCTemp	0	0	2.89
+SD_AuxCurrent_Aux1Current	0	0	2.89
+SD_AuxCurrent_Aux2Current	0	0	2.89
+SD_AuxCurrent_Aux3Current	0	0	2.89
+SD_PhaseVoltage_PhaseAVoltage	0	0	2.89
+SD_PhaseVoltage_PhaseBVoltage	0	0	2.89
+SD_PhaseVoltage_PhaseCVoltage	0	0	2.89
+BMS_RelayState	0	0	2.89
+BMS_PackCurrent	0	0	2.89
+BMS_PackVoltage	0	0	2.89
+BMS_PackStateOfCharge	0	0	2.89
+BMS_PackStateOfHealth	0	0	2.89
+BMS_CurrentLimitStatus	0	0	2.89
+BMS_InternalTemp	0	0	2.89
+BMS_HighestTemp	0	0	2.89
+BMS_HighestTempID	0	0	2.89
+BMS_LowCellVoltage	0	0	2.89
+BMS_LowCellVoltageID	0	0	2.89
+BMS_HighCellVoltage	0	0	2.89
+BMS_HighCellVoltageID	0	0	2.89
+BMS_PowerInputVoltage	0	0	2.89
+BMS_DTCStatus1	0	0	2.89
+BMS_DTCStatus2	0	0	2.89
+LVBatt_Temp	0	0	2.89
+LVBatt_Current	0	0	2.89
+LVBatt_Voltage	0	0	2.89
+RPi_Temp	0	0	2.89
+RPi_Proc_Load	0.0	0	2.89
+RPi_Disk_Space_Used	89767.859375	1	2.89
+RPi_Disk_Space_Free	153671.13671875	1	2.89
+RPi_Mem_Free	1727.34375	0	2.89
+RPi_Mem_Used	6369.65625	0	2.89
+RPi_Mem_Load	78.7	0	2.89
+PV_Left_Temp	0	0	2.89
+PV_Left_Pressure	0	0	2.89
+PV_Right_Temp	0	0	2.89
+PV_Right_Pressure	0	0	2.89
+Ambient_Pressure	0	0	2.89
+IMU1_X	0	0	2.89
+IMU1_Y	0	0	2.89
+IMU1_Z	0	0	2.89
+IMU2_X	0	0	2.89
+IMU2_Y	0	0	2.89
+IMU2_Z	0	0	2.89
+IMU_bad_time_elapsed	0	0	2.89
+V_bad_time_elapsed	0	0	2.89
+LST_missed_stripe_count	0	0	2.89
+LIDAR	0	0	2.89
+GUI_Conn	0	0	2.89
+LST_Left	0	0	2.89
+LST_Right	0	0	2.89
+Abort	0		2.89
+Launch	0		2.89
+HV	0		2.89
+Vent_Sol	0		2.89
+Res1_Sol	0		2.89
+Res2_Sol	0		2.89
+MC_Pump	0		2.89
+para_BBP	0		2.89
+para_max_speed	0		2.89
+para_max_accel	0		2.89
+para_max_time	0		2.89
+para_max_crawl_speed	-1		2.89
+state	1		2.89
+spacex_state	1		2.89
+total_faults	2		2.89
+throttle	0		2.89
+distance	-3.8749582999999963		2.89
+speed	-1		2.89
+accel	0.0		2.89
+wheel_diameter	1.45		2.89
+Brake_Pressure	0	0	3.0
+SD_DriveStatus_ProgramMode	0	0	3.0
+SD_DriveStatus_EngineState	0	0	3.0
+SD_DriveStatus_SwitchState	0	0	3.0
+SD_ErrorStatus_ErrorCode	0	0	3.0
+SD_ErrorStatus_ErrorValue	0	0	3.0
+SD_ErrorStatus_ModeTimer	0	0	3.0
+SD_MotorData_MotorRPM	0	0	3.0
+SD_MotorData_MotorCurrent	0	0	3.0
+SD_MotorData_MotorVoltage	0	0	3.0
+SD_AnalogData_ExternalADC	0	0	3.0
+SD_AnalogData_ThrottleLevel	0	0	3.0
+SD_AnalogData_BrakePressure	0	0	3.0
+SD_HVBusData_Frequency	0	0	3.0
+SD_HVBusData_BusCurrent	0	0	3.0
+SD_HVBusData_BusVoltage	0	0	3.0
+SD_TempData_InternalTemp	0	0	3.0
+SD_TempData_KTY1Temp	0	0	3.0
+SD_TempData_KTY2Temp	0	0	3.0
+SD_IGBTTemp_LegATemp	0	0	3.0
+SD_IGBTTemp_LegBTemp	0	0	3.0
+SD_IGBTTemp_LegCTemp	0	0	3.0
+SD_AuxCurrent_Aux1Current	0	0	3.0
+SD_AuxCurrent_Aux2Current	0	0	3.0
+SD_AuxCurrent_Aux3Current	0	0	3.0
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.0
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.0
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.0
+BMS_RelayState	0	0	3.0
+BMS_PackCurrent	0	0	3.0
+BMS_PackVoltage	0	0	3.0
+BMS_PackStateOfCharge	0	0	3.0
+BMS_PackStateOfHealth	0	0	3.0
+BMS_CurrentLimitStatus	0	0	3.0
+BMS_InternalTemp	0	0	3.0
+BMS_HighestTemp	0	0	3.0
+BMS_HighestTempID	0	0	3.0
+BMS_LowCellVoltage	0	0	3.0
+BMS_LowCellVoltageID	0	0	3.0
+BMS_HighCellVoltage	0	0	3.0
+BMS_HighCellVoltageID	0	0	3.0
+BMS_PowerInputVoltage	0	0	3.0
+BMS_DTCStatus1	0	0	3.0
+BMS_DTCStatus2	0	0	3.0
+LVBatt_Temp	0	0	3.0
+LVBatt_Current	0	0	3.0
+LVBatt_Voltage	0	0	3.0
+RPi_Temp	0	0	3.0
+RPi_Proc_Load	0.0	0	3.0
+RPi_Disk_Space_Used	89767.859375	1	3.0
+RPi_Disk_Space_Free	153671.13671875	1	3.0
+RPi_Mem_Free	1731.15234375	0	3.0
+RPi_Mem_Used	6365.84765625	0	3.0
+RPi_Mem_Load	78.6	0	3.0
+PV_Left_Temp	0	0	3.0
+PV_Left_Pressure	0	0	3.0
+PV_Right_Temp	0	0	3.0
+PV_Right_Pressure	0	0	3.0
+Ambient_Pressure	0	0	3.0
+IMU1_X	0	0	3.0
+IMU1_Y	0	0	3.0
+IMU1_Z	0	0	3.0
+IMU2_X	0	0	3.0
+IMU2_Y	0	0	3.0
+IMU2_Z	0	0	3.0
+IMU_bad_time_elapsed	0	0	3.0
+V_bad_time_elapsed	0	0	3.0
+LST_missed_stripe_count	0	0	3.0
+LIDAR	0	0	3.0
+GUI_Conn	0	0	3.0
+LST_Left	0	0	3.0
+LST_Right	0	0	3.0
+Abort	0		3.0
+Launch	0		3.0
+HV	0		3.0
+Vent_Sol	0		3.0
+Res1_Sol	0		3.0
+Res2_Sol	0		3.0
+MC_Pump	0		3.0
+para_BBP	0		3.0
+para_max_speed	0		3.0
+para_max_accel	0		3.0
+para_max_time	0		3.0
+para_max_crawl_speed	-1		3.0
+state	1		3.0
+spacex_state	1		3.0
+total_faults	2		3.0
+throttle	0		3.0
+distance	-3.9868378999999963		3.0
+speed	-1		3.0
+accel	0.0		3.0
+wheel_diameter	1.45		3.0
+Brake_Pressure	0	0	3.11
+SD_DriveStatus_ProgramMode	0	0	3.11
+SD_DriveStatus_EngineState	0	0	3.11
+SD_DriveStatus_SwitchState	0	0	3.11
+SD_ErrorStatus_ErrorCode	0	0	3.11
+SD_ErrorStatus_ErrorValue	0	0	3.11
+SD_ErrorStatus_ModeTimer	0	0	3.11
+SD_MotorData_MotorRPM	0	0	3.11
+SD_MotorData_MotorCurrent	0	0	3.11
+SD_MotorData_MotorVoltage	0	0	3.11
+SD_AnalogData_ExternalADC	0	0	3.11
+SD_AnalogData_ThrottleLevel	0	0	3.11
+SD_AnalogData_BrakePressure	0	0	3.11
+SD_HVBusData_Frequency	0	0	3.11
+SD_HVBusData_BusCurrent	0	0	3.11
+SD_HVBusData_BusVoltage	0	0	3.11
+SD_TempData_InternalTemp	0	0	3.11
+SD_TempData_KTY1Temp	0	0	3.11
+SD_TempData_KTY2Temp	0	0	3.11
+SD_IGBTTemp_LegATemp	0	0	3.11
+SD_IGBTTemp_LegBTemp	0	0	3.11
+SD_IGBTTemp_LegCTemp	0	0	3.11
+SD_AuxCurrent_Aux1Current	0	0	3.11
+SD_AuxCurrent_Aux2Current	0	0	3.11
+SD_AuxCurrent_Aux3Current	0	0	3.11
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.11
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.11
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.11
+BMS_RelayState	0	0	3.11
+BMS_PackCurrent	0	0	3.11
+BMS_PackVoltage	0	0	3.11
+BMS_PackStateOfCharge	0	0	3.11
+BMS_PackStateOfHealth	0	0	3.11
+BMS_CurrentLimitStatus	0	0	3.11
+BMS_InternalTemp	0	0	3.11
+BMS_HighestTemp	0	0	3.11
+BMS_HighestTempID	0	0	3.11
+BMS_LowCellVoltage	0	0	3.11
+BMS_LowCellVoltageID	0	0	3.11
+BMS_HighCellVoltage	0	0	3.11
+BMS_HighCellVoltageID	0	0	3.11
+BMS_PowerInputVoltage	0	0	3.11
+BMS_DTCStatus1	0	0	3.11
+BMS_DTCStatus2	0	0	3.11
+LVBatt_Temp	0	0	3.11
+LVBatt_Current	0	0	3.11
+LVBatt_Voltage	0	0	3.11
+RPi_Temp	0	0	3.11
+RPi_Proc_Load	0.0	0	3.11
+RPi_Disk_Space_Used	89767.86328125	1	3.11
+RPi_Disk_Space_Free	153671.1328125	1	3.11
+RPi_Mem_Free	1727.296875	0	3.11
+RPi_Mem_Used	6369.703125	0	3.11
+RPi_Mem_Load	78.7	0	3.11
+PV_Left_Temp	0	0	3.11
+PV_Left_Pressure	0	0	3.11
+PV_Right_Temp	0	0	3.11
+PV_Right_Pressure	0	0	3.11
+Ambient_Pressure	0	0	3.11
+IMU1_X	0	0	3.11
+IMU1_Y	0	0	3.11
+IMU1_Z	0	0	3.11
+IMU2_X	0	0	3.11
+IMU2_Y	0	0	3.11
+IMU2_Z	0	0	3.11
+IMU_bad_time_elapsed	0	0	3.11
+V_bad_time_elapsed	0	0	3.11
+LST_missed_stripe_count	0	0	3.11
+LIDAR	0	0	3.11
+GUI_Conn	0	0	3.11
+LST_Left	0	0	3.11
+LST_Right	0	0	3.11
+Abort	0		3.11
+Launch	0		3.11
+HV	0		3.11
+Vent_Sol	0		3.11
+Res1_Sol	0		3.11
+Res2_Sol	0		3.11
+MC_Pump	0		3.11
+para_BBP	0		3.11
+para_max_speed	0		3.11
+para_max_accel	0		3.11
+para_max_time	0		3.11
+para_max_crawl_speed	-1		3.11
+state	1		3.11
+spacex_state	1		3.11
+total_faults	2		3.11
+throttle	0		3.11
+distance	-4.097611199999994		3.11
+speed	-1		3.11
+accel	0.0		3.11
+wheel_diameter	1.45		3.11
+Brake_Pressure	0	0	3.23
+SD_DriveStatus_ProgramMode	0	0	3.23
+SD_DriveStatus_EngineState	0	0	3.23
+SD_DriveStatus_SwitchState	0	0	3.23
+SD_ErrorStatus_ErrorCode	0	0	3.23
+SD_ErrorStatus_ErrorValue	0	0	3.23
+SD_ErrorStatus_ModeTimer	0	0	3.23
+SD_MotorData_MotorRPM	0	0	3.23
+SD_MotorData_MotorCurrent	0	0	3.23
+SD_MotorData_MotorVoltage	0	0	3.23
+SD_AnalogData_ExternalADC	0	0	3.23
+SD_AnalogData_ThrottleLevel	0	0	3.23
+SD_AnalogData_BrakePressure	0	0	3.23
+SD_HVBusData_Frequency	0	0	3.23
+SD_HVBusData_BusCurrent	0	0	3.23
+SD_HVBusData_BusVoltage	0	0	3.23
+SD_TempData_InternalTemp	0	0	3.23
+SD_TempData_KTY1Temp	0	0	3.23
+SD_TempData_KTY2Temp	0	0	3.23
+SD_IGBTTemp_LegATemp	0	0	3.23
+SD_IGBTTemp_LegBTemp	0	0	3.23
+SD_IGBTTemp_LegCTemp	0	0	3.23
+SD_AuxCurrent_Aux1Current	0	0	3.23
+SD_AuxCurrent_Aux2Current	0	0	3.23
+SD_AuxCurrent_Aux3Current	0	0	3.23
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.23
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.23
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.23
+BMS_RelayState	0	0	3.23
+BMS_PackCurrent	0	0	3.23
+BMS_PackVoltage	0	0	3.23
+BMS_PackStateOfCharge	0	0	3.23
+BMS_PackStateOfHealth	0	0	3.23
+BMS_CurrentLimitStatus	0	0	3.23
+BMS_InternalTemp	0	0	3.23
+BMS_HighestTemp	0	0	3.23
+BMS_HighestTempID	0	0	3.23
+BMS_LowCellVoltage	0	0	3.23
+BMS_LowCellVoltageID	0	0	3.23
+BMS_HighCellVoltage	0	0	3.23
+BMS_HighCellVoltageID	0	0	3.23
+BMS_PowerInputVoltage	0	0	3.23
+BMS_DTCStatus1	0	0	3.23
+BMS_DTCStatus2	0	0	3.23
+LVBatt_Temp	0	0	3.23
+LVBatt_Current	0	0	3.23
+LVBatt_Voltage	0	0	3.23
+RPi_Temp	0	0	3.23
+RPi_Proc_Load	0.0	0	3.23
+RPi_Disk_Space_Used	89767.8671875	1	3.23
+RPi_Disk_Space_Free	153671.12890625	1	3.23
+RPi_Mem_Free	1727.296875	0	3.23
+RPi_Mem_Used	6369.703125	0	3.23
+RPi_Mem_Load	78.7	0	3.23
+PV_Left_Temp	0	0	3.23
+PV_Left_Pressure	0	0	3.23
+PV_Right_Temp	0	0	3.23
+PV_Right_Pressure	0	0	3.23
+Ambient_Pressure	0	0	3.23
+IMU1_X	0	0	3.23
+IMU1_Y	0	0	3.23
+IMU1_Z	0	0	3.23
+IMU2_X	0	0	3.23
+IMU2_Y	0	0	3.23
+IMU2_Z	0	0	3.23
+IMU_bad_time_elapsed	0	0	3.23
+V_bad_time_elapsed	0	0	3.23
+LST_missed_stripe_count	0	0	3.23
+LIDAR	0	0	3.23
+GUI_Conn	0	0	3.23
+LST_Left	0	0	3.23
+LST_Right	0	0	3.23
+Abort	0		3.23
+Launch	0		3.23
+HV	0		3.23
+Vent_Sol	0		3.23
+Res1_Sol	0		3.23
+Res2_Sol	0		3.23
+MC_Pump	0		3.23
+para_BBP	0		3.23
+para_max_speed	0		3.23
+para_max_accel	0		3.23
+para_max_time	0		3.23
+para_max_crawl_speed	-1		3.23
+state	1		3.23
+spacex_state	1		3.23
+total_faults	2		3.23
+throttle	0		3.23
+distance	-4.212007699999996		3.23
+speed	-1		3.23
+accel	0.0		3.23
+wheel_diameter	1.45		3.23
+Brake_Pressure	0	0	3.34
+SD_DriveStatus_ProgramMode	0	0	3.34
+SD_DriveStatus_EngineState	0	0	3.34
+SD_DriveStatus_SwitchState	0	0	3.34
+SD_ErrorStatus_ErrorCode	0	0	3.34
+SD_ErrorStatus_ErrorValue	0	0	3.34
+SD_ErrorStatus_ModeTimer	0	0	3.34
+SD_MotorData_MotorRPM	0	0	3.34
+SD_MotorData_MotorCurrent	0	0	3.34
+SD_MotorData_MotorVoltage	0	0	3.34
+SD_AnalogData_ExternalADC	0	0	3.34
+SD_AnalogData_ThrottleLevel	0	0	3.34
+SD_AnalogData_BrakePressure	0	0	3.34
+SD_HVBusData_Frequency	0	0	3.34
+SD_HVBusData_BusCurrent	0	0	3.34
+SD_HVBusData_BusVoltage	0	0	3.34
+SD_TempData_InternalTemp	0	0	3.34
+SD_TempData_KTY1Temp	0	0	3.34
+SD_TempData_KTY2Temp	0	0	3.34
+SD_IGBTTemp_LegATemp	0	0	3.34
+SD_IGBTTemp_LegBTemp	0	0	3.34
+SD_IGBTTemp_LegCTemp	0	0	3.34
+SD_AuxCurrent_Aux1Current	0	0	3.34
+SD_AuxCurrent_Aux2Current	0	0	3.34
+SD_AuxCurrent_Aux3Current	0	0	3.34
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.34
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.34
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.34
+BMS_RelayState	0	0	3.34
+BMS_PackCurrent	0	0	3.34
+BMS_PackVoltage	0	0	3.34
+BMS_PackStateOfCharge	0	0	3.34
+BMS_PackStateOfHealth	0	0	3.34
+BMS_CurrentLimitStatus	0	0	3.34
+BMS_InternalTemp	0	0	3.34
+BMS_HighestTemp	0	0	3.34
+BMS_HighestTempID	0	0	3.34
+BMS_LowCellVoltage	0	0	3.34
+BMS_LowCellVoltageID	0	0	3.34
+BMS_HighCellVoltage	0	0	3.34
+BMS_HighCellVoltageID	0	0	3.34
+BMS_PowerInputVoltage	0	0	3.34
+BMS_DTCStatus1	0	0	3.34
+BMS_DTCStatus2	0	0	3.34
+LVBatt_Temp	0	0	3.34
+LVBatt_Current	0	0	3.34
+LVBatt_Voltage	0	0	3.34
+RPi_Temp	0	0	3.34
+RPi_Proc_Load	0.0	0	3.34
+RPi_Disk_Space_Used	89767.8671875	1	3.34
+RPi_Disk_Space_Free	153671.12890625	1	3.34
+RPi_Mem_Free	1727.32421875	0	3.34
+RPi_Mem_Used	6369.67578125	0	3.34
+RPi_Mem_Load	78.7	0	3.34
+PV_Left_Temp	0	0	3.34
+PV_Left_Pressure	0	0	3.34
+PV_Right_Temp	0	0	3.34
+PV_Right_Pressure	0	0	3.34
+Ambient_Pressure	0	0	3.34
+IMU1_X	0	0	3.34
+IMU1_Y	0	0	3.34
+IMU1_Z	0	0	3.34
+IMU2_X	0	0	3.34
+IMU2_Y	0	0	3.34
+IMU2_Z	0	0	3.34
+IMU_bad_time_elapsed	0	0	3.34
+V_bad_time_elapsed	0	0	3.34
+LST_missed_stripe_count	0	0	3.34
+LIDAR	0	0	3.34
+GUI_Conn	0	0	3.34
+LST_Left	0	0	3.34
+LST_Right	0	0	3.34
+Abort	0		3.34
+Launch	0		3.34
+HV	0		3.34
+Vent_Sol	0		3.34
+Res1_Sol	0		3.34
+Res2_Sol	0		3.34
+MC_Pump	0		3.34
+para_BBP	0		3.34
+para_max_speed	0		3.34
+para_max_accel	0		3.34
+para_max_time	0		3.34
+para_max_crawl_speed	-1		3.34
+state	1		3.34
+spacex_state	1		3.34
+total_faults	2		3.34
+throttle	0		3.34
+distance	-4.325234699999996		3.34
+speed	-1		3.34
+accel	0.0		3.34
+wheel_diameter	1.45		3.34
+Brake_Pressure	0	0	3.45
+SD_DriveStatus_ProgramMode	0	0	3.45
+SD_DriveStatus_EngineState	0	0	3.45
+SD_DriveStatus_SwitchState	0	0	3.45
+SD_ErrorStatus_ErrorCode	0	0	3.45
+SD_ErrorStatus_ErrorValue	0	0	3.45
+SD_ErrorStatus_ModeTimer	0	0	3.45
+SD_MotorData_MotorRPM	0	0	3.45
+SD_MotorData_MotorCurrent	0	0	3.45
+SD_MotorData_MotorVoltage	0	0	3.45
+SD_AnalogData_ExternalADC	0	0	3.45
+SD_AnalogData_ThrottleLevel	0	0	3.45
+SD_AnalogData_BrakePressure	0	0	3.45
+SD_HVBusData_Frequency	0	0	3.45
+SD_HVBusData_BusCurrent	0	0	3.45
+SD_HVBusData_BusVoltage	0	0	3.45
+SD_TempData_InternalTemp	0	0	3.45
+SD_TempData_KTY1Temp	0	0	3.45
+SD_TempData_KTY2Temp	0	0	3.45
+SD_IGBTTemp_LegATemp	0	0	3.45
+SD_IGBTTemp_LegBTemp	0	0	3.45
+SD_IGBTTemp_LegCTemp	0	0	3.45
+SD_AuxCurrent_Aux1Current	0	0	3.45
+SD_AuxCurrent_Aux2Current	0	0	3.45
+SD_AuxCurrent_Aux3Current	0	0	3.45
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.45
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.45
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.45
+BMS_RelayState	0	0	3.45
+BMS_PackCurrent	0	0	3.45
+BMS_PackVoltage	0	0	3.45
+BMS_PackStateOfCharge	0	0	3.45
+BMS_PackStateOfHealth	0	0	3.45
+BMS_CurrentLimitStatus	0	0	3.45
+BMS_InternalTemp	0	0	3.45
+BMS_HighestTemp	0	0	3.45
+BMS_HighestTempID	0	0	3.45
+BMS_LowCellVoltage	0	0	3.45
+BMS_LowCellVoltageID	0	0	3.45
+BMS_HighCellVoltage	0	0	3.45
+BMS_HighCellVoltageID	0	0	3.45
+BMS_PowerInputVoltage	0	0	3.45
+BMS_DTCStatus1	0	0	3.45
+BMS_DTCStatus2	0	0	3.45
+LVBatt_Temp	0	0	3.45
+LVBatt_Current	0	0	3.45
+LVBatt_Voltage	0	0	3.45
+RPi_Temp	0	0	3.45
+RPi_Proc_Load	0.0	0	3.45
+RPi_Disk_Space_Used	89767.87890625	1	3.45
+RPi_Disk_Space_Free	153671.1171875	1	3.45
+RPi_Mem_Free	1740.8984375	0	3.45
+RPi_Mem_Used	6356.1015625	0	3.45
+RPi_Mem_Load	78.5	0	3.45
+PV_Left_Temp	0	0	3.45
+PV_Left_Pressure	0	0	3.45
+PV_Right_Temp	0	0	3.45
+PV_Right_Pressure	0	0	3.45
+Ambient_Pressure	0	0	3.45
+IMU1_X	0	0	3.45
+IMU1_Y	0	0	3.45
+IMU1_Z	0	0	3.45
+IMU2_X	0	0	3.45
+IMU2_Y	0	0	3.45
+IMU2_Z	0	0	3.45
+IMU_bad_time_elapsed	0	0	3.45
+V_bad_time_elapsed	0	0	3.45
+LST_missed_stripe_count	0	0	3.45
+LIDAR	0	0	3.45
+GUI_Conn	0	0	3.45
+LST_Left	0	0	3.45
+LST_Right	0	0	3.45
+Abort	0		3.45
+Launch	0		3.45
+HV	0		3.45
+Vent_Sol	0		3.45
+Res1_Sol	0		3.45
+Res2_Sol	0		3.45
+MC_Pump	0		3.45
+para_BBP	0		3.45
+para_max_speed	0		3.45
+para_max_accel	0		3.45
+para_max_time	0		3.45
+para_max_crawl_speed	-1		3.45
+state	1		3.45
+spacex_state	1		3.45
+total_faults	2		3.45
+throttle	0		3.45
+distance	-4.437682499999997		3.45
+speed	-1		3.45
+accel	0.0		3.45
+wheel_diameter	1.45		3.45
+Brake_Pressure	0	0	3.56
+SD_DriveStatus_ProgramMode	0	0	3.56
+SD_DriveStatus_EngineState	0	0	3.56
+SD_DriveStatus_SwitchState	0	0	3.56
+SD_ErrorStatus_ErrorCode	0	0	3.56
+SD_ErrorStatus_ErrorValue	0	0	3.56
+SD_ErrorStatus_ModeTimer	0	0	3.56
+SD_MotorData_MotorRPM	0	0	3.56
+SD_MotorData_MotorCurrent	0	0	3.57
+SD_MotorData_MotorVoltage	0	0	3.57
+SD_AnalogData_ExternalADC	0	0	3.57
+SD_AnalogData_ThrottleLevel	0	0	3.57
+SD_AnalogData_BrakePressure	0	0	3.57
+SD_HVBusData_Frequency	0	0	3.57
+SD_HVBusData_BusCurrent	0	0	3.57
+SD_HVBusData_BusVoltage	0	0	3.57
+SD_TempData_InternalTemp	0	0	3.57
+SD_TempData_KTY1Temp	0	0	3.57
+SD_TempData_KTY2Temp	0	0	3.57
+SD_IGBTTemp_LegATemp	0	0	3.57
+SD_IGBTTemp_LegBTemp	0	0	3.57
+SD_IGBTTemp_LegCTemp	0	0	3.57
+SD_AuxCurrent_Aux1Current	0	0	3.57
+SD_AuxCurrent_Aux2Current	0	0	3.57
+SD_AuxCurrent_Aux3Current	0	0	3.57
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.57
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.57
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.57
+BMS_RelayState	0	0	3.57
+BMS_PackCurrent	0	0	3.57
+BMS_PackVoltage	0	0	3.57
+BMS_PackStateOfCharge	0	0	3.57
+BMS_PackStateOfHealth	0	0	3.57
+BMS_CurrentLimitStatus	0	0	3.57
+BMS_InternalTemp	0	0	3.57
+BMS_HighestTemp	0	0	3.57
+BMS_HighestTempID	0	0	3.57
+BMS_LowCellVoltage	0	0	3.57
+BMS_LowCellVoltageID	0	0	3.57
+BMS_HighCellVoltage	0	0	3.57
+BMS_HighCellVoltageID	0	0	3.57
+BMS_PowerInputVoltage	0	0	3.57
+BMS_DTCStatus1	0	0	3.57
+BMS_DTCStatus2	0	0	3.57
+LVBatt_Temp	0	0	3.57
+LVBatt_Current	0	0	3.57
+LVBatt_Voltage	0	0	3.57
+RPi_Temp	0	0	3.57
+RPi_Proc_Load	0.0	0	3.57
+RPi_Disk_Space_Used	89767.87109375	1	3.57
+RPi_Disk_Space_Free	153671.125	1	3.57
+RPi_Mem_Free	1733.0625	0	3.57
+RPi_Mem_Used	6363.9375	0	3.57
+RPi_Mem_Load	78.6	0	3.57
+PV_Left_Temp	0	0	3.57
+PV_Left_Pressure	0	0	3.57
+PV_Right_Temp	0	0	3.57
+PV_Right_Pressure	0	0	3.57
+Ambient_Pressure	0	0	3.57
+IMU1_X	0	0	3.57
+IMU1_Y	0	0	3.57
+IMU1_Z	0	0	3.57
+IMU2_X	0	0	3.57
+IMU2_Y	0	0	3.57
+IMU2_Z	0	0	3.57
+IMU_bad_time_elapsed	0	0	3.57
+V_bad_time_elapsed	0	0	3.57
+LST_missed_stripe_count	0	0	3.57
+LIDAR	0	0	3.57
+GUI_Conn	0	0	3.57
+LST_Left	0	0	3.57
+LST_Right	0	0	3.57
+Abort	0		3.57
+Launch	0		3.57
+HV	0		3.57
+Vent_Sol	0		3.57
+Res1_Sol	0		3.57
+Res2_Sol	0		3.57
+MC_Pump	0		3.57
+para_BBP	0		3.57
+para_max_speed	0		3.57
+para_max_accel	0		3.57
+para_max_time	0		3.57
+para_max_crawl_speed	-1		3.57
+state	1		3.57
+spacex_state	1		3.57
+total_faults	2		3.57
+throttle	0		3.57
+distance	-4.550507599999997		3.57
+speed	-1		3.57
+accel	0.0		3.57
+wheel_diameter	1.45		3.57
+Brake_Pressure	0	0	3.68
+SD_DriveStatus_ProgramMode	0	0	3.68
+SD_DriveStatus_EngineState	0	0	3.68
+SD_DriveStatus_SwitchState	0	0	3.68
+SD_ErrorStatus_ErrorCode	0	0	3.68
+SD_ErrorStatus_ErrorValue	0	0	3.68
+SD_ErrorStatus_ModeTimer	0	0	3.68
+SD_MotorData_MotorRPM	0	0	3.68
+SD_MotorData_MotorCurrent	0	0	3.68
+SD_MotorData_MotorVoltage	0	0	3.68
+SD_AnalogData_ExternalADC	0	0	3.68
+SD_AnalogData_ThrottleLevel	0	0	3.68
+SD_AnalogData_BrakePressure	0	0	3.68
+SD_HVBusData_Frequency	0	0	3.68
+SD_HVBusData_BusCurrent	0	0	3.68
+SD_HVBusData_BusVoltage	0	0	3.68
+SD_TempData_InternalTemp	0	0	3.68
+SD_TempData_KTY1Temp	0	0	3.68
+SD_TempData_KTY2Temp	0	0	3.68
+SD_IGBTTemp_LegATemp	0	0	3.68
+SD_IGBTTemp_LegBTemp	0	0	3.68
+SD_IGBTTemp_LegCTemp	0	0	3.68
+SD_AuxCurrent_Aux1Current	0	0	3.68
+SD_AuxCurrent_Aux2Current	0	0	3.68
+SD_AuxCurrent_Aux3Current	0	0	3.68
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.68
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.68
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.68
+BMS_RelayState	0	0	3.68
+BMS_PackCurrent	0	0	3.68
+BMS_PackVoltage	0	0	3.68
+BMS_PackStateOfCharge	0	0	3.68
+BMS_PackStateOfHealth	0	0	3.68
+BMS_CurrentLimitStatus	0	0	3.68
+BMS_InternalTemp	0	0	3.68
+BMS_HighestTemp	0	0	3.68
+BMS_HighestTempID	0	0	3.68
+BMS_LowCellVoltage	0	0	3.68
+BMS_LowCellVoltageID	0	0	3.68
+BMS_HighCellVoltage	0	0	3.68
+BMS_HighCellVoltageID	0	0	3.68
+BMS_PowerInputVoltage	0	0	3.68
+BMS_DTCStatus1	0	0	3.68
+BMS_DTCStatus2	0	0	3.68
+LVBatt_Temp	0	0	3.68
+LVBatt_Current	0	0	3.68
+LVBatt_Voltage	0	0	3.68
+RPi_Temp	0	0	3.68
+RPi_Proc_Load	0.0	0	3.68
+RPi_Disk_Space_Used	89767.87890625	1	3.68
+RPi_Disk_Space_Free	153671.1171875	1	3.68
+RPi_Mem_Free	1733.5078125	0	3.68
+RPi_Mem_Used	6363.4921875	0	3.68
+RPi_Mem_Load	78.6	0	3.68
+PV_Left_Temp	0	0	3.68
+PV_Left_Pressure	0	0	3.68
+PV_Right_Temp	0	0	3.68
+PV_Right_Pressure	0	0	3.68
+Ambient_Pressure	0	0	3.68
+IMU1_X	0	0	3.68
+IMU1_Y	0	0	3.68
+IMU1_Z	0	0	3.68
+IMU2_X	0	0	3.68
+IMU2_Y	0	0	3.68
+IMU2_Z	0	0	3.68
+IMU_bad_time_elapsed	0	0	3.68
+V_bad_time_elapsed	0	0	3.68
+LST_missed_stripe_count	0	0	3.68
+LIDAR	0	0	3.68
+GUI_Conn	0	0	3.68
+LST_Left	0	0	3.68
+LST_Right	0	0	3.68
+Abort	0		3.68
+Launch	0		3.68
+HV	0		3.68
+Vent_Sol	0		3.68
+Res1_Sol	0		3.68
+Res2_Sol	0		3.68
+MC_Pump	0		3.68
+para_BBP	0		3.68
+para_max_speed	0		3.68
+para_max_accel	0		3.68
+para_max_time	0		3.68
+para_max_crawl_speed	-1		3.68
+state	1		3.68
+spacex_state	1		3.68
+total_faults	2		3.68
+throttle	0		3.68
+distance	-4.6617548999999965		3.68
+speed	-1		3.68
+accel	0.0		3.68
+wheel_diameter	1.45		3.68
+Brake_Pressure	0	0	3.79
+SD_DriveStatus_ProgramMode	0	0	3.79
+SD_DriveStatus_EngineState	0	0	3.79
+SD_DriveStatus_SwitchState	0	0	3.79
+SD_ErrorStatus_ErrorCode	0	0	3.79
+SD_ErrorStatus_ErrorValue	0	0	3.79
+SD_ErrorStatus_ModeTimer	0	0	3.79
+SD_MotorData_MotorRPM	0	0	3.79
+SD_MotorData_MotorCurrent	0	0	3.79
+SD_MotorData_MotorVoltage	0	0	3.79
+SD_AnalogData_ExternalADC	0	0	3.79
+SD_AnalogData_ThrottleLevel	0	0	3.79
+SD_AnalogData_BrakePressure	0	0	3.79
+SD_HVBusData_Frequency	0	0	3.79
+SD_HVBusData_BusCurrent	0	0	3.79
+SD_HVBusData_BusVoltage	0	0	3.79
+SD_TempData_InternalTemp	0	0	3.79
+SD_TempData_KTY1Temp	0	0	3.79
+SD_TempData_KTY2Temp	0	0	3.79
+SD_IGBTTemp_LegATemp	0	0	3.79
+SD_IGBTTemp_LegBTemp	0	0	3.79
+SD_IGBTTemp_LegCTemp	0	0	3.79
+SD_AuxCurrent_Aux1Current	0	0	3.79
+SD_AuxCurrent_Aux2Current	0	0	3.79
+SD_AuxCurrent_Aux3Current	0	0	3.79
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.79
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.79
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.79
+BMS_RelayState	0	0	3.79
+BMS_PackCurrent	0	0	3.79
+BMS_PackVoltage	0	0	3.79
+BMS_PackStateOfCharge	0	0	3.79
+BMS_PackStateOfHealth	0	0	3.79
+BMS_CurrentLimitStatus	0	0	3.79
+BMS_InternalTemp	0	0	3.79
+BMS_HighestTemp	0	0	3.79
+BMS_HighestTempID	0	0	3.79
+BMS_LowCellVoltage	0	0	3.79
+BMS_LowCellVoltageID	0	0	3.79
+BMS_HighCellVoltage	0	0	3.79
+BMS_HighCellVoltageID	0	0	3.79
+BMS_PowerInputVoltage	0	0	3.79
+BMS_DTCStatus1	0	0	3.79
+BMS_DTCStatus2	0	0	3.79
+LVBatt_Temp	0	0	3.79
+LVBatt_Current	0	0	3.79
+LVBatt_Voltage	0	0	3.79
+RPi_Temp	0	0	3.79
+RPi_Proc_Load	0.0	0	3.79
+RPi_Disk_Space_Used	89767.8828125	1	3.79
+RPi_Disk_Space_Free	153671.11328125	1	3.79
+RPi_Mem_Free	1733.5	0	3.79
+RPi_Mem_Used	6363.5	0	3.79
+RPi_Mem_Load	78.6	0	3.79
+PV_Left_Temp	0	0	3.79
+PV_Left_Pressure	0	0	3.79
+PV_Right_Temp	0	0	3.79
+PV_Right_Pressure	0	0	3.79
+Ambient_Pressure	0	0	3.79
+IMU1_X	0	0	3.79
+IMU1_Y	0	0	3.79
+IMU1_Z	0	0	3.79
+IMU2_X	0	0	3.79
+IMU2_Y	0	0	3.79
+IMU2_Z	0	0	3.79
+IMU_bad_time_elapsed	0	0	3.79
+V_bad_time_elapsed	0	0	3.79
+LST_missed_stripe_count	0	0	3.79
+LIDAR	0	0	3.79
+GUI_Conn	0	0	3.79
+LST_Left	0	0	3.79
+LST_Right	0	0	3.79
+Abort	0		3.79
+Launch	0		3.79
+HV	0		3.79
+Vent_Sol	0		3.79
+Res1_Sol	0		3.79
+Res2_Sol	0		3.79
+MC_Pump	0		3.79
+para_BBP	0		3.79
+para_max_speed	0		3.79
+para_max_accel	0		3.79
+para_max_time	0		3.79
+para_max_crawl_speed	-1		3.79
+state	1		3.79
+spacex_state	1		3.79
+total_faults	2		3.79
+throttle	0		3.79
+distance	-4.774484699999997		3.79
+speed	-1		3.79
+accel	0.0		3.79
+wheel_diameter	1.45		3.79
+Brake_Pressure	0	0	3.9
+SD_DriveStatus_ProgramMode	0	0	3.9
+SD_DriveStatus_EngineState	0	0	3.9
+SD_DriveStatus_SwitchState	0	0	3.9
+SD_ErrorStatus_ErrorCode	0	0	3.9
+SD_ErrorStatus_ErrorValue	0	0	3.9
+SD_ErrorStatus_ModeTimer	0	0	3.9
+SD_MotorData_MotorRPM	0	0	3.9
+SD_MotorData_MotorCurrent	0	0	3.9
+SD_MotorData_MotorVoltage	0	0	3.9
+SD_AnalogData_ExternalADC	0	0	3.9
+SD_AnalogData_ThrottleLevel	0	0	3.9
+SD_AnalogData_BrakePressure	0	0	3.9
+SD_HVBusData_Frequency	0	0	3.9
+SD_HVBusData_BusCurrent	0	0	3.9
+SD_HVBusData_BusVoltage	0	0	3.9
+SD_TempData_InternalTemp	0	0	3.9
+SD_TempData_KTY1Temp	0	0	3.9
+SD_TempData_KTY2Temp	0	0	3.9
+SD_IGBTTemp_LegATemp	0	0	3.9
+SD_IGBTTemp_LegBTemp	0	0	3.9
+SD_IGBTTemp_LegCTemp	0	0	3.9
+SD_AuxCurrent_Aux1Current	0	0	3.9
+SD_AuxCurrent_Aux2Current	0	0	3.9
+SD_AuxCurrent_Aux3Current	0	0	3.9
+SD_PhaseVoltage_PhaseAVoltage	0	0	3.9
+SD_PhaseVoltage_PhaseBVoltage	0	0	3.9
+SD_PhaseVoltage_PhaseCVoltage	0	0	3.9
+BMS_RelayState	0	0	3.9
+BMS_PackCurrent	0	0	3.9
+BMS_PackVoltage	0	0	3.9
+BMS_PackStateOfCharge	0	0	3.9
+BMS_PackStateOfHealth	0	0	3.9
+BMS_CurrentLimitStatus	0	0	3.9
+BMS_InternalTemp	0	0	3.9
+BMS_HighestTemp	0	0	3.9
+BMS_HighestTempID	0	0	3.9
+BMS_LowCellVoltage	0	0	3.9
+BMS_LowCellVoltageID	0	0	3.9
+BMS_HighCellVoltage	0	0	3.9
+BMS_HighCellVoltageID	0	0	3.9
+BMS_PowerInputVoltage	0	0	3.9
+BMS_DTCStatus1	0	0	3.9
+BMS_DTCStatus2	0	0	3.9
+LVBatt_Temp	0	0	3.9
+LVBatt_Current	0	0	3.9
+LVBatt_Voltage	0	0	3.9
+RPi_Temp	0	0	3.9
+RPi_Proc_Load	0.0	0	3.9
+RPi_Disk_Space_Used	89767.87890625	1	3.9
+RPi_Disk_Space_Free	153671.1171875	1	3.9
+RPi_Mem_Free	1733.49609375	0	3.9
+RPi_Mem_Used	6363.50390625	0	3.9
+RPi_Mem_Load	78.6	0	3.9
+PV_Left_Temp	0	0	3.9
+PV_Left_Pressure	0	0	3.9
+PV_Right_Temp	0	0	3.9
+PV_Right_Pressure	0	0	3.9
+Ambient_Pressure	0	0	3.9
+IMU1_X	0	0	3.9
+IMU1_Y	0	0	3.9
+IMU1_Z	0	0	3.9
+IMU2_X	0	0	3.9
+IMU2_Y	0	0	3.9
+IMU2_Z	0	0	3.9
+IMU_bad_time_elapsed	0	0	3.9
+V_bad_time_elapsed	0	0	3.9
+LST_missed_stripe_count	0	0	3.9
+LIDAR	0	0	3.9
+GUI_Conn	0	0	3.9
+LST_Left	0	0	3.9
+LST_Right	0	0	3.9
+Abort	0		3.9
+Launch	0		3.9
+HV	0		3.9
+Vent_Sol	0		3.9
+Res1_Sol	0		3.9
+Res2_Sol	0		3.9
+MC_Pump	0		3.9
+para_BBP	0		3.9
+para_max_speed	0		3.9
+para_max_accel	0		3.9
+para_max_time	0		3.9
+para_max_crawl_speed	-1		3.9
+state	1		3.9
+spacex_state	1		3.9
+total_faults	2		3.9
+throttle	0		3.9
+distance	-4.884690899999997		3.9
+speed	-1		3.9
+accel	0.0		3.9
+wheel_diameter	1.45		3.9
+Brake_Pressure	0	0	4.01
+SD_DriveStatus_ProgramMode	0	0	4.01
+SD_DriveStatus_EngineState	0	0	4.01
+SD_DriveStatus_SwitchState	0	0	4.01
+SD_ErrorStatus_ErrorCode	0	0	4.01
+SD_ErrorStatus_ErrorValue	0	0	4.01
+SD_ErrorStatus_ModeTimer	0	0	4.01
+SD_MotorData_MotorRPM	0	0	4.01
+SD_MotorData_MotorCurrent	0	0	4.01
+SD_MotorData_MotorVoltage	0	0	4.01
+SD_AnalogData_ExternalADC	0	0	4.01
+SD_AnalogData_ThrottleLevel	0	0	4.01
+SD_AnalogData_BrakePressure	0	0	4.01
+SD_HVBusData_Frequency	0	0	4.01
+SD_HVBusData_BusCurrent	0	0	4.01
+SD_HVBusData_BusVoltage	0	0	4.01
+SD_TempData_InternalTemp	0	0	4.01
+SD_TempData_KTY1Temp	0	0	4.01
+SD_TempData_KTY2Temp	0	0	4.01
+SD_IGBTTemp_LegATemp	0	0	4.01
+SD_IGBTTemp_LegBTemp	0	0	4.01
+SD_IGBTTemp_LegCTemp	0	0	4.01
+SD_AuxCurrent_Aux1Current	0	0	4.01
+SD_AuxCurrent_Aux2Current	0	0	4.01
+SD_AuxCurrent_Aux3Current	0	0	4.01
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.01
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.01
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.01
+BMS_RelayState	0	0	4.01
+BMS_PackCurrent	0	0	4.01
+BMS_PackVoltage	0	0	4.01
+BMS_PackStateOfCharge	0	0	4.01
+BMS_PackStateOfHealth	0	0	4.01
+BMS_CurrentLimitStatus	0	0	4.01
+BMS_InternalTemp	0	0	4.01
+BMS_HighestTemp	0	0	4.01
+BMS_HighestTempID	0	0	4.01
+BMS_LowCellVoltage	0	0	4.01
+BMS_LowCellVoltageID	0	0	4.01
+BMS_HighCellVoltage	0	0	4.01
+BMS_HighCellVoltageID	0	0	4.01
+BMS_PowerInputVoltage	0	0	4.01
+BMS_DTCStatus1	0	0	4.01
+BMS_DTCStatus2	0	0	4.01
+LVBatt_Temp	0	0	4.01
+LVBatt_Current	0	0	4.01
+LVBatt_Voltage	0	0	4.01
+RPi_Temp	0	0	4.01
+RPi_Proc_Load	0.0	0	4.01
+RPi_Disk_Space_Used	89767.88671875	1	4.01
+RPi_Disk_Space_Free	153671.109375	1	4.01
+RPi_Mem_Free	1733.5546875	0	4.01
+RPi_Mem_Used	6363.4453125	0	4.01
+RPi_Mem_Load	78.6	0	4.01
+PV_Left_Temp	0	0	4.01
+PV_Left_Pressure	0	0	4.01
+PV_Right_Temp	0	0	4.01
+PV_Right_Pressure	0	0	4.01
+Ambient_Pressure	0	0	4.01
+IMU1_X	0	0	4.01
+IMU1_Y	0	0	4.01
+IMU1_Z	0	0	4.01
+IMU2_X	0	0	4.01
+IMU2_Y	0	0	4.01
+IMU2_Z	0	0	4.01
+IMU_bad_time_elapsed	0	0	4.01
+V_bad_time_elapsed	0	0	4.01
+LST_missed_stripe_count	0	0	4.01
+LIDAR	0	0	4.01
+GUI_Conn	0	0	4.01
+LST_Left	0	0	4.01
+LST_Right	0	0	4.01
+Abort	0		4.01
+Launch	0		4.01
+HV	0		4.01
+Vent_Sol	0		4.01
+Res1_Sol	0		4.01
+Res2_Sol	0		4.01
+MC_Pump	0		4.01
+para_BBP	0		4.01
+para_max_speed	0		4.01
+para_max_accel	0		4.01
+para_max_time	0		4.01
+para_max_crawl_speed	-1		4.01
+state	1		4.01
+spacex_state	1		4.01
+total_faults	2		4.01
+throttle	0		4.01
+distance	-4.993036599999996		4.01
+speed	-1		4.01
+accel	0.0		4.01
+wheel_diameter	1.45		4.01
+Brake_Pressure	0	0	4.12
+SD_DriveStatus_ProgramMode	0	0	4.12
+SD_DriveStatus_EngineState	0	0	4.12
+SD_DriveStatus_SwitchState	0	0	4.12
+SD_ErrorStatus_ErrorCode	0	0	4.12
+SD_ErrorStatus_ErrorValue	0	0	4.12
+SD_ErrorStatus_ModeTimer	0	0	4.12
+SD_MotorData_MotorRPM	0	0	4.12
+SD_MotorData_MotorCurrent	0	0	4.12
+SD_MotorData_MotorVoltage	0	0	4.12
+SD_AnalogData_ExternalADC	0	0	4.12
+SD_AnalogData_ThrottleLevel	0	0	4.12
+SD_AnalogData_BrakePressure	0	0	4.12
+SD_HVBusData_Frequency	0	0	4.12
+SD_HVBusData_BusCurrent	0	0	4.12
+SD_HVBusData_BusVoltage	0	0	4.12
+SD_TempData_InternalTemp	0	0	4.12
+SD_TempData_KTY1Temp	0	0	4.12
+SD_TempData_KTY2Temp	0	0	4.12
+SD_IGBTTemp_LegATemp	0	0	4.12
+SD_IGBTTemp_LegBTemp	0	0	4.12
+SD_IGBTTemp_LegCTemp	0	0	4.12
+SD_AuxCurrent_Aux1Current	0	0	4.12
+SD_AuxCurrent_Aux2Current	0	0	4.12
+SD_AuxCurrent_Aux3Current	0	0	4.12
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.12
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.12
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.12
+BMS_RelayState	0	0	4.12
+BMS_PackCurrent	0	0	4.12
+BMS_PackVoltage	0	0	4.12
+BMS_PackStateOfCharge	0	0	4.12
+BMS_PackStateOfHealth	0	0	4.12
+BMS_CurrentLimitStatus	0	0	4.12
+BMS_InternalTemp	0	0	4.12
+BMS_HighestTemp	0	0	4.12
+BMS_HighestTempID	0	0	4.12
+BMS_LowCellVoltage	0	0	4.12
+BMS_LowCellVoltageID	0	0	4.12
+BMS_HighCellVoltage	0	0	4.12
+BMS_HighCellVoltageID	0	0	4.12
+BMS_PowerInputVoltage	0	0	4.12
+BMS_DTCStatus1	0	0	4.12
+BMS_DTCStatus2	0	0	4.12
+LVBatt_Temp	0	0	4.12
+LVBatt_Current	0	0	4.12
+LVBatt_Voltage	0	0	4.12
+RPi_Temp	0	0	4.12
+RPi_Proc_Load	0.0	0	4.12
+RPi_Disk_Space_Used	89767.88671875	1	4.12
+RPi_Disk_Space_Free	153671.109375	1	4.12
+RPi_Mem_Free	1735.21875	0	4.12
+RPi_Mem_Used	6361.78125	0	4.12
+RPi_Mem_Load	78.6	0	4.12
+PV_Left_Temp	0	0	4.12
+PV_Left_Pressure	0	0	4.12
+PV_Right_Temp	0	0	4.12
+PV_Right_Pressure	0	0	4.12
+Ambient_Pressure	0	0	4.12
+IMU1_X	0	0	4.12
+IMU1_Y	0	0	4.12
+IMU1_Z	0	0	4.12
+IMU2_X	0	0	4.12
+IMU2_Y	0	0	4.12
+IMU2_Z	0	0	4.12
+IMU_bad_time_elapsed	0	0	4.12
+V_bad_time_elapsed	0	0	4.12
+LST_missed_stripe_count	0	0	4.12
+LIDAR	0	0	4.12
+GUI_Conn	0	0	4.12
+LST_Left	0	0	4.12
+LST_Right	0	0	4.12
+Abort	0		4.12
+Launch	0		4.12
+HV	0		4.12
+Vent_Sol	0		4.12
+Res1_Sol	0		4.12
+Res2_Sol	0		4.12
+MC_Pump	0		4.12
+para_BBP	0		4.12
+para_max_speed	0		4.12
+para_max_accel	0		4.12
+para_max_time	0		4.12
+para_max_crawl_speed	-1		4.12
+state	1		4.12
+spacex_state	1		4.12
+total_faults	2		4.12
+throttle	0		4.12
+distance	-5.103940999999996		4.12
+speed	-1		4.12
+accel	0.0		4.12
+wheel_diameter	1.45		4.12
+Brake_Pressure	0	0	4.22
+SD_DriveStatus_ProgramMode	0	0	4.22
+SD_DriveStatus_EngineState	0	0	4.22
+SD_DriveStatus_SwitchState	0	0	4.22
+SD_ErrorStatus_ErrorCode	0	0	4.22
+SD_ErrorStatus_ErrorValue	0	0	4.22
+SD_ErrorStatus_ModeTimer	0	0	4.22
+SD_MotorData_MotorRPM	0	0	4.22
+SD_MotorData_MotorCurrent	0	0	4.22
+SD_MotorData_MotorVoltage	0	0	4.22
+SD_AnalogData_ExternalADC	0	0	4.22
+SD_AnalogData_ThrottleLevel	0	0	4.22
+SD_AnalogData_BrakePressure	0	0	4.22
+SD_HVBusData_Frequency	0	0	4.22
+SD_HVBusData_BusCurrent	0	0	4.22
+SD_HVBusData_BusVoltage	0	0	4.22
+SD_TempData_InternalTemp	0	0	4.22
+SD_TempData_KTY1Temp	0	0	4.22
+SD_TempData_KTY2Temp	0	0	4.22
+SD_IGBTTemp_LegATemp	0	0	4.22
+SD_IGBTTemp_LegBTemp	0	0	4.22
+SD_IGBTTemp_LegCTemp	0	0	4.22
+SD_AuxCurrent_Aux1Current	0	0	4.22
+SD_AuxCurrent_Aux2Current	0	0	4.22
+SD_AuxCurrent_Aux3Current	0	0	4.22
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.22
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.22
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.22
+BMS_RelayState	0	0	4.22
+BMS_PackCurrent	0	0	4.22
+BMS_PackVoltage	0	0	4.22
+BMS_PackStateOfCharge	0	0	4.22
+BMS_PackStateOfHealth	0	0	4.22
+BMS_CurrentLimitStatus	0	0	4.22
+BMS_InternalTemp	0	0	4.22
+BMS_HighestTemp	0	0	4.22
+BMS_HighestTempID	0	0	4.22
+BMS_LowCellVoltage	0	0	4.22
+BMS_LowCellVoltageID	0	0	4.22
+BMS_HighCellVoltage	0	0	4.22
+BMS_HighCellVoltageID	0	0	4.22
+BMS_PowerInputVoltage	0	0	4.22
+BMS_DTCStatus1	0	0	4.22
+BMS_DTCStatus2	0	0	4.22
+LVBatt_Temp	0	0	4.22
+LVBatt_Current	0	0	4.22
+LVBatt_Voltage	0	0	4.22
+RPi_Temp	0	0	4.22
+RPi_Proc_Load	0.0	0	4.22
+RPi_Disk_Space_Used	89767.88671875	1	4.22
+RPi_Disk_Space_Free	153671.109375	1	4.22
+RPi_Mem_Free	1733.90234375	0	4.22
+RPi_Mem_Used	6363.09765625	0	4.22
+RPi_Mem_Load	78.6	0	4.22
+PV_Left_Temp	0	0	4.22
+PV_Left_Pressure	0	0	4.22
+PV_Right_Temp	0	0	4.22
+PV_Right_Pressure	0	0	4.22
+Ambient_Pressure	0	0	4.22
+IMU1_X	0	0	4.22
+IMU1_Y	0	0	4.22
+IMU1_Z	0	0	4.22
+IMU2_X	0	0	4.22
+IMU2_Y	0	0	4.22
+IMU2_Z	0	0	4.22
+IMU_bad_time_elapsed	0	0	4.22
+V_bad_time_elapsed	0	0	4.22
+LST_missed_stripe_count	0	0	4.22
+LIDAR	0	0	4.22
+GUI_Conn	0	0	4.22
+LST_Left	0	0	4.22
+LST_Right	0	0	4.22
+Abort	0		4.22
+Launch	0		4.22
+HV	0		4.22
+Vent_Sol	0		4.22
+Res1_Sol	0		4.22
+Res2_Sol	0		4.22
+MC_Pump	0		4.22
+para_BBP	0		4.22
+para_max_speed	0		4.22
+para_max_accel	0		4.22
+para_max_time	0		4.22
+para_max_crawl_speed	-1		4.22
+state	1		4.22
+spacex_state	1		4.22
+total_faults	2		4.22
+throttle	0		4.22
+distance	-5.212493299999996		4.22
+speed	-1		4.22
+accel	0.0		4.22
+wheel_diameter	1.45		4.22
+Brake_Pressure	0	0	4.33
+SD_DriveStatus_ProgramMode	0	0	4.33
+SD_DriveStatus_EngineState	0	0	4.33
+SD_DriveStatus_SwitchState	0	0	4.33
+SD_ErrorStatus_ErrorCode	0	0	4.33
+SD_ErrorStatus_ErrorValue	0	0	4.33
+SD_ErrorStatus_ModeTimer	0	0	4.33
+SD_MotorData_MotorRPM	0	0	4.33
+SD_MotorData_MotorCurrent	0	0	4.33
+SD_MotorData_MotorVoltage	0	0	4.33
+SD_AnalogData_ExternalADC	0	0	4.33
+SD_AnalogData_ThrottleLevel	0	0	4.33
+SD_AnalogData_BrakePressure	0	0	4.33
+SD_HVBusData_Frequency	0	0	4.33
+SD_HVBusData_BusCurrent	0	0	4.33
+SD_HVBusData_BusVoltage	0	0	4.33
+SD_TempData_InternalTemp	0	0	4.33
+SD_TempData_KTY1Temp	0	0	4.33
+SD_TempData_KTY2Temp	0	0	4.33
+SD_IGBTTemp_LegATemp	0	0	4.33
+SD_IGBTTemp_LegBTemp	0	0	4.33
+SD_IGBTTemp_LegCTemp	0	0	4.33
+SD_AuxCurrent_Aux1Current	0	0	4.33
+SD_AuxCurrent_Aux2Current	0	0	4.33
+SD_AuxCurrent_Aux3Current	0	0	4.33
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.33
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.33
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.33
+BMS_RelayState	0	0	4.33
+BMS_PackCurrent	0	0	4.33
+BMS_PackVoltage	0	0	4.33
+BMS_PackStateOfCharge	0	0	4.33
+BMS_PackStateOfHealth	0	0	4.33
+BMS_CurrentLimitStatus	0	0	4.33
+BMS_InternalTemp	0	0	4.33
+BMS_HighestTemp	0	0	4.33
+BMS_HighestTempID	0	0	4.33
+BMS_LowCellVoltage	0	0	4.33
+BMS_LowCellVoltageID	0	0	4.33
+BMS_HighCellVoltage	0	0	4.33
+BMS_HighCellVoltageID	0	0	4.33
+BMS_PowerInputVoltage	0	0	4.33
+BMS_DTCStatus1	0	0	4.33
+BMS_DTCStatus2	0	0	4.33
+LVBatt_Temp	0	0	4.33
+LVBatt_Current	0	0	4.33
+LVBatt_Voltage	0	0	4.33
+RPi_Temp	0	0	4.33
+RPi_Proc_Load	0.0	0	4.33
+RPi_Disk_Space_Used	89767.890625	1	4.33
+RPi_Disk_Space_Free	153671.10546875	1	4.33
+RPi_Mem_Free	1733.98828125	0	4.33
+RPi_Mem_Used	6363.01171875	0	4.33
+RPi_Mem_Load	78.6	0	4.33
+PV_Left_Temp	0	0	4.33
+PV_Left_Pressure	0	0	4.33
+PV_Right_Temp	0	0	4.33
+PV_Right_Pressure	0	0	4.33
+Ambient_Pressure	0	0	4.33
+IMU1_X	0	0	4.33
+IMU1_Y	0	0	4.33
+IMU1_Z	0	0	4.33
+IMU2_X	0	0	4.33
+IMU2_Y	0	0	4.33
+IMU2_Z	0	0	4.33
+IMU_bad_time_elapsed	0	0	4.33
+V_bad_time_elapsed	0	0	4.33
+LST_missed_stripe_count	0	0	4.33
+LIDAR	0	0	4.33
+GUI_Conn	0	0	4.33
+LST_Left	0	0	4.33
+LST_Right	0	0	4.33
+Abort	0		4.33
+Launch	0		4.33
+HV	0		4.33
+Vent_Sol	0		4.33
+Res1_Sol	0		4.33
+Res2_Sol	0		4.33
+MC_Pump	0		4.33
+para_BBP	0		4.33
+para_max_speed	0		4.33
+para_max_accel	0		4.33
+para_max_time	0		4.33
+para_max_crawl_speed	-1		4.33
+state	1		4.33
+spacex_state	1		4.33
+total_faults	2		4.33
+throttle	0		4.33
+distance	-5.321856699999996		4.33
+speed	-1		4.33
+accel	0.0		4.33
+wheel_diameter	1.45		4.33
+Brake_Pressure	0	0	4.44
+SD_DriveStatus_ProgramMode	0	0	4.44
+SD_DriveStatus_EngineState	0	0	4.44
+SD_DriveStatus_SwitchState	0	0	4.44
+SD_ErrorStatus_ErrorCode	0	0	4.44
+SD_ErrorStatus_ErrorValue	0	0	4.44
+SD_ErrorStatus_ModeTimer	0	0	4.44
+SD_MotorData_MotorRPM	0	0	4.44
+SD_MotorData_MotorCurrent	0	0	4.44
+SD_MotorData_MotorVoltage	0	0	4.44
+SD_AnalogData_ExternalADC	0	0	4.44
+SD_AnalogData_ThrottleLevel	0	0	4.44
+SD_AnalogData_BrakePressure	0	0	4.44
+SD_HVBusData_Frequency	0	0	4.44
+SD_HVBusData_BusCurrent	0	0	4.44
+SD_HVBusData_BusVoltage	0	0	4.44
+SD_TempData_InternalTemp	0	0	4.44
+SD_TempData_KTY1Temp	0	0	4.44
+SD_TempData_KTY2Temp	0	0	4.44
+SD_IGBTTemp_LegATemp	0	0	4.44
+SD_IGBTTemp_LegBTemp	0	0	4.44
+SD_IGBTTemp_LegCTemp	0	0	4.44
+SD_AuxCurrent_Aux1Current	0	0	4.44
+SD_AuxCurrent_Aux2Current	0	0	4.44
+SD_AuxCurrent_Aux3Current	0	0	4.44
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.44
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.44
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.44
+BMS_RelayState	0	0	4.44
+BMS_PackCurrent	0	0	4.44
+BMS_PackVoltage	0	0	4.44
+BMS_PackStateOfCharge	0	0	4.44
+BMS_PackStateOfHealth	0	0	4.44
+BMS_CurrentLimitStatus	0	0	4.44
+BMS_InternalTemp	0	0	4.44
+BMS_HighestTemp	0	0	4.44
+BMS_HighestTempID	0	0	4.44
+BMS_LowCellVoltage	0	0	4.44
+BMS_LowCellVoltageID	0	0	4.44
+BMS_HighCellVoltage	0	0	4.44
+BMS_HighCellVoltageID	0	0	4.44
+BMS_PowerInputVoltage	0	0	4.44
+BMS_DTCStatus1	0	0	4.44
+BMS_DTCStatus2	0	0	4.44
+LVBatt_Temp	0	0	4.44
+LVBatt_Current	0	0	4.44
+LVBatt_Voltage	0	0	4.44
+RPi_Temp	0	0	4.44
+RPi_Proc_Load	50.0	0	4.44
+RPi_Disk_Space_Used	89767.890625	1	4.44
+RPi_Disk_Space_Free	153671.10546875	1	4.44
+RPi_Mem_Free	1735.734375	0	4.44
+RPi_Mem_Used	6361.265625	0	4.44
+RPi_Mem_Load	78.6	0	4.44
+PV_Left_Temp	0	0	4.44
+PV_Left_Pressure	0	0	4.44
+PV_Right_Temp	0	0	4.44
+PV_Right_Pressure	0	0	4.44
+Ambient_Pressure	0	0	4.44
+IMU1_X	0	0	4.44
+IMU1_Y	0	0	4.44
+IMU1_Z	0	0	4.44
+IMU2_X	0	0	4.44
+IMU2_Y	0	0	4.44
+IMU2_Z	0	0	4.44
+IMU_bad_time_elapsed	0	0	4.44
+V_bad_time_elapsed	0	0	4.44
+LST_missed_stripe_count	0	0	4.44
+LIDAR	0	0	4.44
+GUI_Conn	0	0	4.44
+LST_Left	0	0	4.44
+LST_Right	0	0	4.44
+Abort	0		4.44
+Launch	0		4.44
+HV	0		4.44
+Vent_Sol	0		4.44
+Res1_Sol	0		4.44
+Res2_Sol	0		4.44
+MC_Pump	0		4.44
+para_BBP	0		4.44
+para_max_speed	0		4.44
+para_max_accel	0		4.44
+para_max_time	0		4.44
+para_max_crawl_speed	-1		4.44
+state	1		4.44
+spacex_state	1		4.44
+total_faults	2		4.44
+throttle	0		4.44
+distance	-5.429013299999996		4.44
+speed	-1		4.44
+accel	0.0		4.44
+wheel_diameter	1.45		4.44
+Brake_Pressure	0	0	4.55
+SD_DriveStatus_ProgramMode	0	0	4.55
+SD_DriveStatus_EngineState	0	0	4.55
+SD_DriveStatus_SwitchState	0	0	4.55
+SD_ErrorStatus_ErrorCode	0	0	4.55
+SD_ErrorStatus_ErrorValue	0	0	4.55
+SD_ErrorStatus_ModeTimer	0	0	4.55
+SD_MotorData_MotorRPM	0	0	4.55
+SD_MotorData_MotorCurrent	0	0	4.55
+SD_MotorData_MotorVoltage	0	0	4.55
+SD_AnalogData_ExternalADC	0	0	4.55
+SD_AnalogData_ThrottleLevel	0	0	4.55
+SD_AnalogData_BrakePressure	0	0	4.55
+SD_HVBusData_Frequency	0	0	4.55
+SD_HVBusData_BusCurrent	0	0	4.55
+SD_HVBusData_BusVoltage	0	0	4.55
+SD_TempData_InternalTemp	0	0	4.55
+SD_TempData_KTY1Temp	0	0	4.55
+SD_TempData_KTY2Temp	0	0	4.55
+SD_IGBTTemp_LegATemp	0	0	4.55
+SD_IGBTTemp_LegBTemp	0	0	4.55
+SD_IGBTTemp_LegCTemp	0	0	4.55
+SD_AuxCurrent_Aux1Current	0	0	4.55
+SD_AuxCurrent_Aux2Current	0	0	4.55
+SD_AuxCurrent_Aux3Current	0	0	4.55
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.55
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.55
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.55
+BMS_RelayState	0	0	4.55
+BMS_PackCurrent	0	0	4.55
+BMS_PackVoltage	0	0	4.55
+BMS_PackStateOfCharge	0	0	4.55
+BMS_PackStateOfHealth	0	0	4.55
+BMS_CurrentLimitStatus	0	0	4.55
+BMS_InternalTemp	0	0	4.55
+BMS_HighestTemp	0	0	4.55
+BMS_HighestTempID	0	0	4.55
+BMS_LowCellVoltage	0	0	4.55
+BMS_LowCellVoltageID	0	0	4.55
+BMS_HighCellVoltage	0	0	4.55
+BMS_HighCellVoltageID	0	0	4.55
+BMS_PowerInputVoltage	0	0	4.55
+BMS_DTCStatus1	0	0	4.55
+BMS_DTCStatus2	0	0	4.55
+LVBatt_Temp	0	0	4.55
+LVBatt_Current	0	0	4.55
+LVBatt_Voltage	0	0	4.55
+RPi_Temp	0	0	4.55
+RPi_Proc_Load	50.0	0	4.55
+RPi_Disk_Space_Used	89767.89453125	1	4.55
+RPi_Disk_Space_Free	153671.1015625	1	4.55
+RPi_Mem_Free	1735.7734375	0	4.55
+RPi_Mem_Used	6361.2265625	0	4.55
+RPi_Mem_Load	78.6	0	4.55
+PV_Left_Temp	0	0	4.55
+PV_Left_Pressure	0	0	4.55
+PV_Right_Temp	0	0	4.55
+PV_Right_Pressure	0	0	4.55
+Ambient_Pressure	0	0	4.55
+IMU1_X	0	0	4.55
+IMU1_Y	0	0	4.55
+IMU1_Z	0	0	4.55
+IMU2_X	0	0	4.55
+IMU2_Y	0	0	4.55
+IMU2_Z	0	0	4.55
+IMU_bad_time_elapsed	0	0	4.55
+V_bad_time_elapsed	0	0	4.55
+LST_missed_stripe_count	0	0	4.55
+LIDAR	0	0	4.55
+GUI_Conn	0	0	4.55
+LST_Left	0	0	4.55
+LST_Right	0	0	4.55
+Abort	0		4.55
+Launch	0		4.55
+HV	0		4.55
+Vent_Sol	0		4.55
+Res1_Sol	0		4.55
+Res2_Sol	0		4.55
+MC_Pump	0		4.55
+para_BBP	0		4.55
+para_max_speed	0		4.55
+para_max_accel	0		4.55
+para_max_time	0		4.55
+para_max_crawl_speed	-1		4.55
+state	1		4.55
+spacex_state	1		4.55
+total_faults	2		4.55
+throttle	0		4.55
+distance	-5.539223899999996		4.55
+speed	-1		4.55
+accel	0.0		4.55
+wheel_diameter	1.45		4.55
+Brake_Pressure	0	0	4.66
+SD_DriveStatus_ProgramMode	0	0	4.66
+SD_DriveStatus_EngineState	0	0	4.66
+SD_DriveStatus_SwitchState	0	0	4.66
+SD_ErrorStatus_ErrorCode	0	0	4.66
+SD_ErrorStatus_ErrorValue	0	0	4.66
+SD_ErrorStatus_ModeTimer	0	0	4.66
+SD_MotorData_MotorRPM	0	0	4.66
+SD_MotorData_MotorCurrent	0	0	4.66
+SD_MotorData_MotorVoltage	0	0	4.66
+SD_AnalogData_ExternalADC	0	0	4.66
+SD_AnalogData_ThrottleLevel	0	0	4.66
+SD_AnalogData_BrakePressure	0	0	4.66
+SD_HVBusData_Frequency	0	0	4.66
+SD_HVBusData_BusCurrent	0	0	4.66
+SD_HVBusData_BusVoltage	0	0	4.66
+SD_TempData_InternalTemp	0	0	4.66
+SD_TempData_KTY1Temp	0	0	4.66
+SD_TempData_KTY2Temp	0	0	4.66
+SD_IGBTTemp_LegATemp	0	0	4.66
+SD_IGBTTemp_LegBTemp	0	0	4.66
+SD_IGBTTemp_LegCTemp	0	0	4.66
+SD_AuxCurrent_Aux1Current	0	0	4.66
+SD_AuxCurrent_Aux2Current	0	0	4.66
+SD_AuxCurrent_Aux3Current	0	0	4.66
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.66
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.66
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.66
+BMS_RelayState	0	0	4.66
+BMS_PackCurrent	0	0	4.66
+BMS_PackVoltage	0	0	4.66
+BMS_PackStateOfCharge	0	0	4.66
+BMS_PackStateOfHealth	0	0	4.66
+BMS_CurrentLimitStatus	0	0	4.66
+BMS_InternalTemp	0	0	4.66
+BMS_HighestTemp	0	0	4.66
+BMS_HighestTempID	0	0	4.66
+BMS_LowCellVoltage	0	0	4.66
+BMS_LowCellVoltageID	0	0	4.66
+BMS_HighCellVoltage	0	0	4.66
+BMS_HighCellVoltageID	0	0	4.66
+BMS_PowerInputVoltage	0	0	4.66
+BMS_DTCStatus1	0	0	4.66
+BMS_DTCStatus2	0	0	4.66
+LVBatt_Temp	0	0	4.66
+LVBatt_Current	0	0	4.66
+LVBatt_Voltage	0	0	4.66
+RPi_Temp	0	0	4.66
+RPi_Proc_Load	75.0	0	4.66
+RPi_Disk_Space_Used	89767.8984375	1	4.66
+RPi_Disk_Space_Free	153671.09765625	1	4.66
+RPi_Mem_Free	1735.76953125	0	4.66
+RPi_Mem_Used	6361.23046875	0	4.66
+RPi_Mem_Load	78.6	0	4.66
+PV_Left_Temp	0	0	4.66
+PV_Left_Pressure	0	0	4.66
+PV_Right_Temp	0	0	4.66
+PV_Right_Pressure	0	0	4.66
+Ambient_Pressure	0	0	4.66
+IMU1_X	0	0	4.66
+IMU1_Y	0	0	4.66
+IMU1_Z	0	0	4.66
+IMU2_X	0	0	4.66
+IMU2_Y	0	0	4.66
+IMU2_Z	0	0	4.66
+IMU_bad_time_elapsed	0	0	4.66
+V_bad_time_elapsed	0	0	4.66
+LST_missed_stripe_count	0	0	4.66
+LIDAR	0	0	4.66
+GUI_Conn	0	0	4.66
+LST_Left	0	0	4.66
+LST_Right	0	0	4.66
+Abort	0		4.66
+Launch	0		4.66
+HV	0		4.66
+Vent_Sol	0		4.66
+Res1_Sol	0		4.66
+Res2_Sol	0		4.66
+MC_Pump	0		4.66
+para_BBP	0		4.66
+para_max_speed	0		4.66
+para_max_accel	0		4.66
+para_max_time	0		4.66
+para_max_crawl_speed	-1		4.66
+state	1		4.66
+spacex_state	1		4.66
+total_faults	2		4.66
+throttle	0		4.66
+distance	-5.6466929999999955		4.66
+speed	-1		4.66
+accel	0.0		4.66
+wheel_diameter	1.45		4.66
+Brake_Pressure	0	0	4.78
+SD_DriveStatus_ProgramMode	0	0	4.78
+SD_DriveStatus_EngineState	0	0	4.78
+SD_DriveStatus_SwitchState	0	0	4.78
+SD_ErrorStatus_ErrorCode	0	0	4.78
+SD_ErrorStatus_ErrorValue	0	0	4.78
+SD_ErrorStatus_ModeTimer	0	0	4.78
+SD_MotorData_MotorRPM	0	0	4.78
+SD_MotorData_MotorCurrent	0	0	4.78
+SD_MotorData_MotorVoltage	0	0	4.78
+SD_AnalogData_ExternalADC	0	0	4.78
+SD_AnalogData_ThrottleLevel	0	0	4.78
+SD_AnalogData_BrakePressure	0	0	4.78
+SD_HVBusData_Frequency	0	0	4.78
+SD_HVBusData_BusCurrent	0	0	4.78
+SD_HVBusData_BusVoltage	0	0	4.78
+SD_TempData_InternalTemp	0	0	4.78
+SD_TempData_KTY1Temp	0	0	4.78
+SD_TempData_KTY2Temp	0	0	4.78
+SD_IGBTTemp_LegATemp	0	0	4.78
+SD_IGBTTemp_LegBTemp	0	0	4.78
+SD_IGBTTemp_LegCTemp	0	0	4.78
+SD_AuxCurrent_Aux1Current	0	0	4.78
+SD_AuxCurrent_Aux2Current	0	0	4.78
+SD_AuxCurrent_Aux3Current	0	0	4.78
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.78
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.78
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.78
+BMS_RelayState	0	0	4.78
+BMS_PackCurrent	0	0	4.78
+BMS_PackVoltage	0	0	4.78
+BMS_PackStateOfCharge	0	0	4.78
+BMS_PackStateOfHealth	0	0	4.78
+BMS_CurrentLimitStatus	0	0	4.78
+BMS_InternalTemp	0	0	4.78
+BMS_HighestTemp	0	0	4.78
+BMS_HighestTempID	0	0	4.78
+BMS_LowCellVoltage	0	0	4.78
+BMS_LowCellVoltageID	0	0	4.78
+BMS_HighCellVoltage	0	0	4.78
+BMS_HighCellVoltageID	0	0	4.78
+BMS_PowerInputVoltage	0	0	4.78
+BMS_DTCStatus1	0	0	4.78
+BMS_DTCStatus2	0	0	4.78
+LVBatt_Temp	0	0	4.78
+LVBatt_Current	0	0	4.78
+LVBatt_Voltage	0	0	4.78
+RPi_Temp	0	0	4.78
+RPi_Proc_Load	75.0	0	4.78
+RPi_Disk_Space_Used	89767.90234375	1	4.78
+RPi_Disk_Space_Free	153671.09375	1	4.78
+RPi_Mem_Free	1735.765625	0	4.78
+RPi_Mem_Used	6361.234375	0	4.78
+RPi_Mem_Load	78.6	0	4.78
+PV_Left_Temp	0	0	4.78
+PV_Left_Pressure	0	0	4.78
+PV_Right_Temp	0	0	4.78
+PV_Right_Pressure	0	0	4.78
+Ambient_Pressure	0	0	4.78
+IMU1_X	0	0	4.78
+IMU1_Y	0	0	4.78
+IMU1_Z	0	0	4.78
+IMU2_X	0	0	4.78
+IMU2_Y	0	0	4.78
+IMU2_Z	0	0	4.78
+IMU_bad_time_elapsed	0	0	4.78
+V_bad_time_elapsed	0	0	4.78
+LST_missed_stripe_count	0	0	4.78
+LIDAR	0	0	4.78
+GUI_Conn	0	0	4.78
+LST_Left	0	0	4.78
+LST_Right	0	0	4.78
+Abort	0		4.78
+Launch	0		4.78
+HV	0		4.78
+Vent_Sol	0		4.78
+Res1_Sol	0		4.78
+Res2_Sol	0		4.78
+MC_Pump	0		4.78
+para_BBP	0		4.78
+para_max_speed	0		4.78
+para_max_accel	0		4.78
+para_max_time	0		4.78
+para_max_crawl_speed	-1		4.78
+state	1		4.78
+spacex_state	1		4.78
+total_faults	2		4.78
+throttle	0		4.78
+distance	-5.749040199999996		4.78
+speed	-1		4.78
+accel	0.0		4.78
+wheel_diameter	1.45		4.78
+Brake_Pressure	0	0	4.9
+SD_DriveStatus_ProgramMode	0	0	4.9
+SD_DriveStatus_EngineState	0	0	4.9
+SD_DriveStatus_SwitchState	0	0	4.9
+SD_ErrorStatus_ErrorCode	0	0	4.9
+SD_ErrorStatus_ErrorValue	0	0	4.9
+SD_ErrorStatus_ModeTimer	0	0	4.9
+SD_MotorData_MotorRPM	0	0	4.9
+SD_MotorData_MotorCurrent	0	0	4.9
+SD_MotorData_MotorVoltage	0	0	4.9
+SD_AnalogData_ExternalADC	0	0	4.9
+SD_AnalogData_ThrottleLevel	0	0	4.9
+SD_AnalogData_BrakePressure	0	0	4.9
+SD_HVBusData_Frequency	0	0	4.9
+SD_HVBusData_BusCurrent	0	0	4.9
+SD_HVBusData_BusVoltage	0	0	4.9
+SD_TempData_InternalTemp	0	0	4.9
+SD_TempData_KTY1Temp	0	0	4.9
+SD_TempData_KTY2Temp	0	0	4.9
+SD_IGBTTemp_LegATemp	0	0	4.9
+SD_IGBTTemp_LegBTemp	0	0	4.9
+SD_IGBTTemp_LegCTemp	0	0	4.9
+SD_AuxCurrent_Aux1Current	0	0	4.9
+SD_AuxCurrent_Aux2Current	0	0	4.9
+SD_AuxCurrent_Aux3Current	0	0	4.9
+SD_PhaseVoltage_PhaseAVoltage	0	0	4.9
+SD_PhaseVoltage_PhaseBVoltage	0	0	4.9
+SD_PhaseVoltage_PhaseCVoltage	0	0	4.9
+BMS_RelayState	0	0	4.9
+BMS_PackCurrent	0	0	4.9
+BMS_PackVoltage	0	0	4.9
+BMS_PackStateOfCharge	0	0	4.9
+BMS_PackStateOfHealth	0	0	4.9
+BMS_CurrentLimitStatus	0	0	4.9
+BMS_InternalTemp	0	0	4.9
+BMS_HighestTemp	0	0	4.9
+BMS_HighestTempID	0	0	4.9
+BMS_LowCellVoltage	0	0	4.9
+BMS_LowCellVoltageID	0	0	4.9
+BMS_HighCellVoltage	0	0	4.9
+BMS_HighCellVoltageID	0	0	4.9
+BMS_PowerInputVoltage	0	0	4.9
+BMS_DTCStatus1	0	0	4.9
+BMS_DTCStatus2	0	0	4.9
+LVBatt_Temp	0	0	4.9
+LVBatt_Current	0	0	4.9
+LVBatt_Voltage	0	0	4.9
+RPi_Temp	0	0	4.9
+RPi_Proc_Load	100.0	0	4.9
+RPi_Disk_Space_Used	89767.90234375	1	4.9
+RPi_Disk_Space_Free	153671.09375	1	4.9
+RPi_Mem_Free	1735.78515625	0	4.9
+RPi_Mem_Used	6361.21484375	0	4.9
+RPi_Mem_Load	78.6	0	4.9
+PV_Left_Temp	0	0	4.9
+PV_Left_Pressure	0	0	4.9
+PV_Right_Temp	0	0	4.9
+PV_Right_Pressure	0	0	4.9
+Ambient_Pressure	0	0	4.9
+IMU1_X	0	0	4.9
+IMU1_Y	0	0	4.9
+IMU1_Z	0	0	4.9
+IMU2_X	0	0	4.9
+IMU2_Y	0	0	4.9
+IMU2_Z	0	0	4.9
+IMU_bad_time_elapsed	0	0	4.9
+V_bad_time_elapsed	0	0	4.9
+LST_missed_stripe_count	0	0	4.9
+LIDAR	0	0	4.9
+GUI_Conn	0	0	4.9
+LST_Left	0	0	4.9
+LST_Right	0	0	4.9
+Abort	0		4.9
+Launch	0		4.9
+HV	0		4.9
+Vent_Sol	0		4.9
+Res1_Sol	0		4.9
+Res2_Sol	0		4.9
+MC_Pump	0		4.9
+para_BBP	0		4.9
+para_max_speed	0		4.9
+para_max_accel	0		4.9
+para_max_time	0		4.9
+para_max_crawl_speed	-1		4.9
+state	1		4.9
+spacex_state	1		4.9
+total_faults	2		4.9
+throttle	0		4.9
+distance	-5.8762598999999955		4.9
+speed	-1		4.9
+accel	0.0		4.9
+wheel_diameter	1.45		4.9
+Brake_Pressure	0	0	5.02
+SD_DriveStatus_ProgramMode	0	0	5.02
+SD_DriveStatus_EngineState	0	0	5.02
+SD_DriveStatus_SwitchState	0	0	5.02
+SD_ErrorStatus_ErrorCode	0	0	5.02
+SD_ErrorStatus_ErrorValue	0	0	5.02
+SD_ErrorStatus_ModeTimer	0	0	5.02
+SD_MotorData_MotorRPM	0	0	5.02
+SD_MotorData_MotorCurrent	0	0	5.02
+SD_MotorData_MotorVoltage	0	0	5.02
+SD_AnalogData_ExternalADC	0	0	5.02
+SD_AnalogData_ThrottleLevel	0	0	5.02
+SD_AnalogData_BrakePressure	0	0	5.02
+SD_HVBusData_Frequency	0	0	5.02
+SD_HVBusData_BusCurrent	0	0	5.02
+SD_HVBusData_BusVoltage	0	0	5.02
+SD_TempData_InternalTemp	0	0	5.02
+SD_TempData_KTY1Temp	0	0	5.02
+SD_TempData_KTY2Temp	0	0	5.02
+SD_IGBTTemp_LegATemp	0	0	5.02
+SD_IGBTTemp_LegBTemp	0	0	5.02
+SD_IGBTTemp_LegCTemp	0	0	5.02
+SD_AuxCurrent_Aux1Current	0	0	5.02
+SD_AuxCurrent_Aux2Current	0	0	5.02
+SD_AuxCurrent_Aux3Current	0	0	5.02
+SD_PhaseVoltage_PhaseAVoltage	0	0	5.02
+SD_PhaseVoltage_PhaseBVoltage	0	0	5.02
+SD_PhaseVoltage_PhaseCVoltage	0	0	5.02
+BMS_RelayState	0	0	5.02
+BMS_PackCurrent	0	0	5.02
+BMS_PackVoltage	0	0	5.02
+BMS_PackStateOfCharge	0	0	5.02
+BMS_PackStateOfHealth	0	0	5.02
+BMS_CurrentLimitStatus	0	0	5.02
+BMS_InternalTemp	0	0	5.02
+BMS_HighestTemp	0	0	5.02
+BMS_HighestTempID	0	0	5.02
+BMS_LowCellVoltage	0	0	5.02
+BMS_LowCellVoltageID	0	0	5.02
+BMS_HighCellVoltage	0	0	5.02
+BMS_HighCellVoltageID	0	0	5.02
+BMS_PowerInputVoltage	0	0	5.02
+BMS_DTCStatus1	0	0	5.02
+BMS_DTCStatus2	0	0	5.02
+LVBatt_Temp	0	0	5.02
+LVBatt_Current	0	0	5.02
+LVBatt_Voltage	0	0	5.02
+RPi_Temp	0	0	5.02
+RPi_Proc_Load	0.0	0	5.02
+RPi_Disk_Space_Used	89767.90234375	1	5.02
+RPi_Disk_Space_Free	153671.09375	1	5.02
+RPi_Mem_Free	1734.515625	0	5.02
+RPi_Mem_Used	6362.484375	0	5.02
+RPi_Mem_Load	78.6	0	5.02
+PV_Left_Temp	0	0	5.02
+PV_Left_Pressure	0	0	5.02
+PV_Right_Temp	0	0	5.02
+PV_Right_Pressure	0	0	5.02
+Ambient_Pressure	0	0	5.02
+IMU1_X	0	0	5.02
+IMU1_Y	0	0	5.02
+IMU1_Z	0	0	5.02
+IMU2_X	0	0	5.02
+IMU2_Y	0	0	5.02
+IMU2_Z	0	0	5.02
+IMU_bad_time_elapsed	0	0	5.02
+V_bad_time_elapsed	0	0	5.02
+LST_missed_stripe_count	0	0	5.02
+LIDAR	0	0	5.02
+GUI_Conn	0	0	5.02
+LST_Left	0	0	5.02
+LST_Right	0	0	5.02
+Abort	0		5.02
+Launch	0		5.02
+HV	0		5.02
+Vent_Sol	0		5.02
+Res1_Sol	0		5.02
+Res2_Sol	0		5.02
+MC_Pump	0		5.02
+para_BBP	0		5.02
+para_max_speed	0		5.02
+para_max_accel	0		5.02
+para_max_time	0		5.02
+para_max_crawl_speed	-1		5.02
+state	1		5.02
+spacex_state	1		5.02
+total_faults	2		5.02
+throttle	0		5.02
+distance	-6.002977299999996		5.02
+speed	-1		5.02
+accel	0.0		5.02
+wheel_diameter	1.45		5.02
+Brake_Pressure	0	0	5.13
+SD_DriveStatus_ProgramMode	0	0	5.13
+SD_DriveStatus_EngineState	0	0	5.13
+SD_DriveStatus_SwitchState	0	0	5.13
+SD_ErrorStatus_ErrorCode	0	0	5.13
+SD_ErrorStatus_ErrorValue	0	0	5.13
+SD_ErrorStatus_ModeTimer	0	0	5.13
+SD_MotorData_MotorRPM	0	0	5.13
+SD_MotorData_MotorCurrent	0	0	5.13
+SD_MotorData_MotorVoltage	0	0	5.13
+SD_AnalogData_ExternalADC	0	0	5.13
+SD_AnalogData_ThrottleLevel	0	0	5.13
+SD_AnalogData_BrakePressure	0	0	5.13
+SD_HVBusData_Frequency	0	0	5.13
+SD_HVBusData_BusCurrent	0	0	5.13
+SD_HVBusData_BusVoltage	0	0	5.13
+SD_TempData_InternalTemp	0	0	5.13
+SD_TempData_KTY1Temp	0	0	5.13
+SD_TempData_KTY2Temp	0	0	5.13
+SD_IGBTTemp_LegATemp	0	0	5.13
+SD_IGBTTemp_LegBTemp	0	0	5.13
+SD_IGBTTemp_LegCTemp	0	0	5.13
+SD_AuxCurrent_Aux1Current	0	0	5.13
+SD_AuxCurrent_Aux2Current	0	0	5.13
+SD_AuxCurrent_Aux3Current	0	0	5.13
+SD_PhaseVoltage_PhaseAVoltage	0	0	5.13
+SD_PhaseVoltage_PhaseBVoltage	0	0	5.13
+SD_PhaseVoltage_PhaseCVoltage	0	0	5.13
+BMS_RelayState	0	0	5.13
+BMS_PackCurrent	0	0	5.13
+BMS_PackVoltage	0	0	5.13
+BMS_PackStateOfCharge	0	0	5.13
+BMS_PackStateOfHealth	0	0	5.13
+BMS_CurrentLimitStatus	0	0	5.13
+BMS_InternalTemp	0	0	5.13
+BMS_HighestTemp	0	0	5.13
+BMS_HighestTempID	0	0	5.13
+BMS_LowCellVoltage	0	0	5.13
+BMS_LowCellVoltageID	0	0	5.13
+BMS_HighCellVoltage	0	0	5.13
+BMS_HighCellVoltageID	0	0	5.13
+BMS_PowerInputVoltage	0	0	5.13
+BMS_DTCStatus1	0	0	5.13
+BMS_DTCStatus2	0	0	5.13
+LVBatt_Temp	0	0	5.13
+LVBatt_Current	0	0	5.13
+LVBatt_Voltage	0	0	5.13
+RPi_Temp	0	0	5.13
+RPi_Proc_Load	75.0	0	5.13
+RPi_Disk_Space_Used	89767.90625	1	5.13
+RPi_Disk_Space_Free	153671.08984375	1	5.13
+RPi_Mem_Free	1734.5078125	0	5.13
+RPi_Mem_Used	6362.4921875	0	5.13
+RPi_Mem_Load	78.6	0	5.13
+PV_Left_Temp	0	0	5.13
+PV_Left_Pressure	0	0	5.13
+PV_Right_Temp	0	0	5.13
+PV_Right_Pressure	0	0	5.13
+Ambient_Pressure	0	0	5.13
+IMU1_X	0	0	5.13
+IMU1_Y	0	0	5.13
+IMU1_Z	0	0	5.13
+IMU2_X	0	0	5.13
+IMU2_Y	0	0	5.13
+IMU2_Z	0	0	5.13
+IMU_bad_time_elapsed	0	0	5.13
+V_bad_time_elapsed	0	0	5.13
+LST_missed_stripe_count	0	0	5.13
+LIDAR	0	0	5.13
+GUI_Conn	0	0	5.13
+LST_Left	0	0	5.13
+LST_Right	0	0	5.13
+Abort	0		5.13
+Launch	0		5.13
+HV	0		5.13
+Vent_Sol	0		5.13
+Res1_Sol	0		5.13
+Res2_Sol	0		5.13
+MC_Pump	0		5.13
+para_BBP	0		5.13
+para_max_speed	0		5.13
+para_max_accel	0		5.13
+para_max_time	0		5.13
+para_max_crawl_speed	-1		5.13
+state	1		5.13
+spacex_state	1		5.13
+total_faults	2		5.13
+throttle	0		5.13
+distance	-6.115578899999996		5.13
+speed	-1		5.13
+accel	0.0		5.13
+wheel_diameter	1.45		5.13
+Brake_Pressure	0	0	5.24
+SD_DriveStatus_ProgramMode	0	0	5.24
+SD_DriveStatus_EngineState	0	0	5.24
+SD_DriveStatus_SwitchState	0	0	5.24
+SD_ErrorStatus_ErrorCode	0	0	5.24
+SD_ErrorStatus_ErrorValue	0	0	5.24
+SD_ErrorStatus_ModeTimer	0	0	5.24
+SD_MotorData_MotorRPM	0	0	5.24
+SD_MotorData_MotorCurrent	0	0	5.24
+SD_MotorData_MotorVoltage	0	0	5.24
+SD_AnalogData_ExternalADC	0	0	5.24
+SD_AnalogData_ThrottleLevel	0	0	5.24
+SD_AnalogData_BrakePressure	0	0	5.24
+SD_HVBusData_Frequency	0	0	5.24
+SD_HVBusData_BusCurrent	0	0	5.24
+SD_HVBusData_BusVoltage	0	0	5.24
+SD_TempData_InternalTemp	0	0	5.24
+SD_TempData_KTY1Temp	0	0	5.24
+SD_TempData_KTY2Temp	0	0	5.24
+SD_IGBTTemp_LegATemp	0	0	5.24
+SD_IGBTTemp_LegBTemp	0	0	5.24
+SD_IGBTTemp_LegCTemp	0	0	5.24
+SD_AuxCurrent_Aux1Current	0	0	5.24
+SD_AuxCurrent_Aux2Current	0	0	5.24
+SD_AuxCurrent_Aux3Current	0	0	5.24
+SD_PhaseVoltage_PhaseAVoltage	0	0	5.24
+SD_PhaseVoltage_PhaseBVoltage	0	0	5.24
+SD_PhaseVoltage_PhaseCVoltage	0	0	5.24
+BMS_RelayState	0	0	5.24
+BMS_PackCurrent	0	0	5.24
+BMS_PackVoltage	0	0	5.24
+BMS_PackStateOfCharge	0	0	5.24
+BMS_PackStateOfHealth	0	0	5.24
+BMS_CurrentLimitStatus	0	0	5.24
+BMS_InternalTemp	0	0	5.24
+BMS_HighestTemp	0	0	5.24
+BMS_HighestTempID	0	0	5.24
+BMS_LowCellVoltage	0	0	5.24
+BMS_LowCellVoltageID	0	0	5.24
+BMS_HighCellVoltage	0	0	5.24
+BMS_HighCellVoltageID	0	0	5.24
+BMS_PowerInputVoltage	0	0	5.24
+BMS_DTCStatus1	0	0	5.24
+BMS_DTCStatus2	0	0	5.24
+LVBatt_Temp	0	0	5.24
+LVBatt_Current	0	0	5.24
+LVBatt_Voltage	0	0	5.24
+RPi_Temp	0	0	5.24
+RPi_Proc_Load	100.0	0	5.24
+RPi_Disk_Space_Used	89767.91015625	1	5.24
+RPi_Disk_Space_Free	153671.0859375	1	5.24
+RPi_Mem_Free	1734.31640625	0	5.24
+RPi_Mem_Used	6362.68359375	0	5.24
+RPi_Mem_Load	78.6	0	5.24
+PV_Left_Temp	0	0	5.24
+PV_Left_Pressure	0	0	5.24
+PV_Right_Temp	0	0	5.24
+PV_Right_Pressure	0	0	5.24
+Ambient_Pressure	0	0	5.24
+IMU1_X	0	0	5.24
+IMU1_Y	0	0	5.24
+IMU1_Z	0	0	5.24
+IMU2_X	0	0	5.24
+IMU2_Y	0	0	5.24
+IMU2_Z	0	0	5.24
+IMU_bad_time_elapsed	0	0	5.24
+V_bad_time_elapsed	0	0	5.24
+LST_missed_stripe_count	0	0	5.24
+LIDAR	0	0	5.24
+GUI_Conn	0	0	5.24
+LST_Left	0	0	5.24
+LST_Right	0	0	5.24
+Abort	0		5.24
+Launch	0		5.24
+HV	0		5.24
+Vent_Sol	0		5.24
+Res1_Sol	0		5.24
+Res2_Sol	0		5.24
+MC_Pump	0		5.24
+para_BBP	0		5.24
+para_max_speed	0		5.24
+para_max_accel	0		5.24
+para_max_time	0		5.24
+para_max_crawl_speed	-1		5.24
+state	1		5.24
+spacex_state	1		5.24
+total_faults	2		5.24
+throttle	0		5.24
+distance	-6.227513199999996		5.24
+speed	-1		5.24
+accel	0.0		5.24
+wheel_diameter	1.45		5.24
