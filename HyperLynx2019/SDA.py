@@ -734,7 +734,7 @@ def do_commands():
 
         ### POD WILL LAUNCH WITH THIS SECTION ###
         # Launch pod ONLY if conditions in run_state() for spacex_state are met
-        if PodStatus.cmd_int['Launch'] == 1 and PodStatus.spacex_state == 2:
+        if PodStatus.cmd_ext['Launch'] == 1 and PodStatus.spacex_state == 2:
             transition()
         elif PodStatus.cmd_ext['Launch'] == 1 and PodStatus.spacex_state != 2:
             print("Pod not configured for launch, resetting Launch command to 0.")
