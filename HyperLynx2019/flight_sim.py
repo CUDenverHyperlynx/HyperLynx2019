@@ -29,8 +29,8 @@ def sim(PodStatus):
     if PodStatus.Brakes is False:
 
         # Increment accelerometer data
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
-        PodStatus.sensor_data['IMU2_Z'] = PodStatus.throttle * 0.7 + random.randint(-10,10)*10**-2
+        PodStatus.sensor_data['IMU1_Z'] = PodStatus.throttle * PodStatus.para_max_accel + random.randint(-10,10)*10**-2
+        PodStatus.sensor_data['IMU2_Z'] = PodStatus.throttle * PodStatus.para_max_accel + random.randint(-10,10)*10**-2
         print(str(PodStatus.sensor_data['IMU1_Z']))
         print(str(PodStatus.sensor_data['IMU2_Z']))
 

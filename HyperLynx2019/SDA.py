@@ -275,13 +275,13 @@ def poll_sensors():
         PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
         PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
         tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
-        PodStatus.sensor_data['IMU1_X'] = tempAccel1[0]
-        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[1]
-        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_X'] = tempAccel1[1]
+        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
         tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
-        PodStatus.sensor_data['IMU2_X'] = tempAccel2[0]
-        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[1]
-        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[2]
+        PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
+        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
+        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
         flight_sim.sim(PodStatus)
@@ -392,9 +392,11 @@ def sensor_fusion():
     good_IMUs = []  # reset good_IMUs to empty set
     if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
         # Add mean of IMU values to
+        print('Adding to Q')
         PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
                                         numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
                                                     PodStatus.sensor_filter['IMU2_Z']['val']]))
+
     else:
         PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
 
@@ -1062,7 +1064,9 @@ def write_file():
                     + 'throttle' + '\t' + str(PodStatus.throttle) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'D' + '\t' + str(PodStatus.true_data['D']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'V' + '\t' + str(PodStatus.true_data['V']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'A_q' + '\t' + str(PodStatus.true_data['A']['q']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
