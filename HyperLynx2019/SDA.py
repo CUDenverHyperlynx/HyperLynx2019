@@ -385,7 +385,7 @@ def filter_data():
                     PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)]
                     # set the filtered value to the mean of the new queue
                 else:
-                    print('Did not add value to q: ' + str(PodStatus.sensor_data[str(key)]) + str(PodStatus.MET))
+                    print('Did not add ' + str(key) + ' to q: ' + str(PodStatus.sensor_data[str(key)]) + str(PodStatus.MET))
                     print('Current std dev: ' + str(PodStatus.sensor_filter[str(key)]['std_dev']))
             PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
