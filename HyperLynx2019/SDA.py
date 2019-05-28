@@ -375,7 +375,7 @@ def filter_data():
                 PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
                 # if new value is inside range of std_dev (hence valid), then add to q
-                if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['mean']) <= \
+                if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)]) <= \
                         PodStatus.sensor_filter[str(key)]['std_dev']:
 
                     # shift q values over

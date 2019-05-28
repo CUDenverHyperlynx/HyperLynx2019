@@ -37,7 +37,7 @@ def sim(PodStatus):
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
                                                          PodStatus.true_data['A']['val'] * PodStatus.poll_interval + \
-                                                         random.randint(-10,10)*10**-2) * 60 / PodStatus.wheel_circum
+                                                         random.randint(-1,1)*10**-2) * 60 / PodStatus.wheel_circum
 
         # Increment stripe count
             # Ensure stripe count only incremented when:
