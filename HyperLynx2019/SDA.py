@@ -590,7 +590,7 @@ def rec_data():
         # If state = 1, then load all cmd_ext{} and para_ into the PodStatus dicts.
         # If state != 1, then *only* load the cmd_ext['Abort'] value to the PodStatus.cmd_int['Abort'] var.
         # Have a running clock for GUI; if loss of connection > 2 seconds, will abort
-        
+
         pass
     ###DEBUG CONSOLE GUI###
     if gui == '1':
@@ -745,18 +745,18 @@ def do_commands():
 
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
-    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol']);
-    PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol']);
-    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol']);
+    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol'])
+    PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol'])
+    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol'])
 
     # Coolant Pump
-    PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump']);
-    if PodStatus.cmd_int['MC_Pump'] == 1: PodStatus.MC_Pump = True;
+    PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump'])
+    if PodStatus.cmd_int['MC_Pump'] == 1: PodStatus.MC_Pump = True
     else: PodStatus.MC_Pump = False
 
     # HV Contactors (and red LED by default)
-    PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV']);
-    PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV']);
+    PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV'])
+    PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV'])
     if PodStatus.cmd_int['HV'] == 1: PodStatus.HV = True
     else: PodStatus.HV = False
 
