@@ -382,7 +382,7 @@ def filter_data():
                     # add new value to end of queue
                     PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)]
                     # set the filtered value to the mean of the new queue
-                    PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
+            PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
 def sensor_fusion():
     """ Combines various filtered sensor data to a common solution."""
@@ -1066,7 +1066,9 @@ def write_file():
                     + 'V' + '\t' + str(PodStatus.true_data['V']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_q' + '\t' + str(PodStatus.true_data['A']['q']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
