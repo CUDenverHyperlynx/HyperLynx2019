@@ -29,8 +29,8 @@ def sim(PodStatus):
     if PodStatus.Brakes is False:
 
         # Increment accelerometer data
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.throttle * PodStatus.para_max_accel + random.randint(-10,10)*10**-2
-        PodStatus.sensor_data['IMU2_Z'] = PodStatus.throttle * PodStatus.para_max_accel + random.randint(-10,10)*10**-2
+        PodStatus.sensor_data['IMU1_Z'] = PodStatus.throttle * PodStatus.para_max_accel + random.randint(-1,1)*10**-2
+        PodStatus.sensor_data['IMU2_Z'] = PodStatus.throttle * PodStatus.para_max_accel + random.randint(-1,1)*10**-2
         print(str(PodStatus.sensor_data['IMU1_Z']))
         print(str(PodStatus.sensor_data['IMU2_Z']))
 
@@ -51,13 +51,13 @@ def sim(PodStatus):
     if PodStatus.Brakes is True:
 
         # Increment accelerometer data
-        PodStatus.sensor_data['IMU1_Z'] = PodStatus.throttle * 0.7 - random.randint(-10,10)*10**-2
-        PodStatus.sensor_data['IMU2_Z'] = PodStatus.throttle * 0.7 - random.randint(-10,10)*10**-2
+        PodStatus.sensor_data['IMU1_Z'] = PodStatus.throttle * 0.7 - random.randint(-1,1)*10**-2
+        PodStatus.sensor_data['IMU2_Z'] = PodStatus.throttle * 0.7 - random.randint(-1,1)*10**-2
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
                                                          PodStatus.true_data['A']['val'] * PodStatus.poll_interval + \
-                                                         random.randint(-10,10)*10**-2) * 60 / PodStatus.wheel_circum
+                                                         random.randint(-1,1)*10**-2) * 60 / PodStatus.wheel_circum
 
         if ((PodStatus.true_data['D']['val']/100 - PodStatus.stripe_count) > 25) and \
                 (abs(PodStatus.true_data['D']['val']/100 - numpy.around(PodStatus.true_data['D']['val']/100)) < 0.05):

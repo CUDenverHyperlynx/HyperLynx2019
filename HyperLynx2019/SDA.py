@@ -371,7 +371,7 @@ def filter_data():
                 PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
                                                                       PodStatus.sensor_data[str(key)])
             else:
-                PodStatus.sensor_filter[str(key)]['std_dev'] = numpy.std(PodStatus.sensor_filter[str(key)]['q'])
+                PodStatus.sensor_filter[str(key)]['std_dev'] = 3*numpy.std(PodStatus.sensor_filter[str(key)]['q'])
                 PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
                 # if new value is inside range of std_dev (hence valid), then add to q
