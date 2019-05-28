@@ -1089,7 +1089,7 @@ if __name__ == "__main__":
     print('Which GUI should I use?\n')
     print('\t1\tConsole')
     print('\t2\tExternal')
-    while (gui!= '1' or gui!= '2'):
+    while (gui!= '1' and gui!= '2'):
         gui = str(input('Enter choice: '))
 
 
