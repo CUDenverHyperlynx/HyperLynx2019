@@ -632,7 +632,7 @@ def rec_data():
                   "\t(Q) Quit\n"
                   "\t(FS) Activate Flight Sim\n"
                   "\t\tType line number or letter command to change values.\n")
-            print(str('Brake Pressure: ' + PodStatus.sensor_data['Brake_Pressure']))
+            print(str('Brake Pressure: ' + str(PodStatus.sensor_data['Brake_Pressure'])))
             a = input('Enter choice: ')
             if a == '2':
                 if PodStatus.HV is False:
