@@ -1,4 +1,4 @@
-clear all; close all; clc;
+clear all; clc;
 
 %% Load logfile into array
 file_name = input('Filename: ', 's');

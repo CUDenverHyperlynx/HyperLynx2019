@@ -397,7 +397,7 @@ def sensor_fusion():
 
     PodStatus.true_data['A']['val'] = numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
                                                   PodStatus.sensor_filter['IMU2_Z']['val']])
-    
+
     # good_IMUs = []  # reset good_IMUs to empty set
     # if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
     #     # Add mean of IMU values to
