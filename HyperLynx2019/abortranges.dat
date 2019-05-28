@@ -64,8 +64,8 @@ IMU1_Z	-0.05	0.05	0	0	0	0	0	0	0	0	0
 IMU2_X	-0.05	0.05	0	0	0	0	0	0	0	0	0	
 IMU2_Y	-0.05	0.05	0	0	0	0	0	0	0	0	0	
 IMU2_Z	-0.05	0.05	0	0	0	0	0	0	0	0	0	
-IMU_bad_time_elapsed	-1	2	0	0	1	0	0	0	0	0	0	
-V_bad_time_elapsed	-1	2	0	0	1	0	0	1	0	0	0	
+IMU_bad_time_elapsed	-1	2	0	0	1	0	0	0	0	1	0	
+V_bad_time_elapsed	-1	2	0	0	1	0	0	1	0	1	0	
 D_diff	-1	220	0	0	1	0	0	1	0	0	0	
 LIDAR	0	999	0	0	0	0	0	1	0	1	0	
 GUI_Conn_time	0	2	0	0	0	0	0	0	0	0	0	
