@@ -126,7 +126,7 @@ class Status():
         self.spacex_lastsend = 0
 
         # I2C init
-        self.IMU_init_range = 0.01
+        self.IMU_init_range = 0.05
         self.sensor_poll = Hyperlynx_ECS.HyperlynxECS()
         self.sensor_poll.initializeSensors()
         self.sensor_poll.initializeIO()
@@ -239,7 +239,7 @@ def init():
         PodStatus.init = True
     else:
         print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
-        print('IMU2_Z: ' + str(PodStatus.sensor_Data['IMU2_Z']))
+        print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
         print("IMU init failed.")
 
     PodStatus.create_log()
