@@ -600,7 +600,7 @@ def rec_data():
         PodStatus.para_BBP = 3000
         PodStatus.para_max_speed = 200
         PodStatus.para_max_accel = 0.7
-        PodStatus.para_max_time = 12
+        PodStatus.para_max_time = 7
         PodStatus.para_max_crawl_speed = 20
         PodStatus.para_max_tube_length = 4150
 
