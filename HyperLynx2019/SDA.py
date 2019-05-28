@@ -749,12 +749,7 @@ def do_commands():
             PodStatus.MC_Pump = False
 
         # HV Contactors (and red LED by default)
-        PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_ext['HV'])
-        PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_ext['HV'])
-        if PodStatus.cmd_ext['HV'] == 1:
-            PodStatus.HV = True
-        else:
-            PodStatus.HV = False
+        PodStatus.cmd_int['HV'] = PodStatus.cmd_ext['HV']
 
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
