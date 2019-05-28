@@ -1065,7 +1065,6 @@ def write_file():
                     + 'D' + '\t' + str(PodStatus.true_data['D']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'V' + '\t' + str(PodStatus.true_data['V']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'A_q' + '\t' + str(PodStatus.true_data['A']['q']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
 
