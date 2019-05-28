@@ -238,8 +238,8 @@ def init():
         print("Both IMUs valid.")
         PodStatus.init = True
     else:
-        print('IMU1_Z: ' + PodStatus.sensor_data['IMU1_Z'])
-        print('IMU2_Z: ' + PodStatus.sensor_Data['IMU2_Z'])
+        print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
+        print('IMU2_Z: ' + str(PodStatus.sensor_Data['IMU2_Z']))
         print("IMU init failed.")
 
     PodStatus.create_log()
