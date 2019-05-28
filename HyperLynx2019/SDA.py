@@ -662,12 +662,10 @@ def rec_data():
                 else:
                     PodStatus.commands['Res2_Sol'] = 1
             elif a == '6':
-                if PodStatus.commands['MC_Pump'] == 0:
-                    PodStatus.commands['MC_Pump'] = 1
-                    PodStatus.MC_Pump = 1
+                if PodStatus.MC_Pump == 0:
+                    PodStatus.cmd_ext['MC_Pump'] = 1
                 else:
-                    PodStatus.commands['MC_Pump'] = 0
-                    PodStatus.MC_Pump = 0
+                    PodStatus.cmd_ext['MC_Pump'] = 0
             elif a == '7':
                 PodStatus.para_BBP = float(input("Enter BBP Distance in feet: "))
             elif a == '8':
@@ -743,16 +741,28 @@ def do_commands():
             PodStatus.cmd_ext['Launch'] = 0
             PodStatus.cmd_int['Launch'] = 0
 
+        # Coolant Pump
+        PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump'])
+        if PodStatus.cmd_ext['MC_Pump'] == 1:
+            PodStatus.MC_Pump = True
+        else:
+            PodStatus.MC_Pump = False
+
+        # HV Contactors (and red LED by default)
+        PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_ext['HV'])
+        PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_ext['HV'])
+        if PodStatus.cmd_ext['HV'] == 1:
+            PodStatus.HV = True
+        else:
+            PodStatus.HV = False
+
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
     PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol'])
     PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol'])
     PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol'])
 
-    # Coolant Pump
-    PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump'])
-    if PodStatus.cmd_int['MC_Pump'] == 1: PodStatus.MC_Pump = True
-    else: PodStatus.MC_Pump = False
+
 
     # HV Contactors (and red LED by default)
     PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV'])
