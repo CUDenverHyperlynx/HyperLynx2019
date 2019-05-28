@@ -578,6 +578,8 @@ def eval_abort():
 
     if PodStatus.Abort is True:
         PodStatus.cmd_int['Abort'] = 1
+
+
         abort()
 
 def rec_data():
