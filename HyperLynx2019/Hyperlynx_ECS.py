@@ -114,7 +114,6 @@ class HyperlynxECS():
 		except IOError:
 			print("Connection error with TCA Multiplexer")
 			self.TCA_status = False
-			return 0;
 		try:
 			self.Lidar = Lidar.Lidar_Lite()								#CREATE OBJECT FOR LIDAR LITE V3
 			self.bus.write_quick(self.LID_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
@@ -122,7 +121,6 @@ class HyperlynxECS():
 			self.LID_status = True
 		except IOError:
 			print("Connection error with Lidar")						#PRINT ERROR IF UNABLE TO CONNECT
-			return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
