@@ -394,63 +394,68 @@ def sensor_fusion():
 
     ### BEGIN ACCELERATION FUSION
     # If queue is not full, fill queue
-    good_IMUs = []  # reset good_IMUs to empty set
-    if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
-        # Add mean of IMU values to
-        print('Adding to Q')
-        PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
-                                        numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
-                                                    PodStatus.sensor_filter['IMU2_Z']['val']]))
 
-    else:
-        PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
-        numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
-        numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
-        # # determine valid IMU data
-        # # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
-        # if abs(PodStatus.sensor_filter['IMU1_Z']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
-        #         3 * PodStatus.true_data['A']['std_dev']:
-        #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
-        # else:
-        #     print('Fusion: IMUZ_1 Data Bad\n')
-        #     print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU1_Z']['val'])) + '\n')
-        #     print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
-        #     print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
-        # if abs(PodStatus.sensor_filter['IMU2_Z']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
-        #         3 * PodStatus.true_data['A']['std_dev']:
-        #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
-        # else:
-        #     print('Fusion: IMUZ_2 Data Bad\n')
-        #     print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU2_Z']['val'])) + '\n')
-        #     print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
-        #     print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
-
-        # if good_IMUs is not empty set, take mean value and add to true_data q
-        if good_IMUs:
-            print("Good data found for A")
-            # reset IMU_bad_time timer
-            PodStatus.IMU_bad_time_elapsed = 0
-            PodStatus.IMU_bad_time = None
-
-            # Set true value to mean of good_IMUs array
-            PodStatus.true_data['A']['val'] = numpy.mean(good_IMUs)
-
-            # add valid data to true_data q
-            # shift q values over
-            for i in range(0, (len(PodStatus.true_data['A']['q']) - 1)):
-                PodStatus.true_data['A']['q'][i] = PodStatus.true_data['A']['q'][i + 1]
-            # add new value to end of queue
-            PodStatus.true_data['A']['q'][(PodStatus.filter_length - 1)] = PodStatus.true_data['A']['val']
-
-        # if no good IMU data, start or progress the bad IMU data timer
-        else:
-            if not PodStatus.IMU_bad_time:
-                PodStatus.IMU_bad_time = clock()
-                print("Bad IMU data, starting 2 second clock at " + str(PodStatus.IMU_bad_time))
-
-            else:
-                PodStatus.IMU_bad_time_elapsed = clock()-PodStatus.IMU_bad_time
-                print("Bad IMU data, elapsed time: " + str(PodStatus.IMU_bad_time_elapsed))
+    PodStatus.true_data['A']['val'] = numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
+                                                  PodStatus.sensor_filter['IMU2_Z']['val']])
+    
+    # good_IMUs = []  # reset good_IMUs to empty set
+    # if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
+    #     # Add mean of IMU values to
+    #     print('Adding to Q')
+    #     PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
+    #                                     numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
+    #                                                 PodStatus.sensor_filter['IMU2_Z']['val']]))
+    #
+    # else:
+    #     PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
+    #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
+    #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
+    #
+    #     # # determine valid IMU data
+    #     # # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
+    #     # if abs(PodStatus.sensor_filter['IMU1_Z']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
+    #     #         3 * PodStatus.true_data['A']['std_dev']:
+    #     #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
+    #     # else:
+    #     #     print('Fusion: IMUZ_1 Data Bad\n')
+    #     #     print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU1_Z']['val'])) + '\n')
+    #     #     print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
+    #     #     print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
+    #     # if abs(PodStatus.sensor_filter['IMU2_Z']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
+    #     #         3 * PodStatus.true_data['A']['std_dev']:
+    #     #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
+    #     # else:
+    #     #     print('Fusion: IMUZ_2 Data Bad\n')
+    #     #     print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU2_Z']['val'])) + '\n')
+    #     #     print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
+    #     #     print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
+    #
+    #     # if good_IMUs is not empty set, take mean value and add to true_data q
+    #     if good_IMUs:
+    #         print("Good data found for A")
+    #         # reset IMU_bad_time timer
+    #         PodStatus.IMU_bad_time_elapsed = 0
+    #         PodStatus.IMU_bad_time = None
+    #
+    #         # Set true value to mean of good_IMUs array
+    #         PodStatus.true_data['A']['val'] = numpy.mean(good_IMUs)
+    #
+    #         # add valid data to true_data q
+    #         # shift q values over
+    #         for i in range(0, (len(PodStatus.true_data['A']['q']) - 1)):
+    #             PodStatus.true_data['A']['q'][i] = PodStatus.true_data['A']['q'][i + 1]
+    #         # add new value to end of queue
+    #         PodStatus.true_data['A']['q'][(PodStatus.filter_length - 1)] = PodStatus.true_data['A']['val']
+    #
+    #     # if no good IMU data, start or progress the bad IMU data timer
+    #     else:
+    #         if not PodStatus.IMU_bad_time:
+    #             PodStatus.IMU_bad_time = clock()
+    #             print("Bad IMU data, starting 2 second clock at " + str(PodStatus.IMU_bad_time))
+    #
+    #         else:
+    #             PodStatus.IMU_bad_time_elapsed = clock()-PodStatus.IMU_bad_time
+    #             print("Bad IMU data, elapsed time: " + str(PodStatus.IMU_bad_time_elapsed))
 
 
     ### END ACCELERATION FUSION
