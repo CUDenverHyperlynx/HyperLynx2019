@@ -588,12 +588,7 @@ def eval_abort():
         print("ABORT TRIGGERS FOUND: \t" + str(int(PodStatus.total_triggers)))
         print("FLAGGING ABORT == TRUE")
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
-
-    if PodStatus.Abort is True:
         PodStatus.cmd_int['Abort'] = 1
-
-
-        abort()
 
 def rec_data():
     ###__ACTUAL GUI__###
@@ -778,6 +773,9 @@ def do_commands():
     if PodStatus.cmd_int['HV'] == 1: PodStatus.HV = True
     else: PodStatus.HV = False
 
+    # Abort Command
+    if PodStatus.Abort == True:
+        abort()
 
     # Isolation green LED   DEBUG NEED VAR DATA FOR BMS
     # if PodStatus.sensor_data['BMS_something'] < 4.5:
