@@ -408,16 +408,21 @@ def sensor_fusion():
         # determine valid IMU data
         # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
         if abs(PodStatus.sensor_filter['IMU1_Z']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
-                2 * PodStatus.true_data['A']['std_dev']:
+                3 * PodStatus.true_data['A']['std_dev']:
             numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
         else:
-            print('IMUZ_1 Data Bad\n')
+            print('Fusion: IMUZ_1 Data Bad\n')
             print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU1_Z']['val'])) + '\n')
             print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
-            print('A two times STD ' + str(2 * PodStatus.true_data['A']['std_dev']) + '\n')
+            print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
         if abs(PodStatus.sensor_filter['IMU2_Z']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
-                2 * PodStatus.true_data['A']['std_dev']:
+                3 * PodStatus.true_data['A']['std_dev']:
             numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
+        else:
+            print('Fusion: IMUZ_2 Data Bad\n')
+            print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU2_Z']['val'])) + '\n')
+            print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
+            print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
 
         # if good_IMUs is not empty set, take mean value and add to true_data q
         if good_IMUs:
