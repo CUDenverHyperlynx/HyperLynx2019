@@ -233,8 +233,8 @@ def init():
     print("Checking IMUs")
     poll_sensors()
     filter_data()
-    if abs(PodStatus.sensor_filter['IMU1_X']['val']) < PodStatus.IMU_init_range and \
-            abs(PodStatus.sensor_filter['IMU2_X']['val']) < PodStatus.IMU_init_range:
+    if abs(PodStatus.sensor_filter['IMU1_Z']['val']) < PodStatus.IMU_init_range and \
+            abs(PodStatus.sensor_filter['IMU2_Z']['val']) < PodStatus.IMU_init_range:
         print("Both IMUs valid.")
         PodStatus.init = True
     else:
@@ -1080,14 +1080,13 @@ if __name__ == "__main__":
     if PodStatus.init is False:
         PodStatus.Quit = True
         print("Failed to init.")
-
+    gui = '0'
     print('Which GUI should I use?\n')
     print('\t1\tConsole')
     print('\t2\tExternal')
-    gui = str(input('Enter choice: '))
-    if gui != '1' and gui != '2':
-         print('Invalid choice, quitting')
-         PodStatus.Quit = True
+    while (gui!= '1' or gui!= '2'):
+        gui = str(input('Enter choice: '))
+
 
     while PodStatus.Quit is False:
         write_file()
