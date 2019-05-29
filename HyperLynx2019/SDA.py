@@ -454,7 +454,7 @@ def sensor_fusion():
     ### END ACCELERATION FUSION
 
     ### BEGIN VELOCITY FUSION
-    PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM']['val'] *  \
+    PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM']['val'] * \
                                       PodStatus.wheel_circum / 60
     # If queue is not full, fill queue
     # if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
