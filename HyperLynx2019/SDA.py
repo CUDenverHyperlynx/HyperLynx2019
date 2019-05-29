@@ -894,6 +894,7 @@ def run_state():
     elif PodStatus.state == 5:
         PodStatus.sensor_filter['IMU1_Z']['q'] = []
         PodStatus.sensor_filter['IMU2_Z']['q'] = []
+        PodStatus.sensor_filter['Brake_Pressure']['q'] = []
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
 
@@ -945,6 +946,7 @@ def run_state():
         PodStatus.spacex_state = 6
         PodStatus.sensor_filter['IMU1_Z']['q'] = []
         PodStatus.sensor_filter['IMU2_Z']['q'] = []
+        PodStatus.sensor_filter['Brake_Pressure']['q'] = []
 
         # ACCEL UP TO MAX G within 2%
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel)\
