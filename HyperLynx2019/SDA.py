@@ -142,7 +142,8 @@ class Status():
         # init True values for Distance, Velocity, and Acceleration, with moving average queue, true value, and dev
         self.true_data = {'D': {'q': [], 'val': 0, 'std_dev': 0},
                           'V': {'q': [], 'val': 0, 'std_dev': 0},
-                          'A': {'q': [], 'val': 0, 'std_dev': 0}}
+                          'A': {'q': [], 'val': 0, 'std_dev': 0},
+                          'stripe_count':0}
 
         # Pod Abort conditions init:
         self.Fault = False
