@@ -875,10 +875,10 @@ def run_state():
                     PodStatus.throttle = 0
 
         # TRANSITIONS
-        if PodStatus.distance > PodStatus.para_BBP:
+        if PodStatus.true_data['D']['val'] > PodStatus.para_BBP:
             print("Pod has crossed BBP.")
             transition()
-        elif PodStatus.speed > PodStatus.para_max_speed:
+        elif PodStatus.true_data['V']['val'] > PodStatus.para_max_speed:
             print("Pod has reached max speed.")
             transition()
         elif PodStatus.MET > PodStatus.para_max_time:
@@ -902,10 +902,10 @@ def run_state():
 
         PodStatus.throttle = 0  # SET THROTTLE TO 0
 
-        if PodStatus.speed <= 0.5 and PodStatus.stopped_time <= 0:
+        if PodStatus.true_data['V']['val'] <= 0.5 and PodStatus.stopped_time <= 0:
             PodStatus.stopped_time = clock()
 
-        if PodStatus.speed > 0.5:
+        if PodStatus.true_data['V']['val'] > 0.5:
                                         # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
                                         # IF ERRANT SPEED VALUES > 0.5 WHILE ACTUALLY
                                         # STOPPED, COULD CAUSE EXCESSIVE DISCHARGE
@@ -922,12 +922,12 @@ def run_state():
 
         ## RECONFIGURE FOR CRAWLING STATE
 
-        if PodStatus.speed < 0.5 and (clock() - PodStatus.stopped_time) > 5:
-            if PodStatus.commands['Vent_Sol'] == 0:
-                PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
+        if PodStatus.true_data['V']['val'] < 0.5 and (clock() - PodStatus.stopped_time) > 5:
+            if PodStatus.cmd_int['Vent_Sol'] == 0:
+                PodStatus.cmd_int['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
                 print("Closing Vent Sol")
             if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
-                PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
+                PodStatus.cmd_int['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
                 print("Opening Res#1, pausing for 2 seconds.")
 
             else:
@@ -938,7 +938,7 @@ def run_state():
 
             if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] > 177:
                 print("Brakes retracted, closing Res1 solenoid.")
-                PodStatus.commands['Res1_Sol'] = 0  # CLOSE RES#1 SOLENOID
+                PodStatus.cmd_int['Res1_Sol'] = 0  # CLOSE RES#1 SOLENOID
                 transition()
 
 
@@ -948,11 +948,11 @@ def run_state():
         PodStatus.spacex_state = 6
 
         # ACCEL UP TO MAX G within 2%
-        if PodStatus.accel < (0.98 * PodStatus.para_max_accel)\
-                and PodStatus.speed < PodStatus.para_max_crawl_speed:
+        if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel)\
+                and PodStatus.true_data['V']['val'] < PodStatus.para_max_crawl_speed:
             PodStatus.throttle = PodStatus.throttle * 1.01
-        elif PodStatus.accel > (1.02*PodStatus.para_max_accel)\
-                or PodStatus.speed > PodStatus.para_max_crawl_speed:
+        elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel)\
+                or PodStatus.true_data['V']['val'] > PodStatus.para_max_crawl_speed:
             PodStatus.throttle = PodStatus.throttle * 0.99
 
         if PodStatus.sensor_data['LIDAR'] < 90:
@@ -967,10 +967,10 @@ def run_state():
         PodStatus.throttle = 0
 
         #     PodStatus.stopped_time = 0
-        if PodStatus.speed > 0.5:
-            if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
+        if PodStatus.true_data['V']['val'] > 0.5:
+            if PodStatus.cmd_int['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
                 print("Opening Vent Sol")
-                PodStatus.commands['Vent_Sol'] = 0
+                PodStatus.cmd_int['Vent_Sol'] = 0
 
         # TRANSITION TO S2A
         else:
