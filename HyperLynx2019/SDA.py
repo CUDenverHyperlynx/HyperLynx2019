@@ -85,7 +85,7 @@ class Status():
     def __init__(self):        # BOOT INIT
         self.init = False
         self.flight_sim = False
-        self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
+        self.wheel_diameter = 14.2 / 12 # [ft] define drive wheel diameter
         self.wheel_circum = numpy.pi * self.wheel_diameter
         self.StartTime = clock()
         self.HV = False                     # Current state of HV system (True(1) or False(0))
@@ -280,11 +280,11 @@ def poll_sensors():
         tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
         PodStatus.sensor_data['IMU1_X'] = tempAccel1[1]
         PodStatus.sensor_data['IMU1_Y'] = tempAccel1[2]
-        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
+        #PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
         tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
         PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
         PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
-        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
+        #PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
         flight_sim.sim(PodStatus)
@@ -333,10 +333,6 @@ def poll_sensors():
 
     ### CONVERT DATA ###
     PodStatus.sensor_poll.statusCheck()
-
-    # Set pod state variable for brakes
-    # debug line below before actual testing
-    PodStatus.sensor_data['Brake_Pressure'] = 178
 
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
