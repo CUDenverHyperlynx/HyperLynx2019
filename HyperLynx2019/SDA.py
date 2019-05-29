@@ -1081,7 +1081,8 @@ def write_file():
                     + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'Brakes' + '\t' + str(int(PodStatus.Brakes)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'HV' + '\t' + str(int(PodStatus.HV)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'HV' + '\t' + str(int(PodStatus.HV)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'Vent_Sol' + '\t' + str(int(PodStatus.Vent_Sol)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
