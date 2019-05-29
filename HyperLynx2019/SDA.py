@@ -611,7 +611,7 @@ def rec_data():
         PodStatus.para_BBP = 3000
         PodStatus.para_max_speed = 200
         PodStatus.para_max_accel = 0.7
-        PodStatus.para_max_time = 10
+        PodStatus.para_max_time = 15
         PodStatus.para_max_crawl_speed = 20
         PodStatus.para_max_tube_length = 4150
 
@@ -862,12 +862,12 @@ def run_state():
         # Linear inputs; MC has a built-in throttle damper
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel):
             if PodStatus.throttle < 1:
-                PodStatus.throttle = PodStatus.throttle + 0.05
+                PodStatus.throttle = PodStatus.throttle + 0.01
                 if PodStatus.throttle > 1:
                     PodStatus.throttle = 1
         elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel):
             if PodStatus.throttle > 0:
-                PodStatus.throttle = PodStatus.throttle - 0.05
+                PodStatus.throttle = PodStatus.throttle - 0.01
                 if PodStatus.throttle < 0:
                     PodStatus.throttle = 0
 
