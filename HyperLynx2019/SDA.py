@@ -609,8 +609,8 @@ def rec_data():
         """
         During DEBUG, this function is a mock GUI for testing SDA.
         """
-        PodStatus.para_BBP = 3000
-        PodStatus.para_max_speed = 200
+        PodStatus.para_BBP = 3300
+        PodStatus.para_max_speed = 300
         PodStatus.para_max_accel = 0.7
         PodStatus.para_max_time = 15
         PodStatus.para_max_crawl_speed = 20
