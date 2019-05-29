@@ -1095,7 +1095,8 @@ def write_file():
                     + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'Brakes' + '\t' + str(int(PodStatus.Brakes)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'HV' + '\t' + str(int(PodStatus.HV)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'Vent_Sol' + '\t' + str(int(PodStatus.Vent_Sol)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'Vent_Sol' + '\t' + str(int(PodStatus.Vent_Sol)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'\
+                    + 'stripe_count' + '\t' + str(PodStatus.true_data['stripe_count']) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
