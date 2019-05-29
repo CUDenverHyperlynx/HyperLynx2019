@@ -457,7 +457,8 @@ def sensor_fusion():
     if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
         # Add mean of IMU values to
         PodStatus.true_data['V']['q'] = numpy.append(PodStatus.true_data['V']['q'],
-                                                     PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'])
+                                                     (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * \
+                                                      PodStatus.wheel_circum / 60))
 
     else:
         # Estimate new velocity
@@ -472,7 +473,8 @@ def sensor_fusion():
         #     PodStatus.V_bad_time_elapsed = 0
         #     PodStatus.V_bad_time = None
 
-        PodStatus.true_data['V']['val'] = numpy.mean([Vdr,PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val']])
+        PodStatus.true_data['V']['val'] = numpy.mean([Vdr, \
+                                                      (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * PodStatus.wheel_circum / 60)])
 
         # if new data is invalid:
         # else:
@@ -489,7 +491,7 @@ def sensor_fusion():
     ### END VELOCITY FUSION
 
     ### BEGIN DISTANCE FUSION
-    PodStatus.true_data['D']['val'] = PodStatus.poll_interval * \
+    PodStatus.true_data['D']['val'] = PodStatus.true_data['D']['val'] + PodStatus.poll_interval * \
         PodStatus.true_data['V']['val']
 
     PodStatus.true_data['stripe_dist'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
@@ -628,7 +630,9 @@ def rec_data():
             "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
             "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
             "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
-            "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"                                                                    
+            "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"
+            "\t\tVelocity:\t" + str(PodStatus.true_data['V']['val']) + "\t\n"
+            "\t\tDistance:\t" + str(PodStatus.true_data['D']['val']) + "\t\n"
             "*************************")
 
         if PodStatus.state == PodStatus.SafeToApproach:
