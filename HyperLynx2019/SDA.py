@@ -476,24 +476,25 @@ def sensor_fusion():
         PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
 
         # Evaluate new data compared to true q and std dev
-        if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
-                2 * PodStatus.true_data['V']['std_dev']:
-            PodStatus.V_bad_time_elapsed = 0
-            PodStatus.V_bad_time = None
-            PodStatus.true_data['V']['val'] = PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val']
+        # if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
+        #         2 * PodStatus.true_data['V']['std_dev']:
+        #     PodStatus.V_bad_time_elapsed = 0
+        #     PodStatus.V_bad_time = None
+
+        PodStatus.true_data['V']['val'] = numpy.mean([Vdr,PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val']])
 
         # if new data is invalid:
-        else:
-            # RUN TRACTION CONTROL FUNCTION
-
-            # Start or progress bad V data timer
-            if not PodStatus.V_bad_time:
-                PodStatus.V_bad_time = clock()
-                print("Bad V data, starting clock at " + str(PodStatus.IMU_bad_time))
-
-            else:
-                PodStatus.V_bad_time_elapsed = clock()-PodStatus.V_bad_time
-                print("Bad V data, elapsed time: " + str(PodStatus.V_bad_time_elapsed))
+        # else:
+        #     # RUN TRACTION CONTROL FUNCTION
+        #
+        #     # Start or progress bad V data timer
+        #     if not PodStatus.V_bad_time:
+        #         PodStatus.V_bad_time = clock()
+        #         print("Bad V data, starting clock at " + str(PodStatus.IMU_bad_time))
+        #
+        #     else:
+        #         PodStatus.V_bad_time_elapsed = clock()-PodStatus.V_bad_time
+        #         print("Bad V data, elapsed time: " + str(PodStatus.V_bad_time_elapsed))
     ### END VELOCITY FUSION
 
     ### BEGIN DISTANCE FUSION
@@ -1071,10 +1072,10 @@ def write_file():
                 file.write(line)
             ### Log commands
             for key in PodStatus.cmd_ext:
-                line = str(key) + '\t' + str(PodStatus.cmd_ext[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
+                line = 'ext_' + str(key) + '\t' + str(PodStatus.cmd_ext[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             for key in PodStatus.cmd_int:
-                line = str(key) + '\t' + str(PodStatus.cmd_int[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
+                line = 'int_' + str(key) + '\t' + str(PodStatus.cmd_int[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             ### Log pod state variables
             line = 'state' + '\t' + str(PodStatus.state) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
@@ -1087,8 +1088,8 @@ def write_file():
                     + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'Brakes' + '\t' + str(PodStatus.Brakes) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'HV' + '\t' + str(PodStatus.HV) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'Brakes' + '\t' + str(int(PodStatus.Brakes)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'HV' + '\t' + str(int(PodStatus.HV)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
@@ -1096,7 +1097,7 @@ def write_file():
 if __name__ == "__main__":
 
     PodStatus = Status()
-    
+
     gui = '0'
     print('Which GUI should I use?\n')
     print('\t1\tConsole')
