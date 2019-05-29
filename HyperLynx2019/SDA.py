@@ -455,6 +455,7 @@ def sensor_fusion():
 
     ### BEGIN VELOCITY FUSION
     PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] * PodStatus.wheel_circum / 60
+    if PodStatus.true_data['V']['val'] < 0: PodStatus.true_data['V']['val'] = 0
     # If queue is not full, fill queue
     # if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
     #     # Add mean of IMU values to
