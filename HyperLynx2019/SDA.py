@@ -260,6 +260,7 @@ def poll_sensors():
 
     ### CAN DATA ###
     # None Yet Added
+    PodStatus.true_data['V']['val']
 
     ### I2C DATA ###
 
@@ -453,28 +454,30 @@ def sensor_fusion():
     ### END ACCELERATION FUSION
 
     ### BEGIN VELOCITY FUSION
+    PodStatus.true_data['V']['val'] = PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] *  \
+                                      PodStatus.wheel_circum / 60
     # If queue is not full, fill queue
-    if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
-        # Add mean of IMU values to
-        PodStatus.true_data['V']['q'] = numpy.append(PodStatus.true_data['V']['q'],
-                                                     (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * \
-                                                      PodStatus.wheel_circum / 60))
-
-    else:
-        # Estimate new velocity
-        Vdr = PodStatus.true_data['V']['val'] + PodStatus.poll_interval * PodStatus.true_data['A']['val'] * 32.174
-
-        # Set std_dev
-        PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
-
-        # Evaluate new data compared to true q and std dev
-        # if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
-        #         2 * PodStatus.true_data['V']['std_dev']:
-        #     PodStatus.V_bad_time_elapsed = 0
-        #     PodStatus.V_bad_time = None
-
-        PodStatus.true_data['V']['val'] = numpy.mean([Vdr, \
-                                                      (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * PodStatus.wheel_circum / 60)])
+    # if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
+    #     # Add mean of IMU values to
+    #     PodStatus.true_data['V']['q'] = numpy.append(PodStatus.true_data['V']['q'],
+    #                                                  (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * \
+    #                                                   PodStatus.wheel_circum / 60))
+    #
+    # else:
+    #     # Estimate new velocity
+    #     Vdr = PodStatus.true_data['V']['val'] + PodStatus.poll_interval * PodStatus.true_data['A']['val'] * 32.174
+    #
+    #     # Set std_dev
+    #     PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
+    #
+    #     # Evaluate new data compared to true q and std dev
+    #     # if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
+    #     #         2 * PodStatus.true_data['V']['std_dev']:
+    #     #     PodStatus.V_bad_time_elapsed = 0
+    #     #     PodStatus.V_bad_time = None
+    #
+    #     PodStatus.true_data['V']['val'] = numpy.mean([Vdr, \
+    #                                                   (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * PodStatus.wheel_circum / 60)])
 
         # if new data is invalid:
         # else:
