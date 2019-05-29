@@ -38,9 +38,9 @@ def sim(PodStatus):
         print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
 
         # Increment motor resolver data
-        PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
-                                                         PodStatus.true_data['A']['val'] * 32.174 * PodStatus.poll_interval + \
-                                                         random.randint(-1,1)*10**-3) * 60 / PodStatus.wheel_circum
+        PodStatus.sensor_data['SD_MotorData_MotorRPM'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] + \
+                                                         (PodStatus.true_data['A']['val'] * 32.174 * PodStatus.poll_interval + \
+                                                         random.randint(-1,1)*10**-2) * 60 / PodStatus.wheel_circum
 
         # Increment stripe count
             # Ensure stripe count only incremented when:
