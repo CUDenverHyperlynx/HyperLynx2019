@@ -15,15 +15,18 @@ def sim(PodStatus):
     print("In Flight Simulation")
 
     # Activate Res1
-    if (PodStatus.cmd_ext['Res1_Sol'] == 1) or (PodStatus.cmd_int['Res1_Sol'] == 1) and (PodStatus.Vent_Sol == 1):
+    if ((PodStatus.cmd_ext['Res1_Sol'] == 1) or (PodStatus.cmd_int['Res1_Sol'] == 1)) and (PodStatus.Vent_Sol == 1):
+        print('FS: Pressurizing Brakes from Res1')
         PodStatus.sensor_data['Brake_Pressure'] = 200 + random.randint(-10,10)*10**-2
 
     # Activate Res2
-    if (PodStatus.cmd_ext['Res2_Sol'] == 1) or (PodStatus.cmd_int['Res2_Sol'] == 1) and (PodStatus.Vent_Sol == 1):
+    if ((PodStatus.cmd_ext['Res2_Sol'] == 1) or (PodStatus.cmd_int['Res2_Sol'] == 1)) and (PodStatus.Vent_Sol == 1):
+        print('FS: Pressurizing Brakes from Res2')
         PodStatus.sensor_data['Brake_Pressure'] = 200 + random.randint(-10,10)*10**-2
 
     # Activate Vent
     if (PodStatus.cmd_ext['Vent_Sol'] == 0) or (PodStatus.cmd_int['Vent_Sol'] == 0):
+        print('FS: Venting Brake Pressure')
         PodStatus.sensor_data['Brake_Pressure'] = 0.01 + random.randint(-10,10)*10**-3
 
     if PodStatus.Brakes is False:
