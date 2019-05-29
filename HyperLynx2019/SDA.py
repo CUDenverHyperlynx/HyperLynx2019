@@ -943,6 +943,8 @@ def run_state():
     # ONLY way to transition() is if LIDAR < 90ft.  Probably needs a 2nd/3rd stop point (time/dist)
     elif PodStatus.state == 6:
         PodStatus.spacex_state = 6
+        PodStatus.sensor_filter['IMU1_Z']['q'] = []
+        PodStatus.sensor_filter['IMU2_Z']['q'] = []
 
         # ACCEL UP TO MAX G within 2%
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel)\
