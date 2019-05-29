@@ -497,7 +497,7 @@ def sensor_fusion():
     PodStatus.true_data['D']['val'] = PodStatus.true_data['D']['val'] + PodStatus.poll_interval * \
         PodStatus.true_data['V']['val']
 
-    PodStatus.true_data['stripe_dist'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
+    PodStatus.true_data['stripe_count'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
                                                     PodStatus.sensor_data['LST_Right'])
 
     PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.stripe_count
