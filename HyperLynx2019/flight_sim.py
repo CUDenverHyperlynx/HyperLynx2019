@@ -61,7 +61,7 @@ def sim(PodStatus):
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
-                                                         PodStatus.true_data['A']['val'] * PodStatus.poll_interval + \
+                                                         PodStatus.true_data['A']['val'] * 32.174 * PodStatus.poll_interval + \
                                                          random.randint(-1,1)*10**-2) * 60 / PodStatus.wheel_circum
 
         if ((PodStatus.true_data['D']['val']/100 - PodStatus.stripe_count) > 25) and \
