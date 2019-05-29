@@ -338,6 +338,9 @@ def poll_sensors():
         PodStatus.Brakes = False
     else:
         PodStatus.Brakes = True
+    PodStatus.Vent_Sol = PodStatus.cmd_int['Vent_Sol']
+    PodStatus.Res1_Sol = PodStatus.cmd_int['Res1_Sol']
+    PodStatus.Res2_Sol = PodStatus.cmd_int['Res2_Sol']
 
     # Set pod state variable for speed and acceleration
     old_speed = PodStatus.true_data['V']['val']
