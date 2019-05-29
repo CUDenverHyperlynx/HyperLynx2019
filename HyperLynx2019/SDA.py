@@ -285,7 +285,7 @@ def poll_sensors():
         PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
         PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
         #PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
-        PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
+        PodStatus.sensor_data['LIDAR'] = PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']
 
         flight_sim.sim(PodStatus)
 
@@ -633,9 +633,9 @@ def rec_data():
             "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
             "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
             "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
-            "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"
-            "\t\tVelocity:\t" + str(PodStatus.true_data['V']['val']) + "\t\n"
-            "\t\tDistance:\t" + str(PodStatus.true_data['D']['val']) + "\t\n"
+            "\tThrottle:\t" + str(round(PodStatus.throttle,2)) + "\t\n"
+            "\t\tVelocity:\t" + str(round(PodStatus.true_data['V']['val'],2)) + "\t\n"
+            "\t\tDistance:\t" + str(round(PodStatus.true_data['D']['val'],2)) + "\t\n"
             "*************************")
 
         if PodStatus.state == PodStatus.SafeToApproach:
@@ -952,7 +952,7 @@ def run_state():
                 or PodStatus.true_data['V']['val'] > PodStatus.para_max_crawl_speed:
             PodStatus.throttle = PodStatus.throttle * 0.99
 
-        if PodStatus.sensor_data['LIDAR'] < 90:
+        if PodStatus.sensor_data['LIDAR'] < 90 or (PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']) < 150:
             print("LIDAR is less than 90 feet")
             transition()
 
