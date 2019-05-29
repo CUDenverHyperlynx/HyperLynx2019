@@ -654,24 +654,24 @@ def rec_data():
                     #PodStatus.HV = False
             elif a == '3':
                 if PodStatus.cmd_ext['Vent_Sol'] == 0:
-                    PodStatus.commands['Vent_Sol'] = 1           # Brake Vent opens
+                    PodStatus.cmd_ext['Vent_Sol'] = 1           # Brake Vent opens
                     PodStatus.Vent_Sol = 0
                     PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
                 else:
-                    PodStatus.commands['Vent_Sol'] = 0
+                    PodStatus.cmd_ext['Vent_Sol'] = 0
                     PodStatus.Vent_Sol = 1
             elif a == '4':
-                if PodStatus.commands['Res1_Sol'] == 0:
-                    PodStatus.commands['Res1_Sol'] = 1
+                if PodStatus.cmd_ext['Res1_Sol'] == 0:
+                    PodStatus.cmd_ext['Res1_Sol'] = 1
                     if PodStatus.Vent_Sol == 1:
                         PodStatus.sensor_data['Brake_Pressure'] = 200
                 else:
-                    PodStatus.commands['Res1_Sol'] = 0
+                    PodStatus.cmd_ext['Res1_Sol'] = 0
             elif a == '5':
-                if PodStatus.commands['Res2_Sol'] == 1:
-                    PodStatus.commands['Res2_Sol'] = 0
+                if PodStatus.cmd_ext['Res2_Sol'] == 1:
+                    PodStatus.cmd_ext['Res2_Sol'] = 0
                 else:
-                    PodStatus.commands['Res2_Sol'] = 1
+                    PodStatus.cmd_ext['Res2_Sol'] = 1
             elif a == '6':
                 if PodStatus.MC_Pump == 0:
                     PodStatus.cmd_ext['MC_Pump'] = 1
