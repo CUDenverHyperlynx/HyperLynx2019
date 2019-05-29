@@ -655,16 +655,15 @@ def rec_data():
             elif a == '3':
                 if PodStatus.cmd_ext['Vent_Sol'] == 0:
                     PodStatus.cmd_ext['Vent_Sol'] = 1           # Brake Vent opens
-                    PodStatus.Vent_Sol = 0
-                    PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
+                    #PodStatus.Vent_Sol = 0
+                    #PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
                 else:
                     PodStatus.cmd_ext['Vent_Sol'] = 0
-                    PodStatus.Vent_Sol = 1
+                    #PodStatus.Vent_Sol = 1
             elif a == '4':
                 if PodStatus.cmd_ext['Res1_Sol'] == 0:
                     PodStatus.cmd_ext['Res1_Sol'] = 1
-                    if PodStatus.Vent_Sol == 1:
-                        PodStatus.sensor_data['Brake_Pressure'] = 200
+
                 else:
                     PodStatus.cmd_ext['Res1_Sol'] = 0
             elif a == '5':
@@ -790,9 +789,9 @@ def spacex_data():
     This function passes the required SpaceX data packet at the defined rate.
     """
     ### CONVERT DATA TO SPACEX SPECIFIED UNIT
-    accel = PodStatus.accel * 3217.4        # g (unitless) to cm/s2
-    speed = PodStatus.speed * 30.48         # ft/s to cm/s
-    distance = PodStatus.distance * 30.48   # ft to cm
+    accel = PodStatus.true_data['A']['val'] * 3217.4        # g (unitless) to cm/s2
+    speed = PodStatus.true_data['V']['val'] * 30.48         # ft/s to cm/s
+    distance = PodStatus.true_data['D']['val'] * 30.48   # ft to cm
 
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
         #print("No packet sent.")
