@@ -696,6 +696,7 @@ def rec_data():
             elif a == 'Q':
                 PodStatus.Quit = True
             elif a == 'FS':
+                PodStatus.sensor_data['Brake_Pressure'] = 200
                 PodStatus.flight_sim = True
             else:
                 pass
