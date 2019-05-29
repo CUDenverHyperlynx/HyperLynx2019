@@ -137,8 +137,7 @@ class Status():
 
         # Set filter on priority data:
         self.filter_items = ['IMU1_X', 'IMU1_Y', 'IMU1_Z', 'IMU2_X', 'IMU2_Y',
-                             'IMU2_Z', 'LIDAR', 'Brake_Pressure',
-                             'SD_MotorData_MotorRPM']
+                             'IMU2_Z', 'LIDAR', 'Brake_Pressure']
 
         # init True values for Distance, Velocity, and Acceleration, with moving average queue, true value, and dev
         self.true_data = {'D': {'q': [], 'val': 0, 'std_dev': 0},
@@ -342,9 +341,8 @@ def poll_sensors():
     PodStatus.Res1_Sol = PodStatus.cmd_int['Res1_Sol']
     PodStatus.Res2_Sol = PodStatus.cmd_int['Res2_Sol']
 
-    # Integrate distance.  At 1.4GHz clock speeds, integration can be numerically
-    # approximated as constant speed over the time step.
-    if PodStatus.poll_oldtime != 0:         # Update distance (but skip init loop @ old_time = 0
+    # Integrate distance
+    if PodStatus.state != 1:
         PodStatus.true_data['D']['val'] += PodStatus.true_data['V']['val'] * PodStatus.poll_interval
 
     # Update MET
