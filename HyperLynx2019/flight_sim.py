@@ -38,20 +38,6 @@ def sim(PodStatus):
         print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
         print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
 
-        # Increment motor resolver data
-        PodStatus.sensor_data['SD_MotorData_MotorRPM'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] + \
-                                                         (PodStatus.true_data['A']['val'] * 32.174 * PodStatus.poll_interval + \
-                                                         random.randint(-1,1)*10**-2) * 60 / PodStatus.wheel_circum
-
-        # Increment stripe count
-            # Ensure stripe count only incremented when:
-            #   - current distance is > 25ft from the previous count point
-            #   - current distance is < 5ft from the next stripe
-        if ((PodStatus.true_data['D']['val']/100 - PodStatus.stripe_count) > 25) and \
-                (abs(PodStatus.true_data['D']['val']/100 - numpy.around(PodStatus.true_data['D']['val']/100)) < 0.05):
-            PodStatus.sensor_data['LST_Right'] += 1
-            PodStatus.sensor_data['LST_Left'] += 1
-
     if PodStatus.Brakes is True and PodStatus.true_data['V']['val'] > 0.5:
 
         # Increment accelerometer data
@@ -60,15 +46,19 @@ def sim(PodStatus):
         print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
         print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
 
-        # Increment motor resolver data
-        PodStatus.sensor_data['SD_MotorData_MotorRPM'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] + \
-                                                         (PodStatus.true_data['A']['val'] * 32.174 * PodStatus.poll_interval + \
-                                                         random.randint(-1,1)*10**-2) * 60 / PodStatus.wheel_circum
+    # Increment motor resolver data
+    PodStatus.sensor_data['SD_MotorData_MotorRPM'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] + \
+                                                     (PodStatus.true_data['A'][
+                                                          'val'] * 32.174 * PodStatus.poll_interval + \
+                                                      random.randint(-1, 1) * 10 ** -2 \
+                                                      - (1 + PodStatus.true_data['V'][
+                                                                 'val'] * 0.05)) * 60 / PodStatus.wheel_circum
+    if PodStatus.sensor_data['SD_MotorData_MotorRPM'] < 0: PodStatus.sensor_data['SD_MotorData_MotorRPM'] = 0
 
-        if ((PodStatus.true_data['D']['val']/100 - PodStatus.stripe_count) > 25) and \
-                (abs(PodStatus.true_data['D']['val']/100 - numpy.around(PodStatus.true_data['D']['val']/100)) < 0.05):
-            PodStatus.sensor_data['LST_Right'] += 1
-            PodStatus.sensor_data['LST_Left'] += 1
+    if ((PodStatus.true_data['D']['val']/100 - PodStatus.stripe_count) > 25) and \
+            (abs(PodStatus.true_data['D']['val']/100 - numpy.around(PodStatus.true_data['D']['val']/100)) < 0.05):
+        PodStatus.sensor_data['LST_Right'] += 1
+        PodStatus.sensor_data['LST_Left'] += 1
 
     print("Left Stripe:" + str(PodStatus.sensor_data['LST_Left']) + '\t' + "Right Stripe:" + str(PodStatus.sensor_data['LST_Right']))
 
