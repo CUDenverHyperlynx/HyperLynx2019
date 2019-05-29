@@ -39,7 +39,7 @@ def sim(PodStatus):
 
         # Increment motor resolver data
         PodStatus.sensor_data['SD_MotorData_MotorRPM'] = (PodStatus.true_data['V']['val'] + \
-                                                         PodStatus.true_data['A']['val'] * PodStatus.poll_interval + \
+                                                         PodStatus.true_data['A']['val'] * 32.174 * PodStatus.poll_interval + \
                                                          random.randint(-1,1)*10**-3) * 60 / PodStatus.wheel_circum
 
         # Increment stripe count
@@ -51,7 +51,7 @@ def sim(PodStatus):
             PodStatus.sensor_data['LST_Right'] += 1
             PodStatus.sensor_data['LST_Left'] += 1
 
-    if PodStatus.Brakes is True and PodStatus.true_data['V']['val'] > 0.1:
+    if PodStatus.Brakes is True and PodStatus.true_data['V']['val'] > 0.5:
 
         # Increment accelerometer data
         PodStatus.sensor_data['IMU1_Z'] = -8 - random.randint(-1,1)*10**-2
