@@ -1096,17 +1096,20 @@ def write_file():
 if __name__ == "__main__":
 
     PodStatus = Status()
-    init()
-
-    if PodStatus.init is False:
-        PodStatus.Quit = True
-        print("Failed to init.")
+    
     gui = '0'
     print('Which GUI should I use?\n')
     print('\t1\tConsole')
     print('\t2\tExternal')
     while (gui!= '1' and gui!= '2'):
         gui = str(input('Enter choice: '))
+
+    init()
+
+    if PodStatus.init is False:
+        PodStatus.Quit = True
+        print("Failed to init.")
+
 
 
     while PodStatus.Quit is False:
