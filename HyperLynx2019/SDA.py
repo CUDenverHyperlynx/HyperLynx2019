@@ -893,6 +893,8 @@ def run_state():
 
     # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
+        PodStatus.sensor_filter['IMU1_Z']['q'] = []
+        PodStatus.sensor_filter['IMU2_Z']['q'] = []
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
 
