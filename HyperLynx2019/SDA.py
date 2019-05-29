@@ -286,6 +286,7 @@ def poll_sensors():
         PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
         #PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
         PodStatus.sensor_data['LIDAR'] = PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']
+        if PodStatus.sensor_data['LIDAR'] > 150: PodStatus.sensor_data['LIDAR'] = 150
 
         flight_sim.sim(PodStatus)
 
