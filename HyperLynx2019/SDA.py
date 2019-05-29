@@ -743,6 +743,7 @@ def do_commands():
     """
 
     if PodStatus.state == 1:    # Load ALL commands for full GUI control
+        PodStatus.cmd_int = PodStatus.cmd_ext
 
         ### POD WILL LAUNCH WITH THIS SECTION ###
         # Launch pod ONLY if conditions in run_state() for spacex_state are met
@@ -760,16 +761,12 @@ def do_commands():
         else:
             PodStatus.MC_Pump = False
 
-        # HV Contactors (and red LED by default)
-        PodStatus.cmd_int['HV'] = PodStatus.cmd_ext['HV']
 
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
     PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol'])
     PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol'])
     PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol'])
-
-
 
     # HV Contactors (and red LED by default)
     PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV'])
