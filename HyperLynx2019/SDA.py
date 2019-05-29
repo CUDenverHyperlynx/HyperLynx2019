@@ -863,12 +863,12 @@ def run_state():
         # Linear inputs; MC has a built-in throttle damper
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel):
             if PodStatus.throttle < 1:
-                PodStatus.throttle = PodStatus.throttle + 0.01
+                PodStatus.throttle = PodStatus.throttle + 0.1
                 if PodStatus.throttle > 1:
                     PodStatus.throttle = 1
         elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel):
             if PodStatus.throttle > 0:
-                PodStatus.throttle = PodStatus.throttle - 0.01
+                PodStatus.throttle = PodStatus.throttle - 0.1
                 if PodStatus.throttle < 0:
                     PodStatus.throttle = 0
 
@@ -948,10 +948,14 @@ def run_state():
         # ACCEL UP TO MAX G within 2%
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel)\
                 and PodStatus.true_data['V']['val'] < PodStatus.para_max_crawl_speed:
-            PodStatus.throttle = PodStatus.throttle * 1.01
+            PodStatus.throttle = PodStatus.throttle + 0.05
+            if PodStatus.throttle > 1:
+                PodStatus.throttle = 1
         elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel)\
                 or PodStatus.true_data['V']['val'] > PodStatus.para_max_crawl_speed:
-            PodStatus.throttle = PodStatus.throttle * 0.99
+            PodStatus.throttle = PodStatus.throttle - 0.05
+            if PodStatus.throttle < 0:
+                PodStatus.throttle = 0
 
         if PodStatus.sensor_data['LIDAR'] < 90 or (PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']) < 150:
             print("LIDAR is less than 90 feet")
