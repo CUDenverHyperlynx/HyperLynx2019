@@ -462,7 +462,7 @@ def sensor_fusion():
 
     else:
         # Estimate new velocity
-        Vdr = PodStatus.poll_interval * PodStatus.true_data['A']['val']
+        Vdr = PodStatus.true_data['V']['val'] + PodStatus.poll_interval * PodStatus.true_data['A']['val'] * 32.174
 
         # Set std_dev
         PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
