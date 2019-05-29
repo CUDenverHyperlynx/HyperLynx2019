@@ -863,12 +863,12 @@ def run_state():
         # Linear inputs; MC has a built-in throttle damper
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel):
             if PodStatus.throttle < 1:
-                PodStatus.throttle = PodStatus.throttle + 0.01
+                PodStatus.throttle = PodStatus.throttle + 0.05
                 if PodStatus.throttle > 1:
                     PodStatus.throttle = 1
         elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel):
             if PodStatus.throttle > 0:
-                PodStatus.throttle = PodStatus.throttle - 0.01
+                PodStatus.throttle = PodStatus.throttle - 0.05
                 if PodStatus.throttle < 0:
                     PodStatus.throttle = 0
 
@@ -895,8 +895,8 @@ def run_state():
     elif PodStatus.state == 5:
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
-        # Debug line below for actual brake state
-        PodStatus.Brakes = True
+
+        PodStatus.throttle = 0  # SET THROTTLE TO 0
 
         if PodStatus.speed <= 0.5 and PodStatus.stopped_time <= 0:
             PodStatus.stopped_time = clock()
@@ -908,11 +908,10 @@ def run_state():
                                         # OF RESERVOIRS AND LOSS OF BRAKE RETRACTION
                                         # ABILITY
             PodStatus.stopped_time = 0              # RESET STOPPED TIME
-            if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
+            if PodStatus.cmd_int['Vent_Sol'] == 1:    # Is brake vent closed?
                 print("Opening Vent Sol")
-                PodStatus.commands['Vent_Sol'] = 0
-            if PodStatus.throttle > 0:          # SET THROTTLE TO 0
-                PodStatus.throttle = 0
+                PodStatus.cmd_int['Vent_Sol'] = 0       # open brake vent
+
 
         # DO NOTHING ELSE UNTIL STOPPED
         # RECONFIGURE FOR CRAWLING
@@ -1080,7 +1079,8 @@ def write_file():
                     + 'V' + '\t' + str(PodStatus.true_data['V']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
 
             file.write(line)
 
