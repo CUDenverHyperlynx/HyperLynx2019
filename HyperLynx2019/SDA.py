@@ -270,7 +270,8 @@ def poll_sensors():
         #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
-        PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
+        #PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
+        PodStatus.sensor_data['LVBatt_Voltage'] = 12
         PodStatus.sensor_data['PV_Left_Temp'] = PodStatus.sensor_poll.getBMEtemperature(2)
         PodStatus.sensor_data['PV_Left_Pressure'] = PodStatus.sensor_poll.getBMEpressure(2)
         PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
@@ -893,6 +894,8 @@ def run_state():
 
     # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
+        PodStatus.sensor_filter['IMU1_Z']['q'] = []
+        PodStatus.sensor_filter['IMU2_Z']['q'] = []
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
 
@@ -1067,8 +1070,11 @@ def write_file():
                        + str(int(fault_code)) + '\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             ### Log commands
-            for key in PodStatus.commands:
-                line = str(key) + '\t' + str(PodStatus.commands[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
+            for key in PodStatus.cmd_ext:
+                line = str(key) + '\t' + str(PodStatus.cmd_ext[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
+                file.write(line)
+            for key in PodStatus.cmd_int:
+                line = str(key) + '\t' + str(PodStatus.cmd_int[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             ### Log pod state variables
             line = 'state' + '\t' + str(PodStatus.state) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
@@ -1080,8 +1086,9 @@ def write_file():
                     + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
-
+                    + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'Brakes' + '\t' + str(PodStatus.Brakes) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'HV' + '\t' + str(PodStatus.HV) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
@@ -1089,17 +1096,20 @@ def write_file():
 if __name__ == "__main__":
 
     PodStatus = Status()
-    init()
-
-    if PodStatus.init is False:
-        PodStatus.Quit = True
-        print("Failed to init.")
+    
     gui = '0'
     print('Which GUI should I use?\n')
     print('\t1\tConsole')
     print('\t2\tExternal')
     while (gui!= '1' and gui!= '2'):
         gui = str(input('Enter choice: '))
+
+    init()
+
+    if PodStatus.init is False:
+        PodStatus.Quit = True
+        print("Failed to init.")
+
 
 
     while PodStatus.Quit is False:
