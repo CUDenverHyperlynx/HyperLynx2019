@@ -342,12 +342,6 @@ def poll_sensors():
     PodStatus.Res1_Sol = PodStatus.cmd_int['Res1_Sol']
     PodStatus.Res2_Sol = PodStatus.cmd_int['Res2_Sol']
 
-    # Set pod state variable for speed and acceleration
-    old_speed = PodStatus.true_data['V']['val']
-    if PodStatus.sensor_data['SD_MotorData_MotorRPM']:
-        PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2 * numpy.pi * PodStatus.wheel_diameter
-    PodStatus.true_data['A']['val'] = numpy.mean([PodStatus.sensor_data['IMU1_Z'], PodStatus.sensor_data['IMU2_Z']])
-
     # Integrate distance.  At 1.4GHz clock speeds, integration can be numerically
     # approximated as constant speed over the time step.
     if PodStatus.poll_oldtime != 0:         # Update distance (but skip init loop @ old_time = 0
