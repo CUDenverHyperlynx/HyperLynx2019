@@ -115,7 +115,7 @@ class Status():
         self.IMU_bad_time = None
         self.V_bad_time = None
 
-        self.filter_length = 20         # Moving average for sensor data filter
+        self.filter_length = 10         # Moving average for sensor data filter
 
         # SPACEX CONFIG DATA
         self.spacex_state = 0
@@ -260,7 +260,7 @@ def poll_sensors():
 
     ### CAN DATA ###
     # None Yet Added
-    PodStatus.true_data['V']['val']
+
 
     ### I2C DATA ###
 
