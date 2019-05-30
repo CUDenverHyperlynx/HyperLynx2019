@@ -565,7 +565,7 @@ class HyperlynxECS():
 			if(status == 0):
 				self.IO.output(self.NOsolPIN, self.IO.LOW)
 			elif(status == 1):
-				self.IO.output(self.NOsolPIN, self.IO.LOW)
+				self.IO.output(self.NOsolPIN, self.IO.HIGH)
 				
 	def switchCoolantPump(self, status):
 		if(status == 0):
