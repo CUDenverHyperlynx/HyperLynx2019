@@ -766,9 +766,9 @@ def do_commands():
 
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
-    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol'])
+    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Vent_Sol'])
     PodStatus.Vent_Sol = bool(PodStatus.cmd_int['Vent_Sol'])
-    PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol'])
+    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Res1_Sol'])
     PodStatus.Res1_Sol = bool(PodStatus.cmd_int['Res1_Sol'])
     PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol'])
     PodStatus.Res2_Sol = bool(PodStatus.cmd_int['Res2_Sol'])
