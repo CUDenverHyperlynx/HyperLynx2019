@@ -302,13 +302,13 @@ def poll_sensors():
         PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
         PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
         tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
-        PodStatus.sensor_data['IMU1_X'] = tempAccel1[0]
-        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[1]
-        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_X'] = tempAccel1[1]
+        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
         tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
-        PodStatus.sensor_data['IMU2_X'] = tempAccel2[0]
-        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[1]
-        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[2]
+        PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
+        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
+        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
     if abs(PodStatus.sensor_data['IMU1_Z']) > 20:
