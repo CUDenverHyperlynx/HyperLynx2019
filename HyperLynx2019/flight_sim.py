@@ -14,6 +14,16 @@ def sim(PodStatus):
 
     print("In Flight Simulation")
 
+    # Evaluate HV status
+    if (PodStatus.cmd_int['HV'] == 1):
+        PodStatus.sensor_data['SD_HVBusData_BusVoltage'] = 500
+    else:
+        PodStatus.sensor_data['SD_HVBusData_BusVoltage'] = 0
+    if PodStatus.HV == True:
+        PodStatus.sensor_data['SD_HVBusData_MotorCurrent'] = PodStatus.throttle * 340
+    else:
+        PodStatus.sensor_data['SD_HVBusData_MotorCurrent'] = 0
+
     # Activate Res1
     if (PodStatus.cmd_ext['Res1_Sol'] is True) or (PodStatus.cmd_int['Res1_Sol'] is True) and (PodStatus.Vent_Sol is True):
         PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_data['Brake_Pressure'] + \

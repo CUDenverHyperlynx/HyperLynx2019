@@ -578,6 +578,8 @@ def eval_abort():
 
     if PodStatus.Abort is True:
         PodStatus.cmd_int['Abort'] = 1
+
+
         abort()
 
 def rec_data():
@@ -753,8 +755,10 @@ def do_commands():
     # HV Contactors (and red LED by default)
     PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV']);
     PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV']);
-    if PodStatus.cmd_int['HV'] == 1: PodStatus.HV = True
-    else: PodStatus.HV = False
+    if PodStatus.sensor_data['SD_HVBusData_BusVoltage'] > 50:
+        PodStatus.HV = True
+    else:
+        PodStatus.HV = False
 
 
     # Isolation green LED   DEBUG NEED VAR DATA FOR BMS
@@ -811,7 +815,8 @@ def run_state():
             PodStatus.para_max_accel > 0 and
             PodStatus.para_max_speed > 0 and
             PodStatus.para_max_time > 0 and
-            PodStatus.para_max_crawl_speed > -1):
+            PodStatus.para_max_crawl_speed > -1 and
+            PodStatus.para_max_tube_length > 0):
                 PodStatus.spacex_state = 2
                 print("Pod is Ready for Launch (SpaceX State 2)")
         else:

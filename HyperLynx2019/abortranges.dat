@@ -1,4 +1,4 @@
-Sensor	    Low	     High	1 - S2A	2 - FC2L	3 - Launch	5 - Brake1	Postflight	6 - Crawling	7 - Brake2	Trigger	Fault (INIT TO ZERO)	NOTES (not read by SDA)
+Sensor	    Low	     High	1 - S2A	FC2L	3 - Launch	5 - Brake1	Postflight	6 - Crawling	7 - Brake2	Trigger	Fault (INIT TO ZERO)	NOTES (not read by SDA)
 SD_DriveStatus_ProgramMode	0	0	0	0	0	0	0	0	0	0	0	
 SD_DriveStatus_EngineState	0	0	0	0	0	0	0	0	0	0	0	
 SD_DriveStatus_SwitchState	0	0	0	0	0	0	0	0	0	0	0	
@@ -42,33 +42,32 @@ BMS_HighCellVoltageID	0	0	0	0	0	0	0	0	0	0	0
 BMS_PowerInputVoltage	0	0	0	0	0	0	0	0	0	0	0	
 BMS_DTCStatus1	0	0	0	0	0	0	0	0	0	0	0	
 BMS_DTCStatus2	0	0	0	0	0	0	0	0	0	0	0	
-LVBatt_Temp	0	35	0	0	0	0	1	0	0	0	0	
-LVBatt_Current	0	10	0	0	0	0	1	0	0	0	0	
-LVBatt_Voltage	10.8	13.5	0	0	0	0	1	1	0	1	0	
-RPi_Temp	0	70	1	0	1	1	1	0	0	0	0	
-RPi_Proc_Load	0	100	1	0	1	1	1	0	0	0	0	
-RPi_Disk_Space_Used	0	15000	0	0	1	1	0	0	0	0	0	MB
-RPi_Disk_Space_Free	1000	16000	0	0	1	1	1	1	1	0	0	MB
+LVBatt_Temp	0	50	1	0	1	1	0	1	1	0	0	
+LVBatt_Current	0	15	1	0	1	1	0	1	1	1	0	
+LVBatt_Voltage	10.8	13.5	1	0	1	1	0	1	1	0	0	
+RPi_Temp	0	70	1	0	1	1	0	0	0	1	0	
+RPi_Proc_Load	0	100	1	0	0	0	0	0	0	0	0	
+RPi_Disk_Space_Used	0	15000	0	0	0	0	0	0	0	0	0	MB
+RPi_Disk_Space_Free	1000	16000	0	0	0	0	0	0	0	0	0	MB
 RPi_Mem_Free	0	0	0	0	1	1	0	0	0	0	0	
 RPi_Mem_Used	0	0	0	0	1	1	0	0	0	0	0	
-RPi_Mem_Load	0	80	1	0	1	1	1	0	0	0	0	
-PV_Left_Temp	0	50	0	0	0	0	1	0	0	0	0	
-PV_Left_Pressure	9	15	0	0	0	0	1	0	0	0	0	
-PV_Right_Temp	0	50	0	0	0	0	1	0	0	0	0	
-PV_Right_Pressure	9	15	0	0	0	0	1	0	0	0	0	
-Brake_Pressure	0	177	0	0	0	0	0	0	0	0	0	
+RPi_Mem_Load	0	80	1	0	1	1	0	0	0	0	0	
+PV_Left_Temp	0	50	1	0	1	1	0	0	0	1	0	
+PV_Left_Pressure	9	15	1	0	1	1	0	1	1	1	0	
+PV_Right_Temp	0	50	1	0	1	1	0	0	0	1	0	
+PV_Right_Pressure	9	15	1	0	1	1	0	1	1	1	0	
 Brake_Pressure	177	225	0	0	1	0	0	1	0	1	0	
-Ambient_Pressure	0	2	0	0	1	0	1	0	0	0	0	
-IMU1_X	-0.05	0.05	0	0	0	0	1	0	0	0	0	
-IMU1_Y	-0.05	0.05	0	0	0	0	1	0	0	0	0	
-IMU1_Z	-0.05	0.05	0	0	0	0	1	0	0	0	0	
-IMU2_X	-0.05	0.05	0	0	0	0	1	0	0	0	0	
-IMU2_Y	-0.05	0.05	0	0	0	0	1	0	0	0	0	
-IMU2_Z	-0.05	0.05	0	0	0	0	1	0	0	0	0	
-IMU_bad_time_elapsed	-1	1	0	0	1	0	0	0	0	0	0	
-V_bad_time_elapsed	-1	1	0	0	1	0	0	1	0	0	0	
+Ambient_Pressure	0	2	0	0	1	0	0	0	0	1	0	
+IMU1_X	-0.05	0.05	0	0	0	0	0	0	0	0	0	
+IMU1_Y	-0.05	0.05	0	0	0	0	0	0	0	0	0	
+IMU1_Z	-0.05	0.05	0	0	0	0	0	0	0	0	0	
+IMU2_X	-0.05	0.05	0	0	0	0	0	0	0	0	0	
+IMU2_Y	-0.05	0.05	0	0	0	0	0	0	0	0	0	
+IMU2_Z	-0.05	0.05	0	0	0	0	0	0	0	0	0	
+IMU_bad_time_elapsed	-1	2	0	0	1	0	0	0	0	0	0	
+V_bad_time_elapsed	-1	2	0	0	1	0	0	1	0	0	0	
 D_diff	-1	220	0	0	1	0	0	1	0	0	0	
-LIDAR	90	400	0	0	0	0	1	1	0	1	0	
-GUI_Conn	0.9	1.1	0	0	0	0	1	0	0	0	0	
-LST_Left	0	10	0	0	0	0	1	0	0	0	0	
-LST_Right	0	10	0	0	0	0	1	0	0	0	0	
+LIDAR	0	100	0	0	0	0	0	0	0	0	0	
+GUI_Conn	0.9	1.1	0	0	0	0	0	0	0	0	0	
+LST_Left	0	0	0	0	0	0	0	0	0	0	0	
+LST_Right	0	0	0	0	0	0	0	0	0	0	0	
