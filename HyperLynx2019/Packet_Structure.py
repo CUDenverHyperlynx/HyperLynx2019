@@ -103,14 +103,12 @@ class Status():
         df.rename(columns={'Fault (INIT TO ZERO)':'Fault'}, inplace=True)
         values = ['Low', 'High', 'Trigger', 'Fault']
         states = {
-            'SafeToApproach': df.loc[df['1 - S2A'] == 1, values].to_dict('index'),
-            'Launching': df.loc[df['3 - Launch'] == 1, values],
-            'BrakingHigh':df.loc[df['5 - Brake1'] == 1, values],
-                  'Crawling': df.loc[df['6 - Crawling'] == 1, values],
-                  'BrakingLow':df.loc[df['7 - Brake2'] == 1, values]}
-        self.abort_ranges[self.SafeToApproach] = \
-            states['SafeToApproach'].to_dict('index')
-        self.abort_ranges[self.]
+            self.SafeToApproach: df.loc[df['1 - S2A'] == 1, values].to_dict('index'),
+            self.Launching: df.loc[df['3 - Launch'] == 1, values].to_dict('index'),
+            self.BrakingHigh:df.loc[df['5 - Brake1'] == 1, values].to_dict('index'),
+            self.Crawling: df.loc[df['6 - Crawling'] == 1, values].to_dict('index'),
+            self.BrakingLow:df.loc[df['7 - Brake2'] == 1, values].to_dict('index')}
+        self.abort_ranges.update(states)
 
     #debug
     sensor_data['Brake_Pressure'] = 178
