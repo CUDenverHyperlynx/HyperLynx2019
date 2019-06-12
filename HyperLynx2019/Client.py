@@ -37,11 +37,6 @@ if __name__ == "__main__":
 
     # Copy all existing data in to new structure
     send_data.abort_ranges = pod_status.abort_ranges
-    # send_data.abort_ranges[send_data.SafeToApproach] = pod_status.abort_ranges[pod_status.SafeToApproach]
-    # send_data.abort_ranges[send_data.Launching] = pod_status.abort_ranges[pod_status.Launching]
-    # send_data.abort_ranges[send_data.BrakingHigh] = pod_status.abort_ranges[pod_status.BrakingHigh]
-    # send_data.abort_ranges[send_data.Crawling] = pod_status.abort_ranges[pod_status.Crawling]
-    # send_data.abort_ranges[send_data.BrakingLow] = pod_status.abort_ranges[pod_status.BrakingLow]
     send_data.commands = pod_status.commands
     send_data.sensor_data = pod_status.sensor_data # contains RPM,
     send_data.sensor_filter = pod_status.sensor_filter
