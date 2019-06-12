@@ -2,6 +2,7 @@
 # HyperLynx GUI data simulator
 
 
+import numpy as np
 import pandas as pd
 import argparse
 
@@ -140,13 +141,19 @@ class DataSimulator():
        return {
            'sensor_data': df.loc[df.index.isin(sensors), 'Value'].to_dict(),
            'commands': df.loc[df.index.isin(command_lst), 'Value'].to_dict(),
-           'state': df.loc['state', 'Value'],
-           'spacex_state': df.loc['spacex_state', 'Value'],
-           'throttle': df.loc['throttle', 'Value'],
+           'state': self._dict_exceptions(df, 'state'),
+           'spacex_state': self._dict_exceptions(df, 'spacex_state'),
+           'throttle': self._dict_exceptions(df, 'throttle'),
            'D': df.loc[df.index.isin(D), 'Value'].to_dict(),
            'V': df.loc[df.index.isin(V), 'Value'].to_dict(),
            'A': df.loc[df.index.isin(A), 'Value'].to_dict()
        }
+
+    def _dict_exceptions(self, df, key):
+       try:
+           return df.loc[key, 'Value']
+       except KeyError:
+           return np.nan
 
     def __iter__(self):
         self.it = iter(self.data_list)
@@ -164,4 +171,5 @@ if __name__ == "__main__":
     parser.add_argument('--log', help='path to log file')
     args = parser.parse_args()
 
-    data  = load_data_log(args.log)
+    sim = DataSimulator()
+    sim.load_data_log(args.log)
