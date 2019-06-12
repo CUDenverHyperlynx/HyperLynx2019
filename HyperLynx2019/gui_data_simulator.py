@@ -143,6 +143,7 @@ class DataSimulator():
            'commands': df.loc[df.index.isin(command_lst), 'Value'].to_dict(),
            'state': self._dict_exceptions(df, 'state'),
            'spacex_state': self._dict_exceptions(df, 'spacex_state'),
+           'total_faults': self.)_dict_exceptions(df, 'total_fault'),
            'throttle': self._dict_exceptions(df, 'throttle'),
            'D': df.loc[df.index.isin(D), 'Value'].to_dict(),
            'V': df.loc[df.index.isin(V), 'Value'].to_dict(),
@@ -173,3 +174,7 @@ if __name__ == "__main__":
 
     sim = DataSimulator()
     sim.load_data_log(args.log)
+
+    it = iter(sim)
+    for i in it:
+        print(i)
