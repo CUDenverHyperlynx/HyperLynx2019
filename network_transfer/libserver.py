@@ -40,6 +40,7 @@ class BaseServer():
                         message = key.data
                         try:
                             message.process_events(mask)
+                            ### add code to send data to local stack ###
                         except Exception:
                             print(
                                 "main: error: exception for",
