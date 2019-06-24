@@ -90,11 +90,15 @@ class Message:
 
     def _create_response_json_content(self):
         action = self.request.get("action")
-        if action == "data":
+        if action == "search":
             query = self.request.get("value")
             answer = request_data.get(query) or f'No match for "{query}".'
             content = {"result": answer}
-        # elif action == 'cmd':
+        elif action == 'send_data':
+            # data = self.request.get('value')
+            print('Data:\n\t',self.request.get('value'))
+            answer = 'Data Received'
+            content = {'result': answer}
         else:
             content = {"result": f'Error: invalid action "{action}".'}
         content_encoding = "utf-8"

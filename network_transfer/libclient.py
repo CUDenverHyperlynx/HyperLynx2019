@@ -1,9 +1,70 @@
 import sys
+import socket
 import selectors
+import traceback
 import json
 import io
 import struct
 
+
+class BaseClient():
+    def __init__(self):
+        self.sel = None
+
+    def send_message(self, host, port, action, value):
+        self.sel = selectors.DefaultSelector()
+        request = self._create_request(action, value)
+        self._start_connection(host, port, request)
+        try:
+            while True:
+                events = self.sel.select(timeout=1)
+                for key, mask in events:
+                    message = key.data
+                    try:
+                        message.process_events(mask)
+                    except Exception:
+                        print(
+                            "main: error: exception for",
+                            f"{message.addr}:\n{traceback.format_exc()}",
+                        )
+                        message.close()
+                # Check for a socket being monitored to continue.
+                if not self.sel.get_map():
+                    break
+        except KeyboardInterrupt:
+            print("caught keyboard interrupt, exiting")
+        finally:
+            self.sel.close()
+
+    def _create_request(self, action, value):
+        if action == "search":
+            return dict(
+                type="text/json",
+                encoding="utf-8",
+                content=dict(action=action, value=value),
+            )
+        elif action == 'send_data':
+            return dict(
+                type="text/json",
+                encoding="utf-8",
+                content=dict(action=action, value=value)
+            )
+        else:
+            return dict(
+                type="binary/custom-client-binary-type",
+                encoding="binary",
+                content=bytes(action + value, encoding="utf-8"),
+            )
+
+    def _start_connection(self, host, port, request):
+        addr = (host, port)
+        print("starting connection to", addr)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setblocking(False)
+        sock.connect_ex(addr)
+        events = selectors.EVENT_READ | selectors.EVENT_WRITE
+        message = Message(self.sel, sock, addr, request)
+        self.sel.register(sock, events, data=message)
 
 class Message:
     def __init__(self, selector, sock, addr, request):
