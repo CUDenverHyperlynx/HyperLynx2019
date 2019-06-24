@@ -167,14 +167,28 @@ class DataSimulator():
 
 
 if __name__ == "__main__":
+    # this needs to be run from Hyperlynx2019 top directory to work
+    from network_transfer.libclient import BaseClient
+    import time
 
     parser = argparse.ArgumentParser(description='Pod Data Simulator')
     parser.add_argument('--log', help='path to log file')
+    parser.add_argument('--server', help='<host>:<port>')
     args = parser.parse_args()
+
 
     sim = DataSimulator()
     sim.load_data_log(args.log)
 
     it = iter(sim)
-    for i in it:
-        print(i)
+
+    if args.server:
+        host, port = args.server.split(':')
+        port = int(port)
+        client = BaseClient()
+        for i in it:
+            client.send_message(host, port, 'send_data', i)
+            time.sleep(1)
+    else:
+        for i in it:
+            print(i)
