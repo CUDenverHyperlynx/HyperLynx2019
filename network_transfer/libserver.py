@@ -96,7 +96,7 @@ class Message:
             content = {"result": answer}
         elif action == 'send_data':
             # data = self.request.get('value')
-            print('Data:\n\t',self.request.get('value'))
+            print('Data:\t',type(self.request.get('value')))
             answer = 'Data Received'
             content = {'result': answer}
         else:
@@ -199,7 +199,9 @@ class Message:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.request = self._json_decode(data, encoding)
-            print("received request", repr(self.request), "from", self.addr)
+            # print("received request", repr(self.request), "from", self.addr)
+            print("received request, action:", self.request.get('action'),
+                    "from", self.addr)
         else:
             # Binary or unknown content-type
             self.request = data
