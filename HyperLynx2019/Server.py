@@ -2,13 +2,16 @@
 # HyperLynx TCP Server merged with the GUI
 
 import socket
-import pickle
+# import pickle
+import random
 import sys
 from time import clock
 from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow, \
     QTableWidgetItem
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
+
+from network_transfer.libserver import BaseServer
 
 
 class HyperGui(QMainWindow):
@@ -22,7 +25,7 @@ class HyperGui(QMainWindow):
     s.bind((HOST, PORT))
 
     # ******* Constructor for the class *******
-    def __init__(self):
+    def __init__(self, host=None, port=None):
         super().__init__()
 
         self.init_ui()
@@ -310,19 +313,14 @@ class HyperGui(QMainWindow):
 
     # This function is running on the thread separate from initializing the gui
     def update_txt(self):
-        loop_cnt = 0
+        # Random number generator
+        test_val = random.uniform(0, 3)
 
-        # Its arbitrary but if I did something like while True it breaks the GUI
-        while loop_cnt < 50:
-            # Random number generator
-            # test_val = random.uniform(0, 3)
+        # Update the items of the environmental table
+        self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
+        self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(test_val)))
+        self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
-            # Update the items of the environmental table
-            self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
-            # self.env_table.setItem(0, 1, QTableWidgetItem(str(test_val)))
-            self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
-
-            loop_cnt += 1
 
 
 app = QApplication([])
