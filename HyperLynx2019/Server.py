@@ -17,16 +17,20 @@ from network_transfer.libserver import BaseServer
 class HyperGui(QMainWindow):
     # Creating the dictionary
     # cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
-
+####################################
     # set up connection
-    HOST = '127.0.0.1'  # Change IP Address when using radios
-    PORT = 1028
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((HOST, PORT))
+    # HOST = '127.0.0.1'  # Change IP Address when using radios
+    # PORT = 1028
+    # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # s.bind((HOST, PORT))
+###################################
 
     # ******* Constructor for the class *******
     def __init__(self, host=None, port=None):
         super().__init__()
+
+        self.host = host
+        self.port = port
 
         self.init_ui()
 
@@ -193,7 +197,7 @@ class HyperGui(QMainWindow):
         # ******* This is the log text box *******
 
         # Creating the Log Text box
-        self.pd_log_txt = QTextEdit('Host:' + self.HOST + ' Port:' + str(self.PORT), self)
+        self.pd_log_txt = QTextEdit('Host:' + self.host + ' Port:' + str(self.port), self)
         self.pd_log_txt.setAlignment(Qt.AlignCenter)
         self.pd_log_txt.setReadOnly(True)
         self.pd_log_txt.resize(350, 230)
@@ -323,9 +327,13 @@ class HyperGui(QMainWindow):
 
 
 
-app = QApplication([])
-my_gui = HyperGui()
-my_gui.show()
+
+if __name__ == "__main__":
+    app = QApplication([])
+    my_gui = HyperGui(host='0.0.0.0', port=5000)
+    my_gui.show()
+
+    sys.exit(app.exec_())
 
 '''
 # loop during run
@@ -359,5 +367,3 @@ while 1:
     # Call GUI function and send data
     # Put GUI function here
 '''
-
-sys.exit(app.exec_())
