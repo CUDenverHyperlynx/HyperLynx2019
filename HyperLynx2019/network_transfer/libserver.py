@@ -4,6 +4,7 @@ import selectors
 import traceback
 import json
 import io
+import os
 import struct
 
 request_data = {
@@ -13,7 +14,7 @@ request_data = {
 }
 
 class BaseServer():
-    def __init__(self, host=None, port=None):
+    def __init__(self, host=None, port=None, log=None):
         self.sel = None
         if host and port:
             self.start_server(host, port)
@@ -41,6 +42,7 @@ class BaseServer():
                         try:
                             message.process_events(mask)
                             ### add code to send data to local stack ###
+                            ## write data to file
                         except Exception:
                             print(
                                 "main: error: exception for",
