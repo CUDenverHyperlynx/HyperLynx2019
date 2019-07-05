@@ -2,7 +2,8 @@
 # HyperLynx TCP Server merged with the GUI
 
 import socket
-import pickle
+# import pickle
+import random
 import sys
 from time import clock
 from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow, \
@@ -10,20 +11,26 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, 
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from network_transfer.libserver import BaseServer
+
 
 class HyperGui(QMainWindow):
     # Creating the dictionary
     # cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
-
+####################################
     # set up connection
-    HOST = '127.0.0.1'  # Change IP Address when using radios
-    PORT = 1028
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((HOST, PORT))
+    # HOST = '127.0.0.1'  # Change IP Address when using radios
+    # PORT = 1028
+    # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # s.bind((HOST, PORT))
+###################################
 
     # ******* Constructor for the class *******
-    def __init__(self):
+    def __init__(self, host=None, port=None):
         super().__init__()
+
+        self.host = host
+        self.port = port
 
         self.init_ui()
 
@@ -190,7 +197,7 @@ class HyperGui(QMainWindow):
         # ******* This is the log text box *******
 
         # Creating the Log Text box
-        self.pd_log_txt = QTextEdit('Host:' + self.HOST + ' Port:' + str(self.PORT), self)
+        self.pd_log_txt = QTextEdit('Host:' + self.host + ' Port:' + str(self.port), self)
         self.pd_log_txt.setAlignment(Qt.AlignCenter)
         self.pd_log_txt.setReadOnly(True)
         self.pd_log_txt.resize(350, 230)
@@ -310,24 +317,23 @@ class HyperGui(QMainWindow):
 
     # This function is running on the thread separate from initializing the gui
     def update_txt(self):
-        loop_cnt = 0
+        # Random number generator
+        test_val = random.uniform(0, 3)
 
-        # Its arbitrary but if I did something like while True it breaks the GUI
-        while loop_cnt < 50:
-            # Random number generator
-            # test_val = random.uniform(0, 3)
-
-            # Update the items of the environmental table
-            self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
-            # self.env_table.setItem(0, 1, QTableWidgetItem(str(test_val)))
-            self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
-
-            loop_cnt += 1
+        # Update the items of the environmental table
+        self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
+        self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(test_val)))
+        self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
 
-app = QApplication([])
-my_gui = HyperGui()
-my_gui.show()
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    my_gui = HyperGui(host='0.0.0.0', port=5000)
+    my_gui.show()
+
+    sys.exit(app.exec_())
 
 '''
 # loop during run
@@ -361,5 +367,3 @@ while 1:
     # Call GUI function and send data
     # Put GUI function here
 '''
-
-sys.exit(app.exec_())
