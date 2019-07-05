@@ -4,6 +4,7 @@
 			bus 0:	NOSE	5V		PCA Diff.
 					LIDAR Lite V3	addr 0x62
 					BMP280 			addr 0x77
+					Arduino Micro	addr 0x5F
 			bus 1:	LPV		3.3V	PCA Diff.
 					BME280			addr 0x76
 			bus 2:	RPV1	3.3V
@@ -46,6 +47,8 @@ class HyperlynxECS():
 		self.BME_ADDR2 = 0x76											#I2C ADDRESS 2 FOR BME280 PRESSURE SENSOR
 		self.LID_ADDR = 0x62											#I2C ADDRESS FOR LIDAR LITE V3
 		self.ADC_ADDR = 0x48											#I2C ADDRESS FOR ADS1115 ADC
+		self.MICRO_ADDR = 0x5F											#I2C ADDRESS FOR ARDUINO
+		self.STRIPE_COUNT = 0											#INITIALIZE STRIPE COUNT TO ZERO
 		self.METER2G = (3.28084/32.2)									#CONVERSION: METER TO FEET => FEET/G FOR ACCELERATION
 		self.VOLT2PSI = 94.697											#CONVERSION: VOLTS READ BY ADC TO PSI FOR HONEYWELL PRESSURE SENSOR
 		self.PRESSURE = 2												#ADC PIN FOR HONEYWELL PRESSURE SENSOR
@@ -87,6 +90,7 @@ class HyperlynxECS():
 		self.LID_status = False
 		self.ADC_status = False
 		self.TCA_status = False
+		self.MICRO_status = False
 		self.MLXRST = 0
 		
 		try:															#ESTABLISH CONNECTION TO MULTIPLEXER
@@ -110,7 +114,6 @@ class HyperlynxECS():
 		except IOError:
 			print("Connection error with TCA Multiplexer")
 			self.TCA_status = False
-			return 0;
 		try:
 			self.Lidar = Lidar.Lidar_Lite()								#CREATE OBJECT FOR LIDAR LITE V3
 			self.bus.write_quick(self.LID_ADDR)							#QUICK WRITE TO TEST CONNECTION TO I2C BUS
@@ -118,7 +121,6 @@ class HyperlynxECS():
 			self.LID_status = True
 		except IOError:
 			print("Connection error with Lidar")						#PRINT ERROR IF UNABLE TO CONNECT
-			return 0
 		try:
 			for x in range(0, self.connectAttempt):
 				self.BMP = BMP280(address=self.BMP_ADDR)				#CREATE OBJECT FOR BMP280
@@ -130,6 +132,14 @@ class HyperlynxECS():
 		except IOError:
 			print("Connection Error with BMP")
 			#return 0
+		try:
+			for x in range(0, self.connectAttempt):
+				self.bus.read_byte(self.MICRO_ADDR)
+				print("Arduino Micro Ready")
+				self.MICRO_status = True
+				break
+		except IOError:
+			print("Connection Error with Arduino Micro")
 		try:
 			for x in range(0, self.connectAttempt):
 				self.openBus(self.tcaPVL)								#OPEN CHANNEL ON TCA
@@ -261,6 +271,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaPVR):
 			try:
 				self.openBus(self.tcaPVR)								#CHECKS FOR CURRENT OPEN CHANNEL TO SAVE TIME SELECTING IF IT IS ALREADY OPEN, IF ALREADY NOT OPENED, OPEN IT
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS A ZERO IF CANNOT CONNECT TO THE TCA
@@ -276,6 +287,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaPVR2):
 			try:
 				self.openBus(self.tcaPVR2)								#CHECK IF BUS IS OPENED, IF IT IS NOT, OPEN IT
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return [0, 0, 0]										#RETURNS TUPLE OF ZEROS IF CANNOT CONNECT TO TCA
@@ -309,6 +321,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaPVR2):
 			try:
 				self.openBus(self.tcaPVR2)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return (0, 0, 0)
@@ -342,6 +355,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaNOSE):
 			try:
 				self.openBus(self.tcaNOSE)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -357,6 +371,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaNOSE):
 			try:
 				self.openBus(self.tcaNOSE)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -372,6 +387,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaNOSE):
 			try:
 				self.openBus(self.tcaNOSE)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -388,6 +404,7 @@ class HyperlynxECS():
 			if(self.currentBus != self.tcaPVR2):
 				try:
 					self.openBus(self.tcaPVR2)
+					self.TCA_status = True
 				except IOError:
 					self.TCA_status = 0
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -402,6 +419,7 @@ class HyperlynxECS():
 			if(self.currentBus != self.tcaPVL):
 				try:
 					self.openBus(self.tcaPVL)
+					self.TCA_status = True
 				except IOError:
 					self.TCA_status = False
 					return 0
@@ -422,6 +440,7 @@ class HyperlynxECS():
 			if(self.currentBus != self.tcaPVR2):
 				try:
 					self.openBus(self.tcaPVR2)
+					self.TCA_status = True
 				except IOError:
 					self.TCA_status = False
 					return 0											#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -436,6 +455,7 @@ class HyperlynxECS():
 			if(self.currentBus != self.tcaPVL):
 				try:
 					self.openBus(self.tcaPVL)
+					self.TCA_status = True
 				except IOError:
 					self.TCA_status = False
 					return 0
@@ -454,6 +474,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaPVR):
 			try:
 				self.openBus(self.tcaPVR)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -463,12 +484,13 @@ class HyperlynxECS():
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
 			self.ADC_status = False
-		return (data-4700) * self.ADC_CONVERT * self.vRatio					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY ATTOPILOT AND SCALES TO VOLTAGE READ BY ATTOPILOT, RETURNS VOLTAGE
+		return 12#(data-4700) * self.ADC_CONVERT * self.vRatio					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY ATTOPILOT AND SCALES TO VOLTAGE READ BY ATTOPILOT, RETURNS VOLTAGE
 	"""FETCH LV BATTERY CURRENT DRAW"""#DOES NOT WORK YET, SOURCING NEW SENSOR	
 	def getCurrentLevel(self):
 		if(self.currentBus != self.tcaPVR):
 			try:
 				self.openBus(self.tcaPVR)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0
@@ -484,6 +506,7 @@ class HyperlynxECS():
 		if(self.currentBus != self.tcaPVR):
 			try:
 				self.openBus(self.tcaPVR)
+				self.TCA_status = True
 			except IOError:
 				self.TCA_status = False
 				return 0												#RETURNS ZERO IF CANNOT CONNECT TO TCA
@@ -493,7 +516,22 @@ class HyperlynxECS():
 		except IOError:
 			data = 0													#SETS AS ZERO IF CANNOT CONNECT TO ADC
 			self.ADC_status = False
-		return (data-4700) * self.ADC_CONVERT * self.VOLT2PSI					#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
+		return (data-4700) * self.ADC_CONVERT * self.VOLT2PSI			#CONVERTS ADC BITS TO ACTUAL VOLTAGE SENT BY HONEYWELL AND CONVERTS VOLTAGE TO PSI, RETURNS PRESSURE IN PSI
+	"""FETCH STRIPE COUNT"""											#RETURNS STRIPE COUNT TALLY FROM ARDUINO MICRO
+	def getStripeCount(self):
+		if(self.currentBus != self.tcaNOSE):
+			try:
+				self.openBus(self.tcaNOSE)
+				self.TCA_status = True
+			except IOError:
+				self.TCA_status = False
+				return 0
+			try:
+				self.STRIPE_COUNT = self.bus.read_byte(self.MICRO_ADDR)
+				self.MICRO_status = True
+			except IOError:
+				self.MICRO_status = False
+			return self.STRIPE_COUNT
 	
 	def initializeIO(self):
 		self.IO.setup(self.contactorPIN1, self.IO.OUT, initial=self.IO.LOW)#SET CONTACTOR1 PIN AS OUTPUT, INITIALIZE LOW
@@ -527,7 +565,7 @@ class HyperlynxECS():
 			if(status == 0):
 				self.IO.output(self.NOsolPIN, self.IO.LOW)
 			elif(status == 1):
-				self.IO.output(self.NOsolPIN, self.IO.LOW)
+				self.IO.output(self.NOsolPIN, self.IO.HIGH)
 				
 	def switchCoolantPump(self, status):
 		if(status == 0):
@@ -555,12 +593,12 @@ class HyperlynxECS():
 		self.IO.output(self.MLXrstPIN, self.IO.HIGH)
 		
 	def statusCheck(self):
-		data = self.MLX_status + self.BNO1_status + self.BNO2_status + self.BME1_status + self.BME2_status + self.BMP_status + self.LID_status + self.ADC_status + self.TCA_status
-		if(not self.TCA_status or data == 0):
+		data = self.MLX_status + self.BNO1_status + self.BNO2_status + self.BME1_status + self.BME2_status + self.BMP_status + self.LID_status + self.ADC_status + self.TCA_status + self.MICRO_status
+		if(data == 0):
 			self.MLX_RESET()
 			self.MLXRST = self.MLXRST + 1
 			self.TCA_status = True
-		return (data / 9) * 100
+		return (data / 10) * 100
 				
 if __name__ == '__main__':
 	system = HyperlynxECS()
@@ -583,6 +621,7 @@ if __name__ == '__main__':
 			orient2 = system.getOrientation(2)
 			temp1 = system.getBMEtemperature(1)
 			press1 = system.getBMEpressure(1)
+			stripes = system.getStripeCount()
 			stat = system.statusCheck()
 			endTime = clock() - startTime
 			print(stat)

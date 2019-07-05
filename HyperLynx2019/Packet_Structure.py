@@ -1,4 +1,5 @@
 from time import clock
+import pandas as pd
 
 class Status():
     # Definition of State Numbers
@@ -9,12 +10,11 @@ class Status():
     BrakingLow = 7
 
     # Init dictionaries
-    abort_ranges = {}           # Dict of dicts (below)
-    abort_ranges[SafeToApproach] = {}
-    abort_ranges[Launching] = {}
-    abort_ranges[BrakingHigh] = {}
-    abort_ranges[Crawling] = {}
-    abort_ranges[BrakingLow] = {}
+    abort_ranges = {SafeToApproach: {},
+                    Launching: {},
+                    BrakingHigh: {},
+                    Crawling: {},
+                    BrakingLow: {}}
     commands = {}               # Contains all possible inputs from GUI
     sensor_data = {}            # Contains all inputs from I2C/CAN buses
     sensor_filter = {}
@@ -97,7 +97,18 @@ class Status():
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
         self.log_rate = 10                      # Hz
 
-
+    def load_abort_ranges(self, file):
+        df = pd.read_csv(file, sep='\t').set_index('Sensor')
+        df.columns = [col.strip() for col in df.columns]
+        df.rename(columns={'Fault (INIT TO ZERO)':'Fault'}, inplace=True)
+        values = ['Low', 'High', 'Trigger', 'Fault']
+        states = {
+            self.SafeToApproach: df.loc[df['1 - S2A'] == 1, values].to_dict('index'),
+            self.Launching: df.loc[df['3 - Launch'] == 1, values].to_dict('index'),
+            self.BrakingHigh:df.loc[df['5 - Brake1'] == 1, values].to_dict('index'),
+            self.Crawling: df.loc[df['6 - Crawling'] == 1, values].to_dict('index'),
+            self.BrakingLow:df.loc[df['7 - Brake2'] == 1, values].to_dict('index')}
+        self.abort_ranges.update(states)
 
     #debug
     sensor_data['Brake_Pressure'] = 178

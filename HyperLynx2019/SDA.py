@@ -85,7 +85,7 @@ class Status():
     def __init__(self):        # BOOT INIT
         self.init = False
         self.flight_sim = False
-        self.wheel_diameter = 17.4 / 12 # [ft] define drive wheel diameter
+        self.wheel_diameter = 14.2 / 12 # [ft] define drive wheel diameter
         self.wheel_circum = numpy.pi * self.wheel_diameter
         self.StartTime = clock()
         self.HV = False                     # Current state of HV system (True(1) or False(0))
@@ -115,7 +115,7 @@ class Status():
         self.IMU_bad_time = None
         self.V_bad_time = None
 
-        self.filter_length = 20         # Moving average for sensor data filter
+        self.filter_length = 10         # Moving average for sensor data filter
 
         # SPACEX CONFIG DATA
         self.spacex_state = 0
@@ -126,7 +126,7 @@ class Status():
         self.spacex_lastsend = 0
 
         # I2C init
-        self.IMU_init_range = 0.001
+        self.IMU_init_range = 0.05
         self.sensor_poll = Hyperlynx_ECS.HyperlynxECS()
         self.sensor_poll.initializeSensors()
         self.sensor_poll.initializeIO()
@@ -137,13 +137,13 @@ class Status():
 
         # Set filter on priority data:
         self.filter_items = ['IMU1_X', 'IMU1_Y', 'IMU1_Z', 'IMU2_X', 'IMU2_Y',
-                             'IMU2_Z', 'LIDAR', 'Brake_Pressure',
-                             'SD_MotorData_MotorRPM']
+                             'IMU2_Z', 'LIDAR', 'Brake_Pressure']
 
         # init True values for Distance, Velocity, and Acceleration, with moving average queue, true value, and dev
         self.true_data = {'D': {'q': [], 'val': 0, 'std_dev': 0},
                           'V': {'q': [], 'val': 0, 'std_dev': 0},
-                          'A': {'q': [], 'val': 0, 'std_dev': 0}}
+                          'A': {'q': [], 'val': 0, 'std_dev': 0},
+                          'stripe_count':0}
 
         # Pod Abort conditions init:
         self.Fault = False
@@ -233,11 +233,13 @@ def init():
     print("Checking IMUs")
     poll_sensors()
     filter_data()
-    if abs(PodStatus.sensor_filter['IMU1_X']['val']) < PodStatus.IMU_init_range and \
-            abs(PodStatus.sensor_filter['IMU2_X']['val']) < PodStatus.IMU_init_range:
+    if abs(PodStatus.sensor_filter['IMU1_Z']['val']) < PodStatus.IMU_init_range and \
+            abs(PodStatus.sensor_filter['IMU2_Z']['val']) < PodStatus.IMU_init_range:
         print("Both IMUs valid.")
         PodStatus.init = True
     else:
+        print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
+        print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
         print("IMU init failed.")
 
     PodStatus.create_log()
@@ -260,6 +262,7 @@ def poll_sensors():
     ### CAN DATA ###
     # None Yet Added
 
+
     ### I2C DATA ###
 
     # If you want to run the flight sim:
@@ -267,22 +270,23 @@ def poll_sensors():
 
         #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
-        PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
-        PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
+        PodStatus.sensor_data['LVBatt_Current'] = 4
+        PodStatus.sensor_data['LVBatt_Voltage'] = 12
         PodStatus.sensor_data['PV_Left_Temp'] = PodStatus.sensor_poll.getBMEtemperature(2)
         PodStatus.sensor_data['PV_Left_Pressure'] = PodStatus.sensor_poll.getBMEpressure(2)
         PodStatus.sensor_data['PV_Right_Temp'] = PodStatus.sensor_poll.getBMEtemperature(1)
         PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
         PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
         tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
-        PodStatus.sensor_data['IMU1_X'] = tempAccel1[0]
-        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[1]
-        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_X'] = tempAccel1[1]
+        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[2]
+        #PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
         tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
-        PodStatus.sensor_data['IMU2_X'] = tempAccel2[0]
-        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[1]
-        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[2]
-        PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
+        PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
+        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
+        #PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
+        PodStatus.sensor_data['LIDAR'] = PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']
+        if PodStatus.sensor_data['LIDAR'] > 150: PodStatus.sensor_data['LIDAR'] = 150
 
         flight_sim.sim(PodStatus)
 
@@ -298,13 +302,13 @@ def poll_sensors():
         PodStatus.sensor_data['PV_Right_Pressure'] = PodStatus.sensor_poll.getBMEpressure(1)
         PodStatus.sensor_data['Ambient_Pressure'] = PodStatus.sensor_poll.getTubePressure()
         tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
-        PodStatus.sensor_data['IMU1_X'] = tempAccel1[0]
-        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[1]
-        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_X'] = tempAccel1[1]
+        PodStatus.sensor_data['IMU1_Y'] = tempAccel1[2]
+        PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
         tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
-        PodStatus.sensor_data['IMU2_X'] = tempAccel2[0]
-        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[1]
-        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[2]
+        PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
+        PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
+        PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
         PodStatus.sensor_data['LIDAR'] = PodStatus.sensor_poll.getLidarDistance()
 
     if abs(PodStatus.sensor_data['IMU1_Z']) > 20:
@@ -331,25 +335,17 @@ def poll_sensors():
     ### CONVERT DATA ###
     PodStatus.sensor_poll.statusCheck()
 
-    # Set pod state variable for brakes
-    # debug line below before actual testing
-    PodStatus.sensor_data['Brake_Pressure'] = 178
-
     if PodStatus.sensor_data['Brake_Pressure'] > 177:
         PodStatus.Brakes = False
     else:
         PodStatus.Brakes = True
+    PodStatus.Vent_Sol = PodStatus.cmd_int['Vent_Sol']
+    PodStatus.Res1_Sol = PodStatus.cmd_int['Res1_Sol']
+    PodStatus.Res2_Sol = PodStatus.cmd_int['Res2_Sol']
 
-    # Set pod state variable for speed and acceleration
-    old_speed = PodStatus.speed
-    if PodStatus.sensor_data['SD_MotorData_MotorRPM']:
-        PodStatus.speed = PodStatus.sensor_data['SD_MotorData_MotorRPM'] / 60 * 2 * numpy.pi * PodStatus.wheel_diameter
-    PodStatus.accel = numpy.mean([PodStatus.sensor_data['IMU1_Z'], PodStatus.sensor_data['IMU2_Z']])
-
-    # Integrate distance.  At 1.4GHz clock speeds, integration can be numerically
-    # approximated as constant speed over the time step.
-    if PodStatus.poll_oldtime != 0:         # Update distance (but skip init loop @ old_time = 0
-        PodStatus.distance += PodStatus.speed * PodStatus.poll_interval
+    # Integrate distance
+    if PodStatus.state != 1:
+        PodStatus.true_data['D']['val'] += PodStatus.true_data['V']['val'] * PodStatus.poll_interval
 
     # Update MET
     if PodStatus.MET > 0:
@@ -369,11 +365,11 @@ def filter_data():
                 PodStatus.sensor_filter[str(key)]['q'] = numpy.append(PodStatus.sensor_filter[str(key)]['q'],
                                                                       PodStatus.sensor_data[str(key)])
             else:
-                PodStatus.sensor_filter[str(key)]['std_dev'] = numpy.std(PodStatus.sensor_filter[str(key)]['q'])
+                PodStatus.sensor_filter[str(key)]['std_dev'] = 3*numpy.std(PodStatus.sensor_filter[str(key)]['q'])
                 PodStatus.sensor_filter[str(key)]['mean'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
                 # if new value is inside range of std_dev (hence valid), then add to q
-                if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['mean']) <= \
+                if abs(PodStatus.sensor_data[str(key)]-PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)]) <= \
                         PodStatus.sensor_filter[str(key)]['std_dev']:
 
                     # shift q values over
@@ -382,106 +378,127 @@ def filter_data():
                     # add new value to end of queue
                     PodStatus.sensor_filter[str(key)]['q'][(PodStatus.filter_length-1)] = PodStatus.sensor_data[str(key)]
                     # set the filtered value to the mean of the new queue
-                    PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
+                else:
+                    print('Did not add ' + str(key) + ' to q: ' + str(PodStatus.sensor_data[str(key)]) + str(PodStatus.MET))
+                    print('Current std dev: ' + str(PodStatus.sensor_filter[str(key)]['std_dev']))
+            PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
 
 def sensor_fusion():
     """ Combines various filtered sensor data to a common solution."""
 
     ### BEGIN ACCELERATION FUSION
     # If queue is not full, fill queue
-    good_IMUs = []  # reset good_IMUs to empty set
-    if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
-        # Add mean of IMU values to
-        PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
-                                        numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
-                                                    PodStatus.sensor_filter['IMU2_Z']['val']]))
-    else:
-        PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
 
-        # determine valid IMU data
-        # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
-        if abs(PodStatus.sensor_filter['IMU1_Z']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
-                2 * PodStatus.true_data['A']['std_dev']:
-            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
-        else:
-            print('IMUZ_1 Data Bad\n')
-            print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU1_Z']['val'])) + '\n')
-            print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
-            print('A two times STD ' + str(2 * PodStatus.true_data['A']['std_dev']) + '\n')
-        if abs(PodStatus.sensor_filter['IMU2_Z']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
-                2 * PodStatus.true_data['A']['std_dev']:
-            numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
+    PodStatus.true_data['A']['val'] = numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
+                                                  PodStatus.sensor_filter['IMU2_Z']['val']])
 
-        # if good_IMUs is not empty set, take mean value and add to true_data q
-        if good_IMUs:
-            print("Good data found for A")
-            # reset IMU_bad_time timer
-            PodStatus.IMU_bad_time_elapsed = 0
-            PodStatus.IMU_bad_time = None
-
-            # Set true value to mean of good_IMUs array
-            PodStatus.true_data['A']['val'] = numpy.mean(good_IMUs)
-
-            # add valid data to true_data q
-            # shift q values over
-            for i in range(0, (len(PodStatus.true_data['A']['q']) - 1)):
-                PodStatus.true_data['A']['q'][i] = PodStatus.true_data['A']['q'][i + 1]
-            # add new value to end of queue
-            PodStatus.true_data['A']['q'][(PodStatus.filter_length - 1)] = PodStatus.true_data['A']['val']
-
-        # if no good IMU data, start or progress the bad IMU data timer
-        else:
-            if not PodStatus.IMU_bad_time:
-                PodStatus.IMU_bad_time = clock()
-                print("Bad IMU data, starting 1 second clock at " + str(PodStatus.IMU_bad_time))
-
-            else:
-                PodStatus.IMU_bad_time_elapsed = clock()-PodStatus.IMU_bad_time
-                print("Bad IMU data, elapsed time: " + str(PodStatus.IMU_bad_time_elapsed))
+    # good_IMUs = []  # reset good_IMUs to empty set
+    # if len(PodStatus.true_data['A']['q']) < PodStatus.filter_length:
+    #     # Add mean of IMU values to
+    #     print('Adding to Q')
+    #     PodStatus.true_data['A']['q'] = numpy.append(PodStatus.true_data['A']['q'],
+    #                                     numpy.mean([PodStatus.sensor_filter['IMU1_Z']['val'],
+    #                                                 PodStatus.sensor_filter['IMU2_Z']['val']]))
+    #
+    # else:
+    #     PodStatus.true_data['A']['std_dev'] = numpy.std(PodStatus.true_data['A']['q'])
+    #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
+    #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
+    #
+    #     # # determine valid IMU data
+    #     # # if new sensor_filter data is within 2*std_dev of true q, include in good_IMUs calc
+    #     # if abs(PodStatus.sensor_filter['IMU1_Z']['val']-numpy.mean(PodStatus.true_data['A']['q'])) < \
+    #     #         3 * PodStatus.true_data['A']['std_dev']:
+    #     #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU1_Z']['val'])
+    #     # else:
+    #     #     print('Fusion: IMUZ_1 Data Bad\n')
+    #     #     print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU1_Z']['val'])) + '\n')
+    #     #     print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
+    #     #     print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
+    #     # if abs(PodStatus.sensor_filter['IMU2_Z']['val'] - numpy.mean(PodStatus.true_data['A']['q'])) < \
+    #     #         3 * PodStatus.true_data['A']['std_dev']:
+    #     #     numpy.append(good_IMUs, PodStatus.sensor_filter['IMU2_Z']['val'])
+    #     # else:
+    #     #     print('Fusion: IMUZ_2 Data Bad\n')
+    #     #     print('IMUZ Value ' + str(abs(PodStatus.sensor_filter['IMU2_Z']['val'])) + '\n')
+    #     #     print('A Mean ' + str(numpy.mean(PodStatus.true_data['A']['q'])) + '\n')
+    #     #     print('A two times STD ' + str(3 * PodStatus.true_data['A']['std_dev']) + '\n')
+    #
+    #     # if good_IMUs is not empty set, take mean value and add to true_data q
+    #     if good_IMUs:
+    #         print("Good data found for A")
+    #         # reset IMU_bad_time timer
+    #         PodStatus.IMU_bad_time_elapsed = 0
+    #         PodStatus.IMU_bad_time = None
+    #
+    #         # Set true value to mean of good_IMUs array
+    #         PodStatus.true_data['A']['val'] = numpy.mean(good_IMUs)
+    #
+    #         # add valid data to true_data q
+    #         # shift q values over
+    #         for i in range(0, (len(PodStatus.true_data['A']['q']) - 1)):
+    #             PodStatus.true_data['A']['q'][i] = PodStatus.true_data['A']['q'][i + 1]
+    #         # add new value to end of queue
+    #         PodStatus.true_data['A']['q'][(PodStatus.filter_length - 1)] = PodStatus.true_data['A']['val']
+    #
+    #     # if no good IMU data, start or progress the bad IMU data timer
+    #     else:
+    #         if not PodStatus.IMU_bad_time:
+    #             PodStatus.IMU_bad_time = clock()
+    #             print("Bad IMU data, starting 2 second clock at " + str(PodStatus.IMU_bad_time))
+    #
+    #         else:
+    #             PodStatus.IMU_bad_time_elapsed = clock()-PodStatus.IMU_bad_time
+    #             print("Bad IMU data, elapsed time: " + str(PodStatus.IMU_bad_time_elapsed))
 
 
     ### END ACCELERATION FUSION
 
     ### BEGIN VELOCITY FUSION
+    PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] * PodStatus.wheel_circum / 60
+    if PodStatus.true_data['V']['val'] < 0: PodStatus.true_data['V']['val'] = 0
     # If queue is not full, fill queue
-    if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
-        # Add mean of IMU values to
-        PodStatus.true_data['V']['q'] = numpy.append(PodStatus.true_data['V']['q'],
-                                                     PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'])
-
-    else:
-        # Estimate new velocity
-        Vdr = PodStatus.poll_interval * PodStatus.true_data['A']['val']
-
-        # Set std_dev
-        PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
-
-        # Evaluate new data compared to true q and std dev
-        if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
-                2 * PodStatus.true_data['V']['std_dev']:
-            PodStatus.V_bad_time_elapsed = 0
-            PodStatus.V_bad_time = None
-            PodStatus.true_data['V']['val'] = PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val']
+    # if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
+    #     # Add mean of IMU values to
+    #     PodStatus.true_data['V']['q'] = numpy.append(PodStatus.true_data['V']['q'],
+    #                                                  (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * \
+    #                                                   PodStatus.wheel_circum / 60))
+    #
+    # else:
+    #     # Estimate new velocity
+    #     Vdr = PodStatus.true_data['V']['val'] + PodStatus.poll_interval * PodStatus.true_data['A']['val'] * 32.174
+    #
+    #     # Set std_dev
+    #     PodStatus.true_data['V']['std_dev'] = numpy.std(PodStatus.true_data['V']['q'])
+    #
+    #     # Evaluate new data compared to true q and std dev
+    #     # if abs(PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] - numpy.mean(PodStatus.true_data['V']['q'])) < \
+    #     #         2 * PodStatus.true_data['V']['std_dev']:
+    #     #     PodStatus.V_bad_time_elapsed = 0
+    #     #     PodStatus.V_bad_time = None
+    #
+    #     PodStatus.true_data['V']['val'] = numpy.mean([Vdr, \
+    #                                                   (PodStatus.sensor_filter['SD_MotorData_MotorRPM']['val'] * PodStatus.wheel_circum / 60)])
 
         # if new data is invalid:
-        else:
-            # RUN TRACTION CONTROL FUNCTION
-
-            # Start or progress bad V data timer
-            if not PodStatus.V_bad_time:
-                PodStatus.V_bad_time = clock()
-                print("Bad V data, starting clock at " + str(PodStatus.IMU_bad_time))
-
-            else:
-                PodStatus.V_bad_time_elapsed = clock()-PodStatus.V_bad_time
-                print("Bad V data, elapsed time: " + str(PodStatus.V_bad_time_elapsed))
+        # else:
+        #     # RUN TRACTION CONTROL FUNCTION
+        #
+        #     # Start or progress bad V data timer
+        #     if not PodStatus.V_bad_time:
+        #         PodStatus.V_bad_time = clock()
+        #         print("Bad V data, starting clock at " + str(PodStatus.IMU_bad_time))
+        #
+        #     else:
+        #         PodStatus.V_bad_time_elapsed = clock()-PodStatus.V_bad_time
+        #         print("Bad V data, elapsed time: " + str(PodStatus.V_bad_time_elapsed))
     ### END VELOCITY FUSION
 
     ### BEGIN DISTANCE FUSION
-    PodStatus.true_data['D']['val'] = PodStatus.poll_interval * \
+    PodStatus.true_data['D']['val'] = PodStatus.true_data['D']['val'] + PodStatus.poll_interval * \
         PodStatus.true_data['V']['val']
 
-    PodStatus.true_data['stripe_dist'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
+    PodStatus.true_data['stripe_count'] = numpy.maximum(PodStatus.sensor_data['LST_Left'],
                                                     PodStatus.sensor_data['LST_Right'])
 
     PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.stripe_count
@@ -575,10 +592,7 @@ def eval_abort():
         print("ABORT TRIGGERS FOUND: \t" + str(int(PodStatus.total_triggers)))
         print("FLAGGING ABORT == TRUE")
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
-
-    if PodStatus.Abort is True:
         PodStatus.cmd_int['Abort'] = 1
-        abort()
 
 def rec_data():
     ###__ACTUAL GUI__###
@@ -587,16 +601,18 @@ def rec_data():
         # Need to receive: cmd_ext{} and para{} into temp values.
         # If state = 1, then load all cmd_ext{} and para_ into the PodStatus dicts.
         # If state != 1, then *only* load the cmd_ext['Abort'] value to the PodStatus.cmd_int['Abort'] var.
+        # Have a running clock for GUI; if loss of connection > 2 seconds, will abort
+
         pass
     ###DEBUG CONSOLE GUI###
     if gui == '1':
         """
         During DEBUG, this function is a mock GUI for testing SDA.
         """
-        PodStatus.para_BBP = 3000
-        PodStatus.para_max_speed = 200
+        PodStatus.para_BBP = 3300
+        PodStatus.para_max_speed = 300
         PodStatus.para_max_accel = 0.7
-        PodStatus.para_max_time = 12
+        PodStatus.para_max_time = 15
         PodStatus.para_max_crawl_speed = 20
         PodStatus.para_max_tube_length = 4150
 
@@ -618,7 +634,9 @@ def rec_data():
             "\t9. Flight Accel:     " + str(PodStatus.para_max_accel) + "\t\n"
             "\t10.Flight Time:      " + str(PodStatus.para_max_time) + "\t\n"
             "\t11.Flight Crawl Speed\t" + str(PodStatus.para_max_crawl_speed) + "\t\n"
-            "\tThrottle:\t" + str(PodStatus.throttle) + "\t\n"                                                                    
+            "\tThrottle:\t" + str(round(PodStatus.throttle,2)) + "\t\n"
+            "\t\tVelocity:\t" + str(round(PodStatus.true_data['V']['val'],2)) + "\t\n"
+            "\t\tDistance:\t" + str(round(PodStatus.true_data['D']['val'],2)) + "\t\n"
             "*************************")
 
         if PodStatus.state == PodStatus.SafeToApproach:
@@ -628,7 +646,7 @@ def rec_data():
                   "\t(Q) Quit\n"
                   "\t(FS) Activate Flight Sim\n"
                   "\t\tType line number or letter command to change values.\n")
-            print(str('Brake Pressure: ' + PodStatus.sensor_data['Brake_Pressure']))
+            print(str('Brake Pressure: ' + str(PodStatus.sensor_data['Brake_Pressure'])))
             a = input('Enter choice: ')
             if a == '2':
                 if PodStatus.HV is False:
@@ -639,31 +657,28 @@ def rec_data():
                     #PodStatus.HV = False
             elif a == '3':
                 if PodStatus.cmd_ext['Vent_Sol'] == 0:
-                    PodStatus.commands['Vent_Sol'] = 1           # Brake Vent opens
-                    PodStatus.Vent_Sol = 0
-                    PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
+                    PodStatus.cmd_ext['Vent_Sol'] = 1           # Brake Vent opens
+                    #PodStatus.Vent_Sol = 0
+                    #PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
                 else:
-                    PodStatus.commands['Vent_Sol'] = 0
-                    PodStatus.Vent_Sol = 1
+                    PodStatus.cmd_ext['Vent_Sol'] = 0
+                    #PodStatus.Vent_Sol = 1
             elif a == '4':
-                if PodStatus.commands['Res1_Sol'] == 0:
-                    PodStatus.commands['Res1_Sol'] = 1
-                    if PodStatus.Vent_Sol == 1:
-                        PodStatus.sensor_data['Brake_Pressure'] = 200
+                if PodStatus.cmd_ext['Res1_Sol'] == 0:
+                    PodStatus.cmd_ext['Res1_Sol'] = 1
+
                 else:
-                    PodStatus.commands['Res1_Sol'] = 0
+                    PodStatus.cmd_ext['Res1_Sol'] = 0
             elif a == '5':
-                if PodStatus.commands['Res2_Sol'] == 1:
-                    PodStatus.commands['Res2_Sol'] = 0
+                if PodStatus.cmd_ext['Res2_Sol'] == 1:
+                    PodStatus.cmd_ext['Res2_Sol'] = 0
                 else:
-                    PodStatus.commands['Res2_Sol'] = 1
+                    PodStatus.cmd_ext['Res2_Sol'] = 1
             elif a == '6':
-                if PodStatus.commands['MC_Pump'] == 0:
-                    PodStatus.commands['MC_Pump'] = 1
-                    PodStatus.MC_Pump = 1
+                if PodStatus.MC_Pump == 0:
+                    PodStatus.cmd_ext['MC_Pump'] = 1
                 else:
-                    PodStatus.commands['MC_Pump'] = 0
-                    PodStatus.MC_Pump = 0
+                    PodStatus.cmd_ext['MC_Pump'] = 0
             elif a == '7':
                 PodStatus.para_BBP = float(input("Enter BBP Distance in feet: "))
             elif a == '8':
@@ -683,6 +698,7 @@ def rec_data():
             elif a == 'Q':
                 PodStatus.Quit = True
             elif a == 'FS':
+                PodStatus.sensor_data['Brake_Pressure'] = 200
                 PodStatus.flight_sim = True
             else:
                 pass
@@ -729,33 +745,42 @@ def do_commands():
     """
 
     if PodStatus.state == 1:    # Load ALL commands for full GUI control
+        PodStatus.cmd_int = PodStatus.cmd_ext
 
         ### POD WILL LAUNCH WITH THIS SECTION ###
         # Launch pod ONLY if conditions in run_state() for spacex_state are met
-        if PodStatus.cmd_int['Launch'] == 1 and PodStatus.spacex_state == 2:
+        if PodStatus.cmd_ext['Launch'] == 1 and PodStatus.spacex_state == 2:
             transition()
         elif PodStatus.cmd_ext['Launch'] == 1 and PodStatus.spacex_state != 2:
             print("Pod not configured for launch, resetting Launch command to 0.")
             PodStatus.cmd_ext['Launch'] = 0
             PodStatus.cmd_int['Launch'] = 0
 
+        # Coolant Pump
+        PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump'])
+        if PodStatus.cmd_ext['MC_Pump'] == 1:
+            PodStatus.MC_Pump = True
+        else:
+            PodStatus.MC_Pump = False
+
+
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
-    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Vent_Sol']);
-    PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res1_Sol']);
-    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Res2_Sol']);
-
-    # Coolant Pump
-    PodStatus.sensor_poll.switchCoolantPump(PodStatus.cmd_int['MC_Pump']);
-    if PodStatus.cmd_int['MC_Pump'] == 1: PodStatus.MC_Pump = True;
-    else: PodStatus.MC_Pump = False
+    PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Vent_Sol'])
+    PodStatus.Vent_Sol = bool(PodStatus.cmd_int['Vent_Sol'])
+    PodStatus.sensor_poll.switchSolenoid(1, PodStatus.cmd_int['Res1_Sol'])
+    PodStatus.Res1_Sol = bool(PodStatus.cmd_int['Res1_Sol'])
+    PodStatus.sensor_poll.switchSolenoid(2, PodStatus.cmd_int['Res2_Sol'])
+    PodStatus.Res2_Sol = bool(PodStatus.cmd_int['Res2_Sol'])
 
     # HV Contactors (and red LED by default)
-    PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV']);
-    PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV']);
-    if PodStatus.cmd_int['HV'] == 1: PodStatus.HV = True
-    else: PodStatus.HV = False
+    PodStatus.sensor_poll.switchContactor(1, PodStatus.cmd_int['HV'])
+    PodStatus.sensor_poll.switchContactor(2, PodStatus.cmd_int['HV'])
+    PodStatus.HV = bool(PodStatus.cmd_int['HV'])
 
+    # Abort Command
+    if PodStatus.Abort == True:
+        abort()
 
     # Isolation green LED   DEBUG NEED VAR DATA FOR BMS
     # if PodStatus.sensor_data['BMS_something'] < 4.5:
@@ -769,9 +794,9 @@ def spacex_data():
     This function passes the required SpaceX data packet at the defined rate.
     """
     ### CONVERT DATA TO SPACEX SPECIFIED UNIT
-    accel = PodStatus.accel * 3217.4        # g (unitless) to cm/s2
-    speed = PodStatus.speed * 30.48         # ft/s to cm/s
-    distance = PodStatus.distance * 30.48   # ft to cm
+    accel = PodStatus.true_data['A']['val'] * 3217.4        # g (unitless) to cm/s2
+    speed = PodStatus.true_data['V']['val'] * 30.48         # ft/s to cm/s
+    distance = PodStatus.true_data['D']['val'] * 30.48   # ft to cm
 
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
         #print("No packet sent.")
@@ -838,20 +863,20 @@ def run_state():
         # Linear inputs; MC has a built-in throttle damper
         if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel):
             if PodStatus.throttle < 1:
-                PodStatus.throttle = PodStatus.throttle + 0.01
+                PodStatus.throttle = PodStatus.throttle + 0.1
                 if PodStatus.throttle > 1:
                     PodStatus.throttle = 1
         elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel):
             if PodStatus.throttle > 0:
-                PodStatus.throttle = PodStatus.throttle - 0.01
+                PodStatus.throttle = PodStatus.throttle - 0.1
                 if PodStatus.throttle < 0:
                     PodStatus.throttle = 0
 
         # TRANSITIONS
-        if PodStatus.distance > PodStatus.para_BBP:
+        if PodStatus.true_data['D']['val'] > PodStatus.para_BBP:
             print("Pod has crossed BBP.")
             transition()
-        elif PodStatus.speed > PodStatus.para_max_speed:
+        elif PodStatus.true_data['V']['val'] > PodStatus.para_max_speed:
             print("Pod has reached max speed.")
             transition()
         elif PodStatus.MET > PodStatus.para_max_time:
@@ -868,38 +893,40 @@ def run_state():
 
     # BRAKE, HIGH SPEED
     elif PodStatus.state == 5:
+        PodStatus.sensor_filter['IMU1_Z']['q'] = []
+        PodStatus.sensor_filter['IMU2_Z']['q'] = []
+        PodStatus.sensor_filter['Brake_Pressure']['q'] = []
         PodStatus.MET = clock()-PodStatus.MET_starttime
         PodStatus.spacex_state = 5
-        # Debug line below for actual brake state
-        PodStatus.Brakes = True
 
-        if PodStatus.speed <= 0.5 and PodStatus.stopped_time <= 0:
+        PodStatus.throttle = 0  # SET THROTTLE TO 0
+
+        if PodStatus.true_data['V']['val'] <= 0.5 and PodStatus.stopped_time <= 0:
             PodStatus.stopped_time = clock()
 
-        if PodStatus.speed > 0.5:
+        if PodStatus.true_data['V']['val'] > 0.5:
                                         # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
                                         # IF ERRANT SPEED VALUES > 0.5 WHILE ACTUALLY
                                         # STOPPED, COULD CAUSE EXCESSIVE DISCHARGE
                                         # OF RESERVOIRS AND LOSS OF BRAKE RETRACTION
                                         # ABILITY
             PodStatus.stopped_time = 0              # RESET STOPPED TIME
-            if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
+            if PodStatus.cmd_int['Vent_Sol'] == 1:    # Is brake vent closed?
                 print("Opening Vent Sol")
-                PodStatus.commands['Vent_Sol'] = 0
-            if PodStatus.throttle > 0:          # SET THROTTLE TO 0
-                PodStatus.throttle = 0
+                PodStatus.cmd_int['Vent_Sol'] = 0       # open brake vent
+
 
         # DO NOTHING ELSE UNTIL STOPPED
         # RECONFIGURE FOR CRAWLING
 
         ## RECONFIGURE FOR CRAWLING STATE
 
-        if PodStatus.speed < 0.5 and (clock() - PodStatus.stopped_time) > 5:
-            if PodStatus.commands['Vent_Sol'] == 0:
-                PodStatus.commands['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
+        if PodStatus.true_data['V']['val'] < 0.5 and (clock() - PodStatus.stopped_time) > 5:
+            if PodStatus.cmd_int['Vent_Sol'] == 0:
+                PodStatus.cmd_int['Vent_Sol'] = 1     # CLOSE BRAKE VENT SOLENOID
                 print("Closing Vent Sol")
             if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] < 20:
-                PodStatus.commands['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
+                PodStatus.cmd_int['Res1_Sol'] = 1     # OPEN RES#1 SOLENOID
                 print("Opening Res#1, pausing for 2 seconds.")
 
             else:
@@ -910,7 +937,7 @@ def run_state():
 
             if PodStatus.Vent_Sol == 1 and PodStatus.sensor_data['Brake_Pressure'] > 177:
                 print("Brakes retracted, closing Res1 solenoid.")
-                PodStatus.commands['Res1_Sol'] = 0  # CLOSE RES#1 SOLENOID
+                PodStatus.cmd_int['Res1_Sol'] = 0  # CLOSE RES#1 SOLENOID
                 transition()
 
 
@@ -918,16 +945,23 @@ def run_state():
     # ONLY way to transition() is if LIDAR < 90ft.  Probably needs a 2nd/3rd stop point (time/dist)
     elif PodStatus.state == 6:
         PodStatus.spacex_state = 6
+        PodStatus.sensor_filter['IMU1_Z']['q'] = []
+        PodStatus.sensor_filter['IMU2_Z']['q'] = []
+        PodStatus.sensor_filter['Brake_Pressure']['q'] = []
 
         # ACCEL UP TO MAX G within 2%
-        if PodStatus.accel < (0.98 * PodStatus.para_max_accel)\
-                and PodStatus.speed < PodStatus.para_max_crawl_speed:
-            PodStatus.throttle = PodStatus.throttle * 1.01
-        elif PodStatus.accel > (1.02*PodStatus.para_max_accel)\
-                or PodStatus.speed > PodStatus.para_max_crawl_speed:
-            PodStatus.throttle = PodStatus.throttle * 0.99
+        if PodStatus.true_data['A']['val'] < (0.98 * PodStatus.para_max_accel)\
+                and PodStatus.true_data['V']['val'] < PodStatus.para_max_crawl_speed:
+            PodStatus.throttle = PodStatus.throttle + 0.05
+            if PodStatus.throttle > 1:
+                PodStatus.throttle = 1
+        elif PodStatus.true_data['A']['val'] > (1.02*PodStatus.para_max_accel)\
+                or PodStatus.true_data['V']['val'] > PodStatus.para_max_crawl_speed:
+            PodStatus.throttle = PodStatus.throttle - 0.05
+            if PodStatus.throttle < 0:
+                PodStatus.throttle = 0
 
-        if PodStatus.sensor_data['LIDAR'] < 90:
+        if PodStatus.sensor_data['LIDAR'] < 90 or (PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']) < 150:
             print("LIDAR is less than 90 feet")
             transition()
 
@@ -939,10 +973,10 @@ def run_state():
         PodStatus.throttle = 0
 
         #     PodStatus.stopped_time = 0
-        if PodStatus.speed > 0.5:
-            if PodStatus.commands['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
+        if PodStatus.true_data['V']['val'] > 0.5:
+            if PodStatus.cmd_int['Vent_Sol'] == 1:    # OPEN BRAKE VENT SOLENOID
                 print("Opening Vent Sol")
-                PodStatus.commands['Vent_Sol'] = 0
+                PodStatus.cmd_int['Vent_Sol'] = 0
 
         # TRANSITION TO S2A
         else:
@@ -1043,8 +1077,11 @@ def write_file():
                        + str(int(fault_code)) + '\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             ### Log commands
-            for key in PodStatus.commands:
-                line = str(key) + '\t' + str(PodStatus.commands[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
+            for key in PodStatus.cmd_ext:
+                line = 'ext_' + str(key) + '\t' + str(PodStatus.cmd_ext[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
+                file.write(line)
+            for key in PodStatus.cmd_int:
+                line = 'int_' + str(key) + '\t' + str(PodStatus.cmd_int[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
             ### Log pod state variables
             line = 'state' + '\t' + str(PodStatus.state) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
@@ -1053,7 +1090,14 @@ def write_file():
                     + 'throttle' + '\t' + str(PodStatus.throttle) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'D' + '\t' + str(PodStatus.true_data['D']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
                     + 'V' + '\t' + str(PodStatus.true_data['V']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
-                    + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'
+                    + 'A' + '\t' + str(PodStatus.true_data['A']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'A_std_dev' + '\t' + str(PodStatus.true_data['A']['std_dev']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'A_filter_val' + '\t' + str(PodStatus.sensor_filter['IMU1_Z']['val']) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'Clock_interval' + '\t' + str(PodStatus.poll_interval) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'Brakes' + '\t' + str(int(PodStatus.Brakes)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'HV' + '\t' + str(int(PodStatus.HV)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n' \
+                    + 'Vent_Sol' + '\t' + str(int(PodStatus.Vent_Sol)) + '\t' + str(0) + '\t' + str(round(clock(), 2)) + '\n'\
+                    + 'stripe_count' + '\t' + str(PodStatus.true_data['stripe_count']) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n'
             file.write(line)
 
         PodStatus.log_lastwrite = clock()
@@ -1061,19 +1105,21 @@ def write_file():
 if __name__ == "__main__":
 
     PodStatus = Status()
+
+    gui = '0'
+    print('Which GUI should I use?\n')
+    print('\t1\tConsole')
+    print('\t2\tExternal')
+    while (gui!= '1' and gui!= '2'):
+        gui = str(input('Enter choice: '))
+
     init()
 
     if PodStatus.init is False:
         PodStatus.Quit = True
         print("Failed to init.")
 
-    print('Which GUI should I use?\n')
-    print('\t1\tConsole')
-    print('\t2\tExternal')
-    gui = str(input('Enter choice: '))
-    if gui != '1' and gui != '2':
-         print('Invalid choice, quitting')
-         PodStatus.Quit = True
+
 
     while PodStatus.Quit is False:
         write_file()

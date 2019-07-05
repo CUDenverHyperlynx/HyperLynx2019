@@ -1,8 +1,9 @@
-clear all; close all; clc;
+clear all; clc;
 
 %% Load logfile into array
 file_name = input('Filename: ', 's');
 datatype = input('Data label: ', 's');
+dyn_graph = input('Plot Velocity vs Distance? y/n ', 's');
 
 file = fopen(file_name, 'r');
 x = readtable(file_name);
@@ -25,6 +26,30 @@ for i = 1:length(data)
     end
 end
 
-%% Plot
+% Plot
+fig1 = figure(1);
 plot(spec_data(:,2), spec_data(:,1));
 title(datatype);
+
+%% Dyn_graph
+if dyn_graph == 'y'
+    j = 1; k = 1;
+    if dyn_graph == 'y'
+        for i = 1:length(data)
+            if 'V' == string(data{i,1})
+                v(j,1) = data{i,2};
+                j = j + 1;
+            end
+            if 'D' == string(data{i,1})
+                d(k,1) = data{i,2};
+                k = k + 1;
+            end
+        end
+
+        % Plot
+        fig2 = figure(2);
+        plot(d(:,1), v(:,1));
+        title('Velocity vs Distance');
+
+    end
+end
