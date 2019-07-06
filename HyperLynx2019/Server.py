@@ -233,11 +233,13 @@ class HyperGui(QMainWindow):
         # ******* This is the Environmentals table *******
 
         # Creating the Environmentals text
+        env_width = 475
+        env_pos = (950, 420)
         self.env_txt = QTextEdit('<b>Environmentals</b>', self)
         self.env_txt.setAlignment(Qt.AlignCenter)
         self.env_txt.setReadOnly(True)
-        self.env_txt.resize(321, 30)
-        self.env_txt.move(950, 420)
+        self.env_txt.resize(env_width, 30)
+        self.env_txt.move(*env_pos)
 
         # Creating the table for Environmentals
         self.env_table = QTableWidget(self)
@@ -245,8 +247,8 @@ class HyperGui(QMainWindow):
         self.env_table.setColumnCount(3)
         self.env_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
         self.env_table.setVerticalHeaderLabels([k[0] for k in self.env_tbl_idx.values()])
-        self.env_table.resize(475, 295)
-        self.env_table.move(950, 450)
+        self.env_table.resize(env_width, 295)
+        self.env_table.move(env_pos[0], env_pos[1]+30)
 
         # setGeometry has 4 values to pass in the first two are window position in relation to your computer (x, y)
         # the second two values are the size of the window itself (width, height)

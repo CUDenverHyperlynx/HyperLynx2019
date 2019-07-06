@@ -167,7 +167,7 @@ class DataSimulator():
 
 
 if __name__ == "__main__":
-    # this needs to be run from Hyperlynx2019 top directory to work
+    # this needs to be run from Hyperlynx2019 to work
     from network_transfer.libclient import BaseClient
     import time
 
