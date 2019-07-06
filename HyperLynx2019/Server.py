@@ -32,6 +32,15 @@ class HyperGui(QMainWindow):
         self.host = host
         self.port = port
 
+        self.env_tbl_idx = {
+            'tube_p': ('Tube pressure [psi]', 0),
+            'tube_t': ('Tube temp [C]', 1),
+            'pvL_p': ('PV (left) pressure [psi]', 2),
+            'pvL_t': ('PV (left) temp [C]', 3),
+            'pvR_p': ('PV (right) pressure [psi]', 4),
+            'pvR_t': ('PV (right) temp [C]', 5)
+        }
+
         self.init_ui()
 
         # This is creating the thread with an interval that calls the function update_txt
@@ -232,10 +241,11 @@ class HyperGui(QMainWindow):
 
         # Creating the table for Environmentals
         self.env_table = QTableWidget(self)
-        self.env_table.setRowCount(9)
+        self.env_table.setRowCount(len(self.env_tbl_idx))
         self.env_table.setColumnCount(3)
         self.env_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
-        self.env_table.resize(321, 295)
+        self.env_table.setVerticalHeaderLabels([k[0] for k in self.env_tbl_idx.values()])
+        self.env_table.resize(475, 295)
         self.env_table.move(950, 450)
 
         # setGeometry has 4 values to pass in the first two are window position in relation to your computer (x, y)

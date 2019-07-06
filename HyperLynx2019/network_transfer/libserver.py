@@ -61,6 +61,9 @@ class BaseServer():
         message = Message(self.sel, conn, addr)
         self.sel.register(conn, selectors.EVENT_READ, data=message)
 
+    def _write_file(self):
+        pass
+
 
 class Message:
     def __init__(self, selector, sock, addr):
