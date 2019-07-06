@@ -11,6 +11,7 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, 
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from gui_data_simulator import load_abort_ranges
 from network_transfer.libserver import BaseServer
 
 
@@ -26,11 +27,15 @@ class HyperGui(QMainWindow):
 ###################################
 
     # ******* Constructor for the class *******
-    def __init__(self, host=None, port=None):
+    def __init__(self, host=None, port=None, **kwargs):
         super().__init__()
 
         self.host = host
         self.port = port
+
+        self.abort_ranges = kwargs.get('abort_ranges', None)
+        if self.abort_ranges:
+            self.abort_ranges = load_abort_ranges(self.abort_ranges)
 
         self.env_tbl_idx = {
             'tube_p': ('Tube pressure [psi]', 0),
@@ -59,11 +64,11 @@ class HyperGui(QMainWindow):
         self.gui_status.move(5, 5)
 
         # ******* This is the state text which can change *******
-        self.state_txt = QTextEdit('<h2>State:</h2> ', self)
-        self.state_txt.setReadOnly(True)
-        self.state_txt.setToolTip('This is a <b>State</b> text')
-        self.state_txt.resize(200, 35)
-        self.state_txt.move(100, 5)
+        self.state_tbox = QTextEdit(self._state_txt(), self)
+        self.state_tbox.setReadOnly(True)
+        self.state_tbox.setToolTip('This is a <b>State</b> text')
+        self.state_tbox.resize(200, 35)
+        self.state_tbox.move(100, 5)
 
         # ******* This is our pod dynamics table (May change things in the future) *******
 
@@ -327,8 +332,15 @@ class HyperGui(QMainWindow):
         self.hv_minus_on.setEnabled(False)
         self.update()
 
+    def _state_txt(self, state=None):
+        if not state:
+            return '<h2>State:</h2> '
+        else:
+            return '<h2>State: {}</h2> '.format(state)
+
     # This function is running on the thread separate from initializing the gui
     def update_txt(self):
+        self.state_tbox.setText(self._state_txt(1))
         # Random number generator
         test_val = random.uniform(0, 3)
 
