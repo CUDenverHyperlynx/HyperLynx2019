@@ -26,6 +26,26 @@ class HyperGui(QMainWindow):
     # s.bind((HOST, PORT))
 ###################################
 
+    ### Abort range sensors ###
+    # 'Ambient_Pressure',
+    # 'Brake_Pressure',
+    # 'D_diff',
+    # 'IMU_bad_time_elapsed',
+    # 'LIDAR',
+    # 'LVBatt_Current',
+    # 'LVBatt_Temp',
+    # 'LVBatt_Voltage',
+    # 'PV_Left_Pressure',
+    # 'PV_Left_Temp',
+    # 'PV_Right_Pressure',
+    # 'PV_Right_Temp',
+    # 'RPi_Mem_Free',
+    # 'RPi_Mem_Load',
+    # 'RPi_Mem_Used',
+    # 'RPi_Proc_Load',
+    # 'RPi_Temp',
+    # 'V_bad_time_elapsed'
+
     # ******* Constructor for the class *******
     def __init__(self, host=None, port=None, **kwargs):
         super().__init__()
@@ -37,13 +57,31 @@ class HyperGui(QMainWindow):
         if self.abort_ranges:
             self.abort_ranges = load_abort_ranges(self.abort_ranges)
 
+        self.pod_hlth_idx = {
+            'bms_low_v': 'BMS Low Cell Voltage [V]',
+            'bms_temp': 'BMS Cell Temp [C]',
+            'bms_pack_v': 'BMS Pack Voltage [V]',
+            'Brake_Pressure': 'Brake Pressure',
+            'D_diff': 'D diff',
+            'IMU_bad_time_elapsed': 'IMU bad time elapsed',
+            'LVBatt_Voltage': 'LV Batt Voltage [V]',
+            'LVBatt_Current': 'LV Batt Current [A]',
+            'LVBatt_Temp': 'LV Batt Temp [C]',
+            'RPi_Mem_Free': 'RPi Mem Free [%]',
+            'RPi_Mem_Load': 'RPi Mem Load [%]',
+            'RPi_Mem_Used': 'RPi Mem Used [%]',
+            'RPi_Proc_Load': 'RPi Proc Load [%]',
+            'RPi_Temp': 'RPi Temp [C]',
+            'V_bad_time_elapsed': 'V bad time elapsed'
+        }
+
         self.env_tbl_idx = {
-            'tube_p': ('Tube pressure [psi]', 0),
-            'tube_t': ('Tube temp [C]', 1),
-            'pvL_p': ('PV (left) pressure [psi]', 2),
-            'pvL_t': ('PV (left) temp [C]', 3),
-            'pvR_p': ('PV (right) pressure [psi]', 4),
-            'pvR_t': ('PV (right) temp [C]', 5)
+            'Ambient_Pressure': ('Ambient pressure [psi]', 0),
+            'Ambient_Temperature': ('Ambient Temp [C]', 1),
+            'PV_Left_Pressure': ('PV (left) pressure [psi]', 2),
+            'PV_Left_Temp': ('PV (left) temp [C]', 3),
+            'PV_Right_Pressure': ('PV (right) pressure [psi]', 4),
+            'PV_Right_Temp': ('PV (right) temp [C]', 5)
         }
 
         self.init_ui()
@@ -218,28 +256,29 @@ class HyperGui(QMainWindow):
         self.pd_log_txt.move(550, 5)
 
         # ******* This is the pod health table *******
-
+        hlth_width = 500
+        hlth_pos = (950, 5)
         # Creating the Pod Health text
         self.pod_hlth_txt = QTextEdit('<b>Pod Health</b>', self)
         self.pod_hlth_txt.setAlignment(Qt.AlignCenter)
         self.pod_hlth_txt.setReadOnly(True)
-        self.pod_hlth_txt.resize(325, 30)
-        self.pod_hlth_txt.move(950, 5)
+        self.pod_hlth_txt.resize(hlth_width, 30)
+        self.pod_hlth_txt.move(*hlth_pos)
 
         # Creating the table for Pod Health
         self.pod_hlth_table = QTableWidget(self)
         self.pod_hlth_table.setRowCount(24)
         self.pod_hlth_table.setColumnCount(3)
         self.pod_hlth_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
-        self.pod_hlth_table.resize(325, 380)
-        self.pod_hlth_table.move(950, 35)
+        self.pod_hlth_table.setVerticalHeaderLabels([k for k in self.pod_hlth_idx.values()])
+        self.pod_hlth_table.resize(hlth_width, 380)
+        self.pod_hlth_table.move(hlth_pos[0], hlth_pos[1]+30)
         self.pod_hlth_table.resizeRowsToContents()
 
         # ******* This is the Environmentals table *******
-
-        # Creating the Environmentals text
-        env_width = 475
+        env_width = 500
         env_pos = (950, 420)
+        # Creating the Environmentals text
         self.env_txt = QTextEdit('<b>Environmentals</b>', self)
         self.env_txt.setAlignment(Qt.AlignCenter)
         self.env_txt.setReadOnly(True)
@@ -340,9 +379,11 @@ class HyperGui(QMainWindow):
 
     # This function is running on the thread separate from initializing the gui
     def update_txt(self):
-        self.state_tbox.setText(self._state_txt(1))
         # Random number generator
         test_val = random.uniform(0, 3)
+
+        # update current state
+        self.state_tbox.setText(self._state_txt(1))
 
         # Update the items of the environmental table
         self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
