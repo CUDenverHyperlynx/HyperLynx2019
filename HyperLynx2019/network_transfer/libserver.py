@@ -14,6 +14,10 @@ request_data = {
 }
 
 class BaseServer():
+    '''
+    Class to create a server to accumulate data from the pod and feed it to the
+    GUI
+    '''
     def __init__(self, host=None, port=None, log=None, **kwargs):
         self.sel = None
 
@@ -51,7 +55,8 @@ class BaseServer():
                         except Exception:
                             print(
                                 "main: error: exception for",
-                                f"{message.addr}:\n{traceback.format_exc()}",
+                                "{addr}:\n{traceback}"\
+                                .format(addr=message.addr, traceback=traceback.format_exc()),
                             )
                             message.close()
         except KeyboardInterrupt:
