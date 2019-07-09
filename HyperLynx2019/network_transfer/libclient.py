@@ -247,7 +247,7 @@ class Message:
                 "content-encoding",
             ):
                 if reqhdr not in self.jsonheader:
-                    raise ValueError(f'Missing required header "{reqhdr}".')
+                    raise ValueError('Missing required header "{}".'.format(reqhdr))
 
     def process_response(self):
         content_len = self.jsonheader["content-length"]
@@ -264,7 +264,7 @@ class Message:
             # Binary or unknown content-type
             self.response = data
             print(
-                f'received {self.jsonheader["content-type"]} response from',
+                'received {} response from'.format(self.jsonheader["content-type"]),
                 self.addr,
             )
             self._process_response_binary_content()
