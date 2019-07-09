@@ -89,7 +89,8 @@ class Message:
         elif mode == "rw":
             events = selectors.EVENT_READ | selectors.EVENT_WRITE
         else:
-            raise ValueError(f"Invalid events mask mode {repr(mode)}.")
+            raise ValueError("Invalid events mask mode {}."\
+                                .format(repr(mode)))
         self.selector.modify(self.sock, events, data=self)
 
     def _read(self):
@@ -146,11 +147,11 @@ class Message:
     def _process_response_json_content(self):
         content = self.response
         result = content.get("result")
-        print(f"got result: {result}")
+        print("got result: {}".format(result))
 
     def _process_response_binary_content(self):
         content = self.response
-        print(f"got response: {repr(content)}")
+        print("got response: {}".format(repr(content)))
 
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
@@ -189,16 +190,16 @@ class Message:
             self.selector.unregister(self.sock)
         except Exception as e:
             print(
-                f"error: selector.unregister() exception for",
-                f"{self.addr}: {repr(e)}",
+                "error: selector.unregister() exception for",
+                "{}: {}".format(self.addr, repr(e)),
             )
 
         try:
             self.sock.close()
         except OSError as e:
             print(
-                f"error: socket.close() exception for",
-                f"{self.addr}: {repr(e)}",
+                "error: socket.close() exception for",
+                "{}: {}".format(self.addr, repr(e)),
             )
         finally:
             # Delete reference to socket object for garbage collection
