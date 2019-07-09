@@ -9,13 +9,18 @@ import libclient
 
 sel = selectors.DefaultSelector()
 
-
 def create_request(action, value):
     if action == "search":
         return dict(
             type="text/json",
             encoding="utf-8",
             content=dict(action=action, value=value),
+        )
+    elif action == 'send_data':
+        return dict(
+            type="text/json",
+            encoding="utf-8",
+            content=dict(action=action, value=value)
         )
     else:
         return dict(

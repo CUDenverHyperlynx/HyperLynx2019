@@ -1,7 +1,10 @@
 import sys
+import socket
 import selectors
+import traceback
 import json
 import io
+import os
 import struct
 
 request_data = {
@@ -9,6 +12,65 @@ request_data = {
     "ring": "In the caves beneath the Misty Mountains. \U0001f48d",
     "\U0001f436": "\U0001f43e Playing ball! \U0001f3d0",
 }
+
+class BaseServer():
+    def __init__(self, host=None, port=None, log=None, **kwargs):
+        self.sel = None
+
+        self.print_data = kwargs.get('print_data', False)
+
+        if host and port:
+            self.start_server(host, port)
+
+    def start_server(self, host, port):
+        self.sel = selectors.DefaultSelector()
+
+        lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # Avoid bind() exception: OSError: [Errno 48] Address already in use
+        lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        lsock.bind((host, port))
+        lsock.listen()
+        print("listening on", (host, port))
+        lsock.setblocking(False)
+        self.sel.register(lsock, selectors.EVENT_READ, data=None)
+
+        try:
+            while True:
+                events = self.sel.select(timeout=None)
+                for key, mask in events:
+                    if key.data is None:
+                        self._accept_wrapper(key.fileobj)
+                    else:
+                        message = key.data
+                        try:
+                            message.process_events(mask)
+                            if self.print_data:
+                                self._print_data(message.request.get('value'))
+                            ### add code to send data to local stack ###
+                            ## write data to file
+                        except Exception:
+                            print(
+                                "main: error: exception for",
+                                f"{message.addr}:\n{traceback.format_exc()}",
+                            )
+                            message.close()
+        except KeyboardInterrupt:
+            print("caught keyboard interrupt, exiting")
+        finally:
+            self.sel.close()
+
+    def _accept_wrapper(self, sock):
+        conn, addr = sock.accept()  # Should be ready to read
+        print("accepted connection from", addr)
+        conn.setblocking(False)
+        message = Message(self.sel, conn, addr)
+        self.sel.register(conn, selectors.EVENT_READ, data=message)
+
+    def _write_file(self):
+        pass
+
+    def _print_data(self, data):
+        print(data)
 
 
 class Message:
@@ -90,11 +152,15 @@ class Message:
 
     def _create_response_json_content(self):
         action = self.request.get("action")
-        if action == "data":
+        if action == "search":
             query = self.request.get("value")
             answer = request_data.get(query) or f'No match for "{query}".'
             content = {"result": answer}
-        # elif action == 'cmd':
+        elif action == 'send_data':
+            # data = self.request.get('value')
+            print('Data:\t',type(self.request.get('value')))
+            answer = 'Data Received'
+            content = {'result': answer}
         else:
             content = {"result": f'Error: invalid action "{action}".'}
         content_encoding = "utf-8"
@@ -195,7 +261,9 @@ class Message:
         if self.jsonheader["content-type"] == "text/json":
             encoding = self.jsonheader["content-encoding"]
             self.request = self._json_decode(data, encoding)
-            print("received request", repr(self.request), "from", self.addr)
+            # print("received request", repr(self.request), "from", self.addr)
+            print("received request, action:", self.request.get('action'),
+                    "from", self.addr)
         else:
             # Binary or unknown content-type
             self.request = data
@@ -215,3 +283,21 @@ class Message:
         message = self._create_message(**response)
         self.response_created = True
         self._send_buffer += message
+
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Pod Data Simulator')
+    parser.add_argument('-p', action='store_true', default=False)
+    parser.add_argument('--server', help='<host>:<port>')
+    args = parser.parse_args()
+
+    if args.server:
+        host, port = args.server.split(':')
+        port = int(port)
+    else:
+        host, port = ('localhost', 5000)
+
+    serv = BaseServer(host=host, port=port, print_data=args.p)

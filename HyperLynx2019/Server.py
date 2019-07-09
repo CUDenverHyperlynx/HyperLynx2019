@@ -2,7 +2,8 @@
 # HyperLynx TCP Server merged with the GUI
 
 import socket
-import pickle
+# import pickle
+import random
 import sys
 from time import clock
 from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, QCheckBox, QSlider, QMainWindow, \
@@ -10,20 +11,78 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget, 
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
+from gui_data_simulator import load_abort_ranges
+from network_transfer.libserver import BaseServer
+
 
 class HyperGui(QMainWindow):
     # Creating the dictionary
     # cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
-
+####################################
     # set up connection
-    HOST = '127.0.0.1'  # Change IP Address when using radios
-    PORT = 1028
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((HOST, PORT))
+    # HOST = '127.0.0.1'  # Change IP Address when using radios
+    # PORT = 1028
+    # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    # s.bind((HOST, PORT))
+###################################
+
+    ### Abort range sensors ###
+    # 'Ambient_Pressure',
+    # 'Brake_Pressure',
+    # 'D_diff',
+    # 'IMU_bad_time_elapsed',
+    # 'LIDAR',
+    # 'LVBatt_Current',
+    # 'LVBatt_Temp',
+    # 'LVBatt_Voltage',
+    # 'PV_Left_Pressure',
+    # 'PV_Left_Temp',
+    # 'PV_Right_Pressure',
+    # 'PV_Right_Temp',
+    # 'RPi_Mem_Free',
+    # 'RPi_Mem_Load',
+    # 'RPi_Mem_Used',
+    # 'RPi_Proc_Load',
+    # 'RPi_Temp',
+    # 'V_bad_time_elapsed'
 
     # ******* Constructor for the class *******
-    def __init__(self):
+    def __init__(self, host=None, port=None, **kwargs):
         super().__init__()
+
+        self.host = host
+        self.port = port
+
+        self.abort_ranges = kwargs.get('abort_ranges', None)
+        if self.abort_ranges:
+            self.abort_ranges = load_abort_ranges(self.abort_ranges)
+
+        self.pod_hlth_idx = {
+            'bms_low_v': 'BMS Low Cell Voltage [V]',
+            'bms_temp': 'BMS Cell Temp [C]',
+            'bms_pack_v': 'BMS Pack Voltage [V]',
+            'Brake_Pressure': 'Brake Pressure',
+            'D_diff': 'D diff',
+            'IMU_bad_time_elapsed': 'IMU bad time elapsed',
+            'LVBatt_Voltage': 'LV Batt Voltage [V]',
+            'LVBatt_Current': 'LV Batt Current [A]',
+            'LVBatt_Temp': 'LV Batt Temp [C]',
+            'RPi_Mem_Free': 'RPi Mem Free [%]',
+            'RPi_Mem_Load': 'RPi Mem Load [%]',
+            'RPi_Mem_Used': 'RPi Mem Used [%]',
+            'RPi_Proc_Load': 'RPi Proc Load [%]',
+            'RPi_Temp': 'RPi Temp [C]',
+            'V_bad_time_elapsed': 'V bad time elapsed'
+        }
+
+        self.env_tbl_idx = {
+            'Ambient_Pressure': ('Ambient pressure [psi]', 0),
+            'Ambient_Temperature': ('Ambient Temp [C]', 1),
+            'PV_Left_Pressure': ('PV (left) pressure [psi]', 2),
+            'PV_Left_Temp': ('PV (left) temp [C]', 3),
+            'PV_Right_Pressure': ('PV (right) pressure [psi]', 4),
+            'PV_Right_Temp': ('PV (right) temp [C]', 5)
+        }
 
         self.init_ui()
 
@@ -43,11 +102,11 @@ class HyperGui(QMainWindow):
         self.gui_status.move(5, 5)
 
         # ******* This is the state text which can change *******
-        self.state_txt = QTextEdit('<h2>State:</h2> ', self)
-        self.state_txt.setReadOnly(True)
-        self.state_txt.setToolTip('This is a <b>State</b> text')
-        self.state_txt.resize(200, 35)
-        self.state_txt.move(100, 5)
+        self.state_tbox = QTextEdit(self._state_txt(), self)
+        self.state_tbox.setReadOnly(True)
+        self.state_tbox.setToolTip('This is a <b>State</b> text')
+        self.state_tbox.resize(200, 35)
+        self.state_tbox.move(100, 5)
 
         # ******* This is our pod dynamics table (May change things in the future) *******
 
@@ -190,46 +249,50 @@ class HyperGui(QMainWindow):
         # ******* This is the log text box *******
 
         # Creating the Log Text box
-        self.pd_log_txt = QTextEdit('Host:' + self.HOST + ' Port:' + str(self.PORT), self)
+        self.pd_log_txt = QTextEdit('Host:' + self.host + ' Port:' + str(self.port), self)
         self.pd_log_txt.setAlignment(Qt.AlignCenter)
         self.pd_log_txt.setReadOnly(True)
         self.pd_log_txt.resize(350, 230)
         self.pd_log_txt.move(550, 5)
 
         # ******* This is the pod health table *******
-
+        hlth_width = 500
+        hlth_pos = (950, 5)
         # Creating the Pod Health text
         self.pod_hlth_txt = QTextEdit('<b>Pod Health</b>', self)
         self.pod_hlth_txt.setAlignment(Qt.AlignCenter)
         self.pod_hlth_txt.setReadOnly(True)
-        self.pod_hlth_txt.resize(325, 30)
-        self.pod_hlth_txt.move(950, 5)
+        self.pod_hlth_txt.resize(hlth_width, 30)
+        self.pod_hlth_txt.move(*hlth_pos)
 
         # Creating the table for Pod Health
         self.pod_hlth_table = QTableWidget(self)
         self.pod_hlth_table.setRowCount(24)
         self.pod_hlth_table.setColumnCount(3)
         self.pod_hlth_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
-        self.pod_hlth_table.resize(325, 380)
-        self.pod_hlth_table.move(950, 35)
+        self.pod_hlth_table.setVerticalHeaderLabels([k for k in self.pod_hlth_idx.values()])
+        self.pod_hlth_table.resize(hlth_width, 380)
+        self.pod_hlth_table.move(hlth_pos[0], hlth_pos[1]+30)
         self.pod_hlth_table.resizeRowsToContents()
 
         # ******* This is the Environmentals table *******
-
+        env_width = 500
+        env_pos = (950, 420)
         # Creating the Environmentals text
         self.env_txt = QTextEdit('<b>Environmentals</b>', self)
         self.env_txt.setAlignment(Qt.AlignCenter)
         self.env_txt.setReadOnly(True)
-        self.env_txt.resize(321, 30)
-        self.env_txt.move(950, 420)
+        self.env_txt.resize(env_width, 30)
+        self.env_txt.move(*env_pos)
 
         # Creating the table for Environmentals
         self.env_table = QTableWidget(self)
-        self.env_table.setRowCount(9)
+        self.env_table.setRowCount(len(self.env_tbl_idx))
         self.env_table.setColumnCount(3)
         self.env_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
-        self.env_table.resize(321, 295)
-        self.env_table.move(950, 450)
+        self.env_table.setVerticalHeaderLabels([k[0] for k in self.env_tbl_idx.values()])
+        self.env_table.resize(env_width, 295)
+        self.env_table.move(env_pos[0], env_pos[1]+30)
 
         # setGeometry has 4 values to pass in the first two are window position in relation to your computer (x, y)
         # the second two values are the size of the window itself (width, height)
@@ -308,26 +371,34 @@ class HyperGui(QMainWindow):
         self.hv_minus_on.setEnabled(False)
         self.update()
 
+    def _state_txt(self, state=None):
+        if not state:
+            return '<h2>State:</h2> '
+        else:
+            return '<h2>State: {}</h2> '.format(state)
+
     # This function is running on the thread separate from initializing the gui
     def update_txt(self):
-        loop_cnt = 0
+        # Random number generator
+        test_val = random.uniform(0, 3)
 
-        # Its arbitrary but if I did something like while True it breaks the GUI
-        while loop_cnt < 50:
-            # Random number generator
-            # test_val = random.uniform(0, 3)
+        # update current state
+        self.state_tbox.setText(self._state_txt(1))
 
-            # Update the items of the environmental table
-            self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
-            # self.env_table.setItem(0, 1, QTableWidgetItem(str(test_val)))
-            self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
-
-            loop_cnt += 1
+        # Update the items of the environmental table
+        self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
+        self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(test_val)))
+        self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
 
-app = QApplication([])
-my_gui = HyperGui()
-my_gui.show()
+
+
+if __name__ == "__main__":
+    app = QApplication([])
+    my_gui = HyperGui(host='0.0.0.0', port=5000)
+    my_gui.show()
+
+    sys.exit(app.exec_())
 
 '''
 # loop during run
@@ -361,5 +432,3 @@ while 1:
     # Call GUI function and send data
     # Put GUI function here
 '''
-
-sys.exit(app.exec_())
