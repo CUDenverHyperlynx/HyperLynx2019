@@ -268,3 +268,23 @@ class Message:
             self._process_response_binary_content()
         # Close when response has been processed
         self.close()
+
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Pod Data Simulator')
+    parser.add_argument('--server', help='<host>:<port>')
+    args = parser.parse_args()
+
+    client = BaseClient()
+
+    if args.server:
+        host, port = args.server.split(':')
+        port = int(port)
+    else:
+        host, port = ('localhost', 5000)
+
+    data = {'test1': [1,2,3,4,5], 'test2': ['abcd','1234',5,7]}
+    client.send_message(host, port, 'send_data', data)

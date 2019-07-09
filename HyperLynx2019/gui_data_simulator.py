@@ -192,3 +192,4 @@ if __name__ == "__main__":
     else:
         for i in it:
             print(i)
+            time.sleep(1)

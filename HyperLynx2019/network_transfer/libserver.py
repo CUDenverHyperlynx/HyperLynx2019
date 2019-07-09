@@ -14,8 +14,11 @@ request_data = {
 }
 
 class BaseServer():
-    def __init__(self, host=None, port=None, log=None):
+    def __init__(self, host=None, port=None, log=None, **kwargs):
         self.sel = None
+
+        self.print_data = kwargs.get('print_data', False)
+
         if host and port:
             self.start_server(host, port)
 
@@ -41,6 +44,8 @@ class BaseServer():
                         message = key.data
                         try:
                             message.process_events(mask)
+                            if self.print_data:
+                                self._print_data(message.request.get('value'))
                             ### add code to send data to local stack ###
                             ## write data to file
                         except Exception:
@@ -63,6 +68,9 @@ class BaseServer():
 
     def _write_file(self):
         pass
+
+    def _print_data(self, data):
+        print(data)
 
 
 class Message:
@@ -275,3 +283,21 @@ class Message:
         message = self._create_message(**response)
         self.response_created = True
         self._send_buffer += message
+
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Pod Data Simulator')
+    parser.add_argument('-p', action='store_true', default=False)
+    parser.add_argument('--server', help='<host>:<port>')
+    args = parser.parse_args()
+
+    if args.server:
+        host, port = args.server.split(':')
+        port = int(port)
+    else:
+        host, port = ('localhost', 5000)
+
+    serv = BaseServer(host=host, port=port, print_data=args.p)
