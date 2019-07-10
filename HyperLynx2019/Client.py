@@ -9,8 +9,6 @@ import Packet_Structure
 
 def send_server(pod_status):    # This function will receive a class and send data over to server.py
 
-
-
     # Setting up where to send the data
     host = '10.136.167.87'                 # Change IP Address to server IP when running with radios
     port = 1028
