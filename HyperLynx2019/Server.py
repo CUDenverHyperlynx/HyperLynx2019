@@ -2,6 +2,7 @@
 # HyperLynx TCP Server
 
 import socket
+<<<<<<< HEAD
 # import pickle
 import random
 import sys
@@ -340,14 +341,21 @@ if __name__ == "__main__":
 
 app = QApplication([])
 my_gui = HyperGui()
+=======
+import pickle
+from time import clock
+>>>>>>> parent of 8b77253... Update Server.py
 
 # Print Listening on HOST and PORT
 # print(HOST)
 # print(PORT)
 
+<<<<<<< HEAD
 my_gui.show()
 
 '''
+=======
+>>>>>>> parent of 8b77253... Update Server.py
 # loop during run
 while 1:
     # Receive new data
@@ -378,4 +386,7 @@ while 1:
 
     # Call GUI function and send data
     # Put GUI function here
+<<<<<<< HEAD
 '''
+=======
+>>>>>>> parent of 8b77253... Update Server.py
