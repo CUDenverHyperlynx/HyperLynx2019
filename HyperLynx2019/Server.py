@@ -1,5 +1,5 @@
-# Jose Ortega and Mohammad Hossain
-# HyperLynx TCP Server merged with the GUI
+# Jose Ortega
+# HyperLynx TCP Server
 
 import socket
 # import pickle
@@ -202,6 +202,11 @@ class HyperGui(QMainWindow):
         self.pd_log_txt.setReadOnly(True)
         self.pd_log_txt.resize(350, 230)
         self.pd_log_txt.move(550, 5)
+        self.pd_val_txt = QTextEdit('<b>Pod Value</b>', self)
+        self.pd_val_txt.setAlignment(Qt.AlignCenter)
+        self.pd_val_txt.setReadOnly(True)
+        self.pd_val_txt.resize(150, 230)
+        self.pd_val_txt.move(550, 5)
 
         # ******* This is the pod health table *******
 
@@ -326,14 +331,21 @@ class HyperGui(QMainWindow):
         self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
 
 
-
-
 if __name__ == "__main__":
     app = QApplication([])
     my_gui = HyperGui(host='0.0.0.0', port=5000)
     my_gui.show()
 
     sys.exit(app.exec_())
+
+app = QApplication([])
+my_gui = HyperGui()
+
+# Print Listening on HOST and PORT
+# print(HOST)
+# print(PORT)
+
+my_gui.show()
 
 '''
 # loop during run
