@@ -26,7 +26,7 @@ try:
 
     # Receive response
     print('Waiting to receive')
-    data, server = sock.recvfrom(4096)
+    data, server = sock.recvfrom(50000)
     print('Received "%s"' % data)
     print()
 
