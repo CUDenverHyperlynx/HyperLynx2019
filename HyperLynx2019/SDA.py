@@ -858,6 +858,8 @@ def run_state():
     elif PodStatus.state == 2:
         # Set Motor Controller Parameters
         # Emerg Brake / Active? / Forward
+
+        # Timeout
         if PodStatus.state_timeout[PodStatus.state] == 0:
             PodStatus.state_timeout[PodStatus.state] = clock()
         PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
