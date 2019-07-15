@@ -956,9 +956,19 @@ def run_state():
                 print("Opening Vent Sol")
                 PodStatus.cmd_int['Vent_Sol'] = 0       # open brake vent
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
 
         # DO NOTHING ELSE UNTIL STOPPED
-        # RECONFIGURE FOR CRAWLING
+
 
         ## RECONFIGURE FOR CRAWLING STATE
 
@@ -1006,12 +1016,23 @@ def run_state():
             print("LIDAR is less than 90 feet")
             transition()
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
     # BRAKE, FINAL
     elif PodStatus.state == 7:
         PodStatus.spacex_state = 5
         print("Entering final braking state.")
 
         PodStatus.throttle = 0
+        PodStatus.cmd_int['HV'] = 0
 
         #     PodStatus.stopped_time = 0
         if PodStatus.true_data['V']['val'] > 0.5:
@@ -1022,6 +1043,16 @@ def run_state():
         # TRANSITION TO S2A
         else:
             transition()
+
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
 
     else:
         PodStatus.state = PodStatus.BrakingLow
@@ -1048,10 +1079,43 @@ def transition():
         print("TRANS: LAUNCH(3) TO BRAKE(5)")
 
     elif PodStatus.state == 5:
-        PodStatus.state = 6
-        print("TRANS: BRAKE(5) to CRAWLING(6)")
+        # Reconfig1-2-3 States
+        # Close Brake Vent, open res#1 solenoid, close res#1 solenoid
+        # APPLIES TO CONFIGS WITH NO RES IN-LINE REGULATOR
+        if PodStatus.cmd_int['Vent_Sol'] == 0:
+            PodStatus.cmd_int['Vent_Sol'] = 1     # CLOSE VENT SOL
+        elif PodStatus.Vent_Sol == True:
+            PodStatus.cmd_int['Res1_Sol'] = 1       # OPEN RES#1 SOL
+        elif PodStatus.Res1_Sol == True:
+            if PodStatus.sensor_data['Brake_Pressure'] > 177:
+                PodStatus.cmd_int['Res1_Sol'] = 0   # CLOSE RES#1 SOL
+                PodStatus.state = 6
+                print("TRANS: BRAKE(5) to CRAWLING(6)")
+
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
 
     elif PodStatus.state == 6:
+        ### RECONFIG 4 STATE
+        # TELL SD100 TO CHANGE DRIVE MODE, SET EMERG BRAKE
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
         PodStatus.state = 7
         print("TRANS: CRAWLING(6) TO BRAKE(7)")
 
