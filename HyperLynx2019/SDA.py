@@ -125,7 +125,7 @@ class Status():
         self.IMU_bad_time = None
         self.V_bad_time = None
 
-        self.state_timeout = []
+        self.state_timeout = [0,0,0,0,0,0,0,0]
         self.state_timeout_limits = timeouts.get()
 
         self.filter_length = 10         # Moving average for sensor data filter
