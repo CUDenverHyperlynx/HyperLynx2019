@@ -55,10 +55,12 @@ import os, psutil
 #import smbus
 import Hyperlynx_ECS, flight_sim
 from Client import send_server
+import timeouts
 
 class Status():
     # Definition of State Numbers
     SafeToApproach = 1
+    PreLaunch = 2
     Launching = 3
     BrakingHigh = 5
     Crawling = 6
@@ -67,6 +69,7 @@ class Status():
     # Init dictionaries
     abort_ranges = {}           # Dict of dicts (below)
     abort_ranges[SafeToApproach] = {}
+    abort_ranges[PreLaunch] = {}
     abort_ranges[Launching] = {}
     abort_ranges[BrakingHigh] = {}
     abort_ranges[Crawling] = {}
@@ -114,6 +117,9 @@ class Status():
 
         self.IMU_bad_time = None
         self.V_bad_time = None
+
+        self.state_timeout = []
+        self.state_timeout_limits = timeouts.get()
 
         self.filter_length = 10         # Moving average for sensor data filter
 
@@ -176,6 +182,7 @@ def init():
                                    dtype=str)
     abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12))
 
+    # Assign abort conditions to each state
     for i in range(0, len(abort_names)):
         if not str(abort_names[i]) in PodStatus.sensor_data:
             PodStatus.sensor_data[abort_names[i]] = 0
@@ -194,6 +201,7 @@ def init():
                                                                  'Trigger': abort_vals[i, 9],
                                                                  'Fault': abort_vals[i, 10]
                                                                  }
+            PodStatus.abort_ranges[PodStatus.PreLaunch] = PodStatus.abort_ranges[PodStatus.Launching]
         if abort_vals[i, 5] == 1:
             PodStatus.abort_ranges[PodStatus.BrakingHigh][abort_names[i]] = {'Low': abort_vals[i, 0],
                                                                    'High': abort_vals[i, 1],
@@ -241,6 +249,7 @@ def init():
         print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
         print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
         print("IMU init failed.")
+        PodStatus.Fault == True
 
     PodStatus.create_log()
 
@@ -592,7 +601,7 @@ def eval_abort():
         print("ABORT TRIGGERS FOUND: \t" + str(int(PodStatus.total_triggers)))
         print("FLAGGING ABORT == TRUE")
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
-        PodStatus.cmd_int['Abort'] = 1
+        #PodStatus.cmd_int['Abort'] = 1
 
 def rec_data():
     ###__ACTUAL GUI__###
@@ -845,6 +854,19 @@ def run_state():
         # TRANSITIONS
         # None.  Only transition from S2A comes from do_commands() function
 
+    # PRELAUNCH State
+    elif PodStatus.state == 2:
+        # Set Motor Controller Parameters
+        # Emerg Brake / Active? / Forward
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
 
     # LAUNCHING STATE
     elif PodStatus.state == 3:
@@ -1034,6 +1056,9 @@ def abort():
     """
     if PodStatus.state == 1:          # S2A STATE FUNCTIONS
         print("Abort flagged in S2A.")
+
+    elif PodStatus.state == 2:          # PreLaunch Abort
+        PodStatus.state = 7
 
     elif PodStatus.state == 3:          # LAUNCH STATE FUNCTIONS
         print("ABORTING from 3 to 7")

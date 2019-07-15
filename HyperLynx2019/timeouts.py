@@ -9,4 +9,4 @@ def get(self):
     self.timeouts[5] = 30
     self.timeouts[6] = 180
     self.timeouts[7] = 30
-    return(self.timeouts)
+    return self.timeouts
