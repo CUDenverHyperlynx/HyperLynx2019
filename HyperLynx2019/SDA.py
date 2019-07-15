@@ -46,6 +46,13 @@
    John Brenner & Jeff Stanek
 '''
 
+
+#Instead of print statements as error messages lets create function calls for each error
+#Make a function called error_log() and it will be passed a string that we can customize
+#Then we receive a time stamped log file as an output
+#Each main loop will have a separate timestamp
+
+
 from time import sleep, clock
 import socket, struct
 import numpy
