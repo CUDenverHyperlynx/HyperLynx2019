@@ -472,6 +472,7 @@ def sensor_fusion():
 
     ### BEGIN VELOCITY FUSION
     PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] * PodStatus.wheel_circum / 60
+
     if PodStatus.true_data['V']['val'] < 0: PodStatus.true_data['V']['val'] = 0
     # If queue is not full, fill queue
     # if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
@@ -519,24 +520,25 @@ def sensor_fusion():
 
     PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.stripe_count
 
-    if PodStatus.true_data['D']['val'] > 25:
-        temp_count = PodStatus.true_data['D']['val'] / 100
-        temp_dec = abs(temp_count - numpy.around(temp_count))
-        if temp_dec < 0.2 and PodStatus.D_diff > 20:
-            print("Looking for stripe")
-            if PodStatus.sensor_data['LST_Left'] == temp_count:
-                print("Left stripe counted!")
-                PodStatus.stripe_count = PodStatus.sensor_data['LST_Left']
-                PodStatus.sensor_data['LST_Right'] = PodStatus.sensor_data['LST_Left']
-            elif PodStatus.sensor_data['LST_Right'] == temp_count:
-                print("Right stripe counted!")
-                PodStatus.stripe_count = PodStatus.sensor_data['LST_Right']
-                PodStatus.sensor_data['LST_Left'] = PodStatus.sensor_data['LST_Right']
-            else:
-                print("No stripe counted, still waiting.")
-
-        else:
-            pass
+    ### Unnecessary block, since we count stripes independently and take max as true_data
+    # if PodStatus.true_data['D']['val'] > 25:
+    #     temp_count = PodStatus.true_data['D']['val'] / 100
+    #     temp_dec = abs(temp_count - numpy.around(temp_count))
+    #     if temp_dec < 0.2 and PodStatus.D_diff > 20:
+    #         print("Looking for stripe")
+    #         if PodStatus.sensor_data['LST_Left'] == temp_count:
+    #             print("Left stripe counted!")
+    #             PodStatus.stripe_count = PodStatus.sensor_data['LST_Left']
+    #             PodStatus.sensor_data['LST_Right'] = PodStatus.sensor_data['LST_Left']
+    #         elif PodStatus.sensor_data['LST_Right'] == temp_count:
+    #             print("Right stripe counted!")
+    #             PodStatus.stripe_count = PodStatus.sensor_data['LST_Right']
+    #             PodStatus.sensor_data['LST_Left'] = PodStatus.sensor_data['LST_Right']
+    #         else:
+    #             print("No stripe counted, still waiting.")
+    #
+    #     else:
+    #         pass
 
 
     ### END DISTANCE FUSION
@@ -871,7 +873,7 @@ def run_state():
             PodStatus.state_timeout[PodStatus.state] = clock()
         PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
 
-        # Transition
+        # Timeout Transition
         if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
             PodStatus.Fault = True
             PodStatus.Abort = True
@@ -913,12 +915,20 @@ def run_state():
         elif PodStatus.MET > PodStatus.para_max_time:
             print("Pod has exceeded max time.")
             transition()
-
         # TRANSITIONS FOR BAD DATA
         elif PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
             print("Transition for bad IMU data.")
             transition()
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
 
     # COAST (NOT USED)
 
