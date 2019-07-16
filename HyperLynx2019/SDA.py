@@ -256,7 +256,7 @@ def init():
         print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
         print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
         print("IMU init failed.")
-        PodStatus.Fault == True
+        PodStatus.Fault = True
 
     PodStatus.create_log()
 
