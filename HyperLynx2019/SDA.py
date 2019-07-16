@@ -906,7 +906,8 @@ def run_state():
                     PodStatus.throttle = 0
 
         # TRANSITIONS
-        if PodStatus.true_data['D']['val'] > PodStatus.para_BBP:
+        if (PodStatus.true_data['D']['val'] > PodStatus.para_BBP) or \
+                (PodStatus.true_data['stripe_count']*100 > PodStatus.para_BBP):
             print("Pod has crossed BBP.")
             transition()
         elif PodStatus.true_data['V']['val'] > PodStatus.para_max_speed:
