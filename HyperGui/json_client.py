@@ -4,7 +4,7 @@ import json
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-server_address = ('192.168.0.255', 5050)
+server_address = ('10.136.167.87', 5050)
 
 col_to_state = {'1 - S2A': "SafeToApproach",
            '2 - FC2l': "",

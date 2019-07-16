@@ -5,7 +5,7 @@ import json
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Bind the socket to the port
-server_address = ('192.168.43.232', 1028)
+server_address = ('10.136.167.87', 5050)
 print('Starting up on %s port %s' % server_address)
 sock.bind(server_address)
 
