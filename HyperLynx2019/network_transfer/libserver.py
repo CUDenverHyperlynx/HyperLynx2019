@@ -16,7 +16,15 @@ request_data = {
 class BaseServer():
     '''
     Class to create a server to accumulate data from the pod and feed it to the
-    GUI
+    GUI. If the server is initialized with with a host and port it will
+    automatically start the server, otherwise, start_server will need to be
+    called on the instance.
+
+    Inputs:
+        host (str):     hostname or IP address
+        port (int):     port for the socket, should be above 1024
+        log (str):      filepath to log incoming data, NOT IMPLEMENTED
+        print_data (bool): whether or not to print data that has been received
     '''
     def __init__(self, host=None, port=None, log=None, **kwargs):
         self.sel = None
@@ -79,6 +87,9 @@ class BaseServer():
 
 
 class Message:
+    '''
+
+    '''
     def __init__(self, selector, sock, addr):
         self.selector = selector
         self.sock = sock

@@ -18,13 +18,13 @@ from network_transfer.libserver import BaseServer
 class HyperGui(QMainWindow):
     # Creating the dictionary
     # cmd_ext = {'abort': 0, 'hv': 0, 'vent_sol': 0, 'res1_sol': 0, 'res2_sol': 0, 'mc_pump': 0}
-####################################
+    ####################################
     # set up connection
     # HOST = '127.0.0.1'  # Change IP Address when using radios
     # PORT = 1028
     # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # s.bind((HOST, PORT))
-###################################
+    ###################################
 
     ### Abort range sensors ###
     # 'Ambient_Pressure',
@@ -53,6 +53,9 @@ class HyperGui(QMainWindow):
         self.host = host
         self.port = port
 
+        # static for testing, need to change with data
+        self.state = ''
+
         self.abort_ranges = kwargs.get('abort_ranges', None)
         if self.abort_ranges:
             self.abort_ranges = load_abort_ranges(self.abort_ranges)
@@ -76,12 +79,12 @@ class HyperGui(QMainWindow):
         }
 
         self.env_tbl_idx = {
-            'Ambient_Pressure': ('Ambient pressure [psi]', 0),
-            'Ambient_Temperature': ('Ambient Temp [C]', 1),
-            'PV_Left_Pressure': ('PV (left) pressure [psi]', 2),
-            'PV_Left_Temp': ('PV (left) temp [C]', 3),
-            'PV_Right_Pressure': ('PV (right) pressure [psi]', 4),
-            'PV_Right_Temp': ('PV (right) temp [C]', 5)
+            'Ambient_Pressure':     'Ambient pressure [psi]',
+            'Ambient_Temperature':  'Ambient Temp [C]',
+            'PV_Left_Pressure':     'PV (left) pressure [psi]',
+            'PV_Left_Temp':         'PV (left) temp [C]',
+            'PV_Right_Pressure':    'PV (right) pressure [psi]',
+            'PV_Right_Temp':        'PV (right) temp [C]'
         }
 
         self.init_ui()
@@ -267,7 +270,7 @@ class HyperGui(QMainWindow):
 
         # Creating the table for Pod Health
         self.pod_hlth_table = QTableWidget(self)
-        self.pod_hlth_table.setRowCount(24)
+        self.pod_hlth_table.setRowCount(len(self.pod_hlth_idx))
         self.pod_hlth_table.setColumnCount(3)
         self.pod_hlth_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
         self.pod_hlth_table.setVerticalHeaderLabels([k for k in self.pod_hlth_idx.values()])
@@ -290,7 +293,7 @@ class HyperGui(QMainWindow):
         self.env_table.setRowCount(len(self.env_tbl_idx))
         self.env_table.setColumnCount(3)
         self.env_table.setHorizontalHeaderLabels(["LOW", "ACTUAL", "HIGH"])
-        self.env_table.setVerticalHeaderLabels([k[0] for k in self.env_tbl_idx.values()])
+        self.env_table.setVerticalHeaderLabels([k for k in self.env_tbl_idx.values()])
         self.env_table.resize(env_width, 295)
         self.env_table.move(env_pos[0], env_pos[1]+30)
 
@@ -305,6 +308,7 @@ class HyperGui(QMainWindow):
 
     # This function will start the thread
     def start(self):
+        self.state = 1
         self.timer.start()
 
     # This function will stop the thread
@@ -383,19 +387,61 @@ class HyperGui(QMainWindow):
         test_val = random.uniform(0, 3)
 
         # update current state
-        self.state_tbox.setText(self._state_txt(1))
+        state = self.state
+        self.state_tbox.setText(self._state_txt(state))
 
-        # Update the items of the environmental table
-        self.env_table.setItem(0, 0, QTableWidgetItem("0.0"))
-        self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(test_val)))
-        self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
+        # Update Health and Environment tables
+        if self.abort_ranges:
+            # Upate Health table
+            for i,k in enumerate(self.pod_hlth_idx):
+                sensor = self.abort_ranges[state].get(k, {'Low':'', 'High':''})
+                self.pod_hlth_table.setItem(i, 0, QTableWidgetItem(
+                    '{}'.format(sensor['Low'])
+                ))
+                self.pod_hlth_table.setItem(i, 2, QTableWidgetItem(
+                    '{}'.format(sensor['High'])
+                ))
+
+            # Update Environment table
+            for i,k in enumerate(self.env_tbl_idx):
+                sensor = self.abort_ranges[state].get(k, {'Low':'', 'High':''})
+                self.env_table.setItem(i, 0, QTableWidgetItem('{}'.format(
+                    sensor['Low']
+                )))
+                self.env_table.setItem(i, 2, QTableWidgetItem('{}'.format(
+                    sensor['High']
+                )))
+            self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(
+                test_val
+            )))
+        else:
+            self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(test_val)))
+            self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
+        
+        
+
 
 
 
 
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='GUI for Hyperlynx 2019 pod')
+    parser.add_argument('--abort_ranges', help='path to abort ranges file')
+    args = parser.parse_args()
+
+    params = {
+        'host': 'localhost',
+        'port': 5050,
+        'abort_ranges': None
+    }
+
+    if args.abort_ranges:
+        params['abort_ranges'] = args.abort_ranges
+
     app = QApplication([])
-    my_gui = HyperGui(host='0.0.0.0', port=5000)
+    my_gui = HyperGui(**params)
     my_gui.show()
 
     sys.exit(app.exec_())
