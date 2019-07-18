@@ -1,10 +1,13 @@
 # Jose Ortega
 # HyperLynx TCP Server
 
-import pickle
+import random
 import socket
-from time import clock
+import sys
 
+from PyQt5 import QtCore, Qt
+from PyQt5.QtWidgets import QMainWindow, QTextEdit, QTableWidget, QPushButton, QCheckBox, QSlider, QApplication, \
+    QTableWidgetItem
 from gui_data_simulator import load_abort_ranges
 from network_transfer.libserver import BaseServer
 
@@ -17,6 +20,7 @@ s.bind((HOST, PORT))
 # Print Listening on HOST and PORT
 print(HOST)
 print(PORT)
+
 
 class HyperGui(QMainWindow):
     # Creating the dictionary
@@ -396,7 +400,7 @@ class HyperGui(QMainWindow):
         # Update Health and Environment tables
         if self.abort_ranges:
             # Upate Health table
-            for i,k in enumerate(self.pod_hlth_idx):
+            for i, k in enumerate(self.pod_hlth_idx):
                 sensor = self.abort_ranges[state].get(k, {'Low':'', 'High':''})
                 self.pod_hlth_table.setItem(i, 0, QTableWidgetItem(
                     '{}'.format(sensor['Low'])
@@ -421,11 +425,6 @@ class HyperGui(QMainWindow):
             self.env_table.setItem(0, 1, QTableWidgetItem("{:.2f}".format(test_val)))
             self.env_table.setItem(0, 2, QTableWidgetItem("3.0"))
         
-        
-
-
-
-
 
 if __name__ == "__main__":
     import argparse
@@ -480,3 +479,4 @@ while 1:
 
     # Call GUI function and send data
     # Put GUI function here
+'''
