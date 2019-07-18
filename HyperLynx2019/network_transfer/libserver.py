@@ -4,7 +4,6 @@ import selectors
 import traceback
 import json
 import io
-import os
 import struct
 
 request_data = {
@@ -13,7 +12,8 @@ request_data = {
     "\U0001f436": "\U0001f43e Playing ball! \U0001f3d0",
 }
 
-class BaseServer():
+
+class BaseServer:
     '''
     Class to create a server to accumulate data from the pod and feed it to the
     GUI. If the server is initialized with with a host and port it will
@@ -299,7 +299,6 @@ class Message:
         message = self._create_message(**response)
         self.response_created = True
         self._send_buffer += message
-
 
 
 if __name__ == "__main__":
