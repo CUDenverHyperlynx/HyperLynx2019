@@ -127,7 +127,6 @@ class Status():
 
         self.state_timeout = [0,0,0,0,0,0,0,0]
         self.state_timeout_limits = timeouts.get()
-
         self.filter_length = 10         # Moving average for sensor data filter
 
         # SPACEX CONFIG DATA
@@ -966,7 +965,6 @@ def run_state():
         if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
             PodStatus.Fault = True
             PodStatus.Abort = True
-
 
         # DO NOTHING ELSE UNTIL STOPPED
 

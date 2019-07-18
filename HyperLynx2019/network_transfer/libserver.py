@@ -4,6 +4,7 @@ import selectors
 import traceback
 import json
 import io
+import os
 import struct
 
 request_data = {
@@ -13,8 +14,23 @@ request_data = {
 }
 
 class BaseServer():
-    def __init__(self, host=None, port=None):
+    '''
+    Class to create a server to accumulate data from the pod and feed it to the
+    GUI. If the server is initialized with with a host and port it will
+    automatically start the server, otherwise, start_server will need to be
+    called on the instance.
+
+    Inputs:
+        host (str):     hostname or IP address
+        port (int):     port for the socket, should be above 1024
+        log (str):      filepath to log incoming data, NOT IMPLEMENTED
+        print_data (bool): whether or not to print data that has been received
+    '''
+    def __init__(self, host=None, port=None, log=None, **kwargs):
         self.sel = None
+
+        self.print_data = kwargs.get('print_data', False)
+
         if host and port:
             self.start_server(host, port)
 
@@ -40,11 +56,15 @@ class BaseServer():
                         message = key.data
                         try:
                             message.process_events(mask)
+                            if self.print_data:
+                                self._print_data(message.request.get('value'))
                             ### add code to send data to local stack ###
+                            ## write data to file
                         except Exception:
                             print(
                                 "main: error: exception for",
-                                f"{message.addr}:\n{traceback.format_exc()}",
+                                "{addr}:\n{traceback}"\
+                                .format(addr=message.addr, traceback=traceback.format_exc()),
                             )
                             message.close()
         except KeyboardInterrupt:
@@ -59,8 +79,17 @@ class BaseServer():
         message = Message(self.sel, conn, addr)
         self.sel.register(conn, selectors.EVENT_READ, data=message)
 
+    def _write_file(self):
+        pass
+
+    def _print_data(self, data):
+        print(data)
+
 
 class Message:
+    '''
+
+    '''
     def __init__(self, selector, sock, addr):
         self.selector = selector
         self.sock = sock
@@ -81,7 +110,7 @@ class Message:
         elif mode == "rw":
             events = selectors.EVENT_READ | selectors.EVENT_WRITE
         else:
-            raise ValueError(f"Invalid events mask mode {repr(mode)}.")
+            raise ValueError("Invalid events mask mode {}.".format(repr(mode)))
         self.selector.modify(self.sock, events, data=self)
 
     def _read(self):
@@ -141,7 +170,7 @@ class Message:
         action = self.request.get("action")
         if action == "search":
             query = self.request.get("value")
-            answer = request_data.get(query) or f'No match for "{query}".'
+            answer = request_data.get(query) or 'No match for "{}".'.format(query)
             content = {"result": answer}
         elif action == 'send_data':
             # data = self.request.get('value')
@@ -149,7 +178,7 @@ class Message:
             answer = 'Data Received'
             content = {'result': answer}
         else:
-            content = {"result": f'Error: invalid action "{action}".'}
+            content = {"result": 'Error: invalid action "{}".'.format(action)}
         content_encoding = "utf-8"
         response = {
             "content_bytes": self._json_encode(content, content_encoding),
@@ -200,16 +229,16 @@ class Message:
             self.selector.unregister(self.sock)
         except Exception as e:
             print(
-                f"error: selector.unregister() exception for",
-                f"{self.addr}: {repr(e)}",
+                "error: selector.unregister() exception for",
+                "{}: {}".format(self.addr, repr(e)),
             )
 
         try:
             self.sock.close()
         except OSError as e:
             print(
-                f"error: socket.close() exception for",
-                f"{self.addr}: {repr(e)}",
+                "error: socket.close() exception for",
+                "{}: {}".format(self.addr, repr(e)),
             )
         finally:
             # Delete reference to socket object for garbage collection
@@ -237,7 +266,7 @@ class Message:
                 "content-encoding",
             ):
                 if reqhdr not in self.jsonheader:
-                    raise ValueError(f'Missing required header "{reqhdr}".')
+                    raise ValueError('Missing required header "{}".'.format(reqhdr))
 
     def process_request(self):
         content_len = self.jsonheader["content-length"]
@@ -255,7 +284,7 @@ class Message:
             # Binary or unknown content-type
             self.request = data
             print(
-                f'received {self.jsonheader["content-type"]} request from',
+                'received {} request from'.format(self.jsonheader["content-type"]),
                 self.addr,
             )
         # Set selector to listen for write events, we're done reading.
@@ -270,3 +299,21 @@ class Message:
         message = self._create_message(**response)
         self.response_created = True
         self._send_buffer += message
+
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Pod Data Simulator')
+    parser.add_argument('-p', action='store_true', default=False)
+    parser.add_argument('--server', help='<host>:<port>')
+    args = parser.parse_args()
+
+    if args.server:
+        host, port = args.server.split(':')
+        port = int(port)
+    else:
+        host, port = ('localhost', 5000)
+
+    serv = BaseServer(host=host, port=port, print_data=args.p)
