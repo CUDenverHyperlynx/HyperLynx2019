@@ -842,8 +842,8 @@ def send_data():        # Sends data to TCP (GUI) and CAN (BMS/MC)
     ### Send to CAN ###
 
     ### Send to TCP ###
-    send_server(PodStatus)
-
+    #send_server(PodStatus)
+    pass
 
 def run_state():
     """
