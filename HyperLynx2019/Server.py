@@ -52,6 +52,9 @@ class HyperGui(QMainWindow):
 
         self.host = host
         self.port = port
+        if host and port:
+            # start server thread here
+            pass
 
         # static for testing, need to change with data
         self.state = ''
