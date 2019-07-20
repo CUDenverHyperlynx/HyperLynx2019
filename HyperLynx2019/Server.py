@@ -1,11 +1,10 @@
-# Jose Ortega
+
 # HyperLynx TCP Server
 
-import random
+
 import socket
-<<<<<<<<< Temporary merge branch 1
-import sys
-=========
+
+
 # import pickle
 from queue import Queue
 import random
@@ -17,8 +16,6 @@ import numpy as np
 from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget
 from PyQt5.QtWidgets import QCheckBox, QSlider, QMainWindow, QTableWidgetItem
 from PyQt5.QtCore import *
-from PyQt5 import QtCore
->>>>>>>>> Temporary merge branch 2
 
 from PyQt5 import QtCore, Qt
 from PyQt5.QtWidgets import QMainWindow, QTextEdit, QTableWidget, QPushButton, QCheckBox, QSlider, QApplication, \
