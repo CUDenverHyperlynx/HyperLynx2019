@@ -4,13 +4,13 @@ import selectors
 import traceback
 import json
 import io
-import os
 import struct
 import threading
 from queue import Queue
 
 
-class BaseServer():
+
+class BaseServer:
     '''
     Class to create a server to accumulate data from the pod and feed it to the
     GUI. If the server is initialized with with a host and port it will
@@ -346,7 +346,6 @@ class ThreadedServer(threading.Thread, BaseServer):
             print("caught keyboard interrupt, exiting")
         finally:
             self.sel.close()
-
 
 
 if __name__ == "__main__":
