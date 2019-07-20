@@ -24,3 +24,13 @@ environment_table:
   PV_Left_Temp:         PV (left) temp [C]
   PV_Right_Pressure:    PV (right) pressure [psi]
   PV_Right_Temp:        PV (right) temp [C]
+
+pod_dyn_table:
+  pos:      Position [ft]
+  stp_cnt:  Stripe Count
+  spd:      Speed [ft/s]
+  accl:     Acceleration [ft/s^2]
+  IMU1_Z:   IMU1
+  IMU2_Z:   IMU2
+  thrtl:    Throttle
+  lidar:    Lidar -

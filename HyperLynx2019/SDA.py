@@ -58,8 +58,11 @@ import socket, struct
 import numpy
 import datetime
 import os, psutil
+import pickle
+#from argparse import ArgumentParser
 #import smbus
 import Hyperlynx_ECS, flight_sim
+from network_transfer.libclient import BaseClient
 from Client import send_server
 import timeouts
 import can_bms
@@ -181,6 +184,18 @@ class Status():
             file.write("\n")
         file.close()
         print("Log file created: " + str(self.file_name))
+    
+    def data_dump(self):
+        data_dict = {}
+        data_dict['pos'] = self.true_data['D']['val']
+        data_dict['stp_cnt'] = self.true_data['stripe_count']
+        data_dict['spd'] = self.true_data['V']['val']
+        data_dict['accl'] = self.true_data['A']['val']
+        data_dict['IMU1_Z'] = self.sensor_filter['IMU1_Z']['val']
+        data_dict['IMU2_z'] = self.sensor_filter['IMU2_Z']['val']
+        data_dict['thrtl'] = self.throttle
+        data_dict['lidar'] = self.sensor_filter['LIDAR']['val']
+        return data_dict
 
 
 def init():
@@ -1253,7 +1268,7 @@ if __name__ == "__main__":
         eval_abort()
         rec_data()
         spacex_data()
-        send_data()
+        client.send_message(*addr, 'send_data', PodStatus.data_dump())
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")
