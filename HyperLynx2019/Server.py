@@ -1,8 +1,11 @@
 # Jose Ortega
 # HyperLynx TCP Server
 
-import pickle
+import random
 import socket
+<<<<<<<<< Temporary merge branch 1
+import sys
+=========
 # import pickle
 from queue import Queue
 import random
@@ -15,7 +18,11 @@ from PyQt5.QtWidgets import QApplication, QPushButton, QTextEdit, QTableWidget
 from PyQt5.QtWidgets import QCheckBox, QSlider, QMainWindow, QTableWidgetItem
 from PyQt5.QtCore import *
 from PyQt5 import QtCore
+>>>>>>>>> Temporary merge branch 2
 
+from PyQt5 import QtCore, Qt
+from PyQt5.QtWidgets import QMainWindow, QTextEdit, QTableWidget, QPushButton, QCheckBox, QSlider, QApplication, \
+    QTableWidgetItem
 from gui_data_simulator import load_abort_ranges
 from network_transfer.libserver import BaseServer
 
@@ -28,6 +35,7 @@ s.bind((HOST, PORT))
 # Print Listening on HOST and PORT
 print(HOST)
 print(PORT)
+
 
 class HyperGui(QMainWindow):
     # Creating the dictionary
@@ -425,9 +433,6 @@ class HyperGui(QMainWindow):
             )))
 
 
-
-
-
 if __name__ == "__main__":
     import argparse
 
@@ -481,3 +486,4 @@ while 1:
 
     # Call GUI function and send data
     # Put GUI function here
+'''
