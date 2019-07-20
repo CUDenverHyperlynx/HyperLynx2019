@@ -13,36 +13,60 @@
 # https://github.com/skpang/PiCAN-Python-examples/blob/master/simple_rx_test.py
 #
 
-import python-can as can
+import can
 import time
 import os
 
-print('\n\rCAN Rx test')
-print('Bring up CAN0....')
-os.system("sudo /sbin/ip link set can0 up type can bitrate 500000")
-time.sleep(0.1)
+def run(object):
+    print('\n\rCAN Rx test')
+    print('Bring up CAN0....')
+    os.system("sudo /sbin/ip link set can0 up type can bitrate 500000")
+    time.sleep(0.1)
 
-try:
-    bus = can.interface.Bus(channel='can0', bustype='socketcan_native')
-except OSError:
-    print('Cannot find PiCAN board.')
-    exit()
+    try:
+        bus = can.interface.Bus(channel='can0', bustype='socketcan_native')
+    except OSError:
+        print('Cannot find PiCAN board.')
+        exit()
 
-print('Ready')
+    print('Ready')
 
-try:
-    while True:
-        message = bus.recv()  # Wait until a message is received.
+    datamap = {'0x6B0':{'name':'PopulatedCells', 'val_float':0, 'mult':1},
+               '0x6B1':{'name':'PackSumVoltage', 'val_float':0, 'mult':10},
+               '0x6B2':{'name':'AvgCellVoltage', 'val_float':0, 'mult':10000},
+               '0x6B3':{'name':'FailsafeStatus', 'val_float':0, 'mult':1, 'val_str':'None'},
+               }
+    failsafemap = {0x00:'No failsafe active',
+                   0x01:'Voltage failsafe active',
+                   0x02:'Current failsafe active',
+                   0x04:'Relay failsafe active',
+                   0x08:'Cell balancing active (non-failsafe mode)',
+                   0x10:'Charge interlock failsafe active',
+                   0x20:'Thermistor B-value table invalid',
+                   0x40:'Input power supply failsafe active'
+                   }
 
-        c = '{0:f} {1:x} {2:x} '.format(message.timestamp, message.arbitration_id, message.dlc)
-        s = ''
-        for i in range(message.dlc):
-            s += '{0:x} '.format(message.data[i])
+    try:
+        while True:
+            message = bus.recv()  # Wait until a message is received.
 
-        print(' {}'.format(c + s))
+            c = '{0:f} {1:x} {2:x} '.format(message.timestamp, message.arbitration_id, message.dlc)
+            arb_ID = '{1:x}'.format(message.arbitration_id)
+            s = ''
+            for i in range(message.dlc):
+                s += '{0:x} '.format(message.data[i])
+
+            print(' {}'.format(c + s))
+            value = float(s,16)
+            for key in datamap:
+                if arb_ID == key:
+                    datamap[key['val_float']] = float(s) * datamap[key['mult']]
+                    if arb_ID = '0x6B3':
+                        datamap['0x6B3'['val_str']] = failsafemap[s]
 
 
-except KeyboardInterrupt:
-    # Catch keyboard interrupt
-    os.system("sudo /sbin/ip link set can0 down")
-    print('\n\rKeyboard interrtupt')
+
+    except KeyboardInterrupt:
+        # Catch keyboard interrupt
+        os.system("sudo /sbin/ip link set can0 down")
+        print('\n\rKeyboard interrtupt')

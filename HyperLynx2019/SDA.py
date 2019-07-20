@@ -62,6 +62,7 @@ import os, psutil
 import Hyperlynx_ECS, flight_sim
 from Client import send_server
 import timeouts
+import can_comm
 
 
 class Status():
@@ -615,6 +616,10 @@ def eval_abort():
 
 
 def rec_data():
+
+    ### CAN BUS RECEIVE ###
+    can_comm.run()
+
     ###__ACTUAL GUI__###
     if gui == '2':
         ### RECEIVE DATA FROM GUI ###
