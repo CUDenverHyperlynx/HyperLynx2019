@@ -1230,12 +1230,12 @@ if __name__ == "__main__":
 
     PodStatus = Status()
 
-    gui = '0'
-    print('Which GUI should I use?\n')
-    print('\t1\tConsole')
-    print('\t2\tExternal')
-    while gui != '1' and gui != '2':
-        gui = str(input('Enter choice: '))
+    gui = '2'
+    # print('Which GUI should I use?\n')
+    # print('\t1\tConsole')
+    # print('\t2\tExternal')
+    # while gui != '1' and gui != '2':
+    #     gui = str(input('Enter choice: '))
 
     init()
 
