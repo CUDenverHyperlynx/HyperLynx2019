@@ -62,7 +62,7 @@ import os, psutil
 import Hyperlynx_ECS, flight_sim
 from Client import send_server
 import timeouts
-import can_comm
+import can_bms
 
 
 class Status():
