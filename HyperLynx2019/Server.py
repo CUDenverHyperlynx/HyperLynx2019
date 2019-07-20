@@ -99,7 +99,7 @@ class HyperGui(QMainWindow):
         # ******* This is the gui status text for the program (Need to change design) *******
         self.gui_status = QTextEdit('<b>Live</b>', self)
         self.gui_status.setReadOnly(True)
-        self.gui_status.setAlignment(Qt.AlignCenter)
+        self.gui_status.setAlignment(QtCore.Qt.AlignCenter)
         self.gui_status.setToolTip('This is a <b>Status</b> text')
         self.gui_status.resize(80, 30)
         self.gui_status.move(5, 5)
@@ -115,7 +115,7 @@ class HyperGui(QMainWindow):
 
         # Adjusting the text box for Pod Dynamics
         self.pod_dyn_txt = QTextEdit('<b>POD DYNAMICS</b> ', self)
-        self.pod_dyn_txt.setAlignment(Qt.AlignCenter)
+        self.pod_dyn_txt.setAlignment(QtCore.Qt.AlignCenter)
         self.pod_dyn_txt.setReadOnly(True)
         self.pod_dyn_txt.resize(425, 30)
         self.pod_dyn_txt.move(5, 390)
@@ -227,8 +227,8 @@ class HyperGui(QMainWindow):
         self.mt_chkbox.move(35, 330)
 
         # ******* This is the manual throttle slider *******
-        self.mt_chkslider = QSlider(Qt.Horizontal, self)
-        self.mt_chkslider.setFocusPolicy(Qt.NoFocus)
+        self.mt_chkslider = QSlider(QtCore.Qt.Horizontal, self)
+        self.mt_chkslider.setFocusPolicy(QtCore.Qt.NoFocus)
         self.mt_chkslider.setGeometry(35, 350, 110, 30)
 
         # ******* This is the LAUNCH button for the program (Need to change design) *******
@@ -253,7 +253,7 @@ class HyperGui(QMainWindow):
 
         # Creating the Log Text box
         self.pd_log_txt = QTextEdit('Host:' + self.host + ' Port:' + str(self.port), self)
-        self.pd_log_txt.setAlignment(Qt.AlignCenter)
+        self.pd_log_txt.setAlignment(QtCore.Qt.AlignCenter)
         self.pd_log_txt.setReadOnly(True)
         self.pd_log_txt.resize(350, 230)
         self.pd_log_txt.move(550, 5)
@@ -263,7 +263,7 @@ class HyperGui(QMainWindow):
         hlth_pos = (950, 5)
         # Creating the Pod Health text
         self.pod_hlth_txt = QTextEdit('<b>Pod Health</b>', self)
-        self.pod_hlth_txt.setAlignment(Qt.AlignCenter)
+        self.pod_hlth_txt.setAlignment(QtCore.Qt.AlignCenter)
         self.pod_hlth_txt.setReadOnly(True)
         self.pod_hlth_txt.resize(hlth_width, 30)
         self.pod_hlth_txt.move(*hlth_pos)
@@ -283,7 +283,7 @@ class HyperGui(QMainWindow):
         env_pos = (950, 420)
         # Creating the Environmentals text
         self.env_txt = QTextEdit('<b>Environmentals</b>', self)
-        self.env_txt.setAlignment(Qt.AlignCenter)
+        self.env_txt.setAlignment(QtCore.Qt.AlignCenter)
         self.env_txt.setReadOnly(True)
         self.env_txt.resize(env_width, 30)
         self.env_txt.move(*env_pos)
