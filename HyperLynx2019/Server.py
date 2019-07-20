@@ -1,6 +1,7 @@
-# Jose Ortega and Mohammad Hossain
-# HyperLynx TCP Server merged with the GUI
+# Jose Ortega
+# HyperLynx TCP Server
 
+import pickle
 import socket
 # import pickle
 from queue import Queue
@@ -18,6 +19,15 @@ from PyQt5 import QtCore
 from gui_data_simulator import load_abort_ranges
 from network_transfer.libserver import BaseServer
 
+# set up connection
+HOST = '127.0.0.1'  # Change IP Address when using radios
+PORT = 1028
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.bind((HOST, PORT))
+
+# Print Listening on HOST and PORT
+print(HOST)
+print(PORT)
 
 class HyperGui(QMainWindow):
     # Creating the dictionary
@@ -471,4 +481,3 @@ while 1:
 
     # Call GUI function and send data
     # Put GUI function here
-'''
