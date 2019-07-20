@@ -6,12 +6,9 @@ import json
 import io
 import os
 import struct
+import threading
+from queue import Queue
 
-request_data = {
-    "morpheus": "Follow the white rabbit. \U0001f430",
-    "ring": "In the caves beneath the Misty Mountains. \U0001f48d",
-    "\U0001f436": "\U0001f43e Playing ball! \U0001f3d0",
-}
 
 class BaseServer():
     '''
@@ -26,23 +23,23 @@ class BaseServer():
         log (str):      filepath to log incoming data, NOT IMPLEMENTED
         print_data (bool): whether or not to print data that has been received
     '''
-    def __init__(self, host=None, port=None, log=None, **kwargs):
+    def __init__(self, host, port, **kwargs):
         self.sel = None
-
         self.print_data = kwargs.get('print_data', False)
+        self.verbose = kwargs.get('verbose', False)
 
-        if host and port:
-            self.start_server(host, port)
+        self.host = host
+        self.port = port
 
-    def start_server(self, host, port):
+    def start_server(self):
         self.sel = selectors.DefaultSelector()
 
         lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # Avoid bind() exception: OSError: [Errno 48] Address already in use
         lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        lsock.bind((host, port))
+        lsock.bind((self.host, self.port))
         lsock.listen()
-        print("listening on", (host, port))
+        print("listening on", (self.host, self.port))
         lsock.setblocking(False)
         self.sel.register(lsock, selectors.EVENT_READ, data=None)
 
@@ -74,7 +71,8 @@ class BaseServer():
 
     def _accept_wrapper(self, sock):
         conn, addr = sock.accept()  # Should be ready to read
-        print("accepted connection from", addr)
+        if self.verbose:
+            print("accepted connection from", addr)
         conn.setblocking(False)
         message = Message(self.sel, conn, addr)
         self.sel.register(conn, selectors.EVENT_READ, data=message)
@@ -90,7 +88,7 @@ class Message:
     '''
 
     '''
-    def __init__(self, selector, sock, addr):
+    def __init__(self, selector, sock, addr, verbose=False):
         self.selector = selector
         self.sock = sock
         self.addr = addr
@@ -100,6 +98,8 @@ class Message:
         self.jsonheader = None
         self.request = None
         self.response_created = False
+
+        self.verbose = verbose
 
     def _set_selector_events_mask(self, mode):
         """Set selector to listen for events: mode is 'r', 'w', or 'rw'."""
@@ -128,7 +128,8 @@ class Message:
 
     def _write(self):
         if self._send_buffer:
-            print("sending", repr(self._send_buffer), "to", self.addr)
+            if self.verbose:
+                print("sending", repr(self._send_buffer), "to", self.addr)
             try:
                 # Should be ready to write
                 sent = self.sock.send(self._send_buffer)
@@ -168,13 +169,10 @@ class Message:
 
     def _create_response_json_content(self):
         action = self.request.get("action")
-        if action == "search":
-            query = self.request.get("value")
-            answer = request_data.get(query) or 'No match for "{}".'.format(query)
-            content = {"result": answer}
-        elif action == 'send_data':
+        if action == 'send_data':
             # data = self.request.get('value')
-            print('Data:\t',type(self.request.get('value')))
+            if self.verbose:
+                print('Data:\t',type(self.request.get('value')))
             answer = 'Data Received'
             content = {'result': answer}
         else:
@@ -224,7 +222,8 @@ class Message:
         self._write()
 
     def close(self):
-        print("closing connection to", self.addr)
+        if self.verbose:
+            print("closing connection to", self.addr)
         try:
             self.selector.unregister(self.sock)
         except Exception as e:
@@ -278,15 +277,17 @@ class Message:
             encoding = self.jsonheader["content-encoding"]
             self.request = self._json_decode(data, encoding)
             # print("received request", repr(self.request), "from", self.addr)
-            print("received request, action:", self.request.get('action'),
+            if self.verbose:
+                print("received request, action:", self.request.get('action'),
                     "from", self.addr)
         else:
             # Binary or unknown content-type
             self.request = data
-            print(
+            if self.verbose:
+                print(
                 'received {} request from'.format(self.jsonheader["content-type"]),
                 self.addr,
-            )
+                )
         # Set selector to listen for write events, we're done reading.
         self._set_selector_events_mask("w")
 
@@ -300,14 +301,66 @@ class Message:
         self.response_created = True
         self._send_buffer += message
 
+class ThreadedServer(threading.Thread, BaseServer):
+    def __init__(self, q, **kwargs):
+        threading.Thread.__init__(self)
+        BaseServer.__init__(self, **kwargs)
+
+        self.q = q
+    
+    def run(self):
+        # run the server and add received data to queue
+        self.sel = selectors.DefaultSelector()
+
+        lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # Avoid bind() exception: OSError: [Errno 48] Address already in use
+        lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        lsock.bind((self.host, self.port))
+        lsock.listen()
+        print("listening on", (self.host, self.port))
+        lsock.setblocking(False)
+        self.sel.register(lsock, selectors.EVENT_READ, data=None)
+
+        try:
+            while True:
+                events = self.sel.select(timeout=None)
+                for key, mask in events:
+                    if key.data is None:
+                        self._accept_wrapper(key.fileobj)
+                    else:
+                        message = key.data
+                        try:
+                            message.process_events(mask)
+                            if self.print_data:
+                                self._print_data(message.request.get('value'))
+                            self.q.put(message.request.get('value'))
+                            ## write data to file (not implemented)
+                        except Exception:
+                            print(
+                                "main: error: exception for",
+                                "{addr}:\n{traceback}"\
+                                .format(addr=message.addr, traceback=traceback.format_exc()),
+                            )
+                            message.close()
+        except KeyboardInterrupt:
+            print("caught keyboard interrupt, exiting")
+        finally:
+            self.sel.close()
+
 
 
 if __name__ == "__main__":
     import argparse
+    import time
 
     parser = argparse.ArgumentParser(description='Pod Data Simulator')
-    parser.add_argument('-p', action='store_true', default=False)
+    parser.add_argument(
+        '-p', help='print received data', action='store_true', default=False
+    )
     parser.add_argument('--server', help='<host>:<port>')
+    parser.add_argument(
+        '-t', help='use Threaded server', action='store_true', default=False
+    )
     args = parser.parse_args()
 
     if args.server:
@@ -316,4 +369,16 @@ if __name__ == "__main__":
     else:
         host, port = ('localhost', 5000)
 
-    serv = BaseServer(host=host, port=port, print_data=args.p)
+    
+    if args.t:
+        q = Queue()
+        serv = ThreadedServer(q, host=host, port=port, print_data=args.p)
+        serv.setDaemon(True)
+        serv.start()
+        for i in range(200):
+            if not q.empty():
+                print(q.get())
+            time.sleep(2)
+    else:
+        serv = BaseServer(host=host, port=port, print_data=args.p)
+        serv.start_server()
