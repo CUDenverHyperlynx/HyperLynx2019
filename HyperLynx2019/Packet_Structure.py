@@ -1,7 +1,8 @@
 from time import clock
 import pandas as pd
 
-class Status():
+
+class Status:
     # Definition of State Numbers
     SafeToApproach = 1
     Launching = 3
@@ -110,5 +111,5 @@ class Status():
             self.BrakingLow:df.loc[df['7 - Brake2'] == 1, values].to_dict('index')}
         self.abort_ranges.update(states)
 
-    #debug
+    # debug
     sensor_data['Brake_Pressure'] = 178
