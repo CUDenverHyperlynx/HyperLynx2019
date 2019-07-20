@@ -31,10 +31,10 @@ def run(object):
 
     print('Ready')
 
-    datamap = {'0x6B0':{'name':'PopulatedCells', 'val_float':0, 'mult':1},
-               '0x6B1':{'name':'PackSumVoltage', 'val_float':0, 'mult':10},
-               '0x6B2':{'name':'AvgCellVoltage', 'val_float':0, 'mult':10000},
-               '0x6B3':{'name':'FailsafeStatus', 'val_float':0, 'mult':1, 'val_str':'None'},
+    datamap = {0x6B0:{'name':'PopulatedCells', 'val_float':0, 'mult':1},
+               0x6B1:{'name':'PackSumVoltage', 'val_float':0, 'mult':10},
+               0x6B2:{'name':'AvgCellVoltage', 'val_float':0, 'mult':10000},
+               0x6B3:{'name':'FailsafeStatus', 'val_float':0, 'mult':1, 'val_str':'None'},
                }
     failsafemap = {0x00:'No failsafe active',
                    0x01:'Voltage failsafe active',
@@ -51,7 +51,7 @@ def run(object):
             message = bus.recv()  # Wait until a message is received.
 
             c = '{0:f} {1:x} {2:x} '.format(message.timestamp, message.arbitration_id, message.dlc)
-            arb_ID = '{1:x}'.format(message.arbitration_id)
+            arb_ID = message.arbitration_id
             s = ''
             for i in range(message.dlc):
                 s += '{0:x} '.format(message.data[i])
@@ -60,9 +60,10 @@ def run(object):
             value = float(s,16)
             for key in datamap:
                 if arb_ID == key:
-                    datamap[key['val_float']] = float(s) * datamap[key['mult']]
-                    if arb_ID = '0x6B3':
-                        datamap['0x6B3'['val_str']] = failsafemap[s]
+                    datamap[key]['val_float'] = float(s) * datamap[key]['mult']
+                    print(datamap[0x6B3])
+                    if arb_ID == 0x6B3:
+                        datamap[0x6B3]['val_str'] = failsafemap[s]
 
 
 
