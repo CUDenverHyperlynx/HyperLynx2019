@@ -618,7 +618,7 @@ def eval_abort():
 def rec_data():
 
     ### CAN BUS RECEIVE ###
-    can_comm.run()
+    bms_data = can_bms.run()
 
     ###__ACTUAL GUI__###
     if gui == '2':

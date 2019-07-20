@@ -70,3 +70,5 @@ def run(object):
         # Catch keyboard interrupt
         os.system("sudo /sbin/ip link set can0 down")
         print('\n\rKeyboard interrtupt')
+
+    return(datamap)
