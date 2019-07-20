@@ -2,7 +2,7 @@
 # HyperLynx TCP Server merged with the GUI
 
 import socket
-# import pickle
+import pickle
 from queue import Queue
 import random
 import sys
@@ -16,7 +16,8 @@ from PyQt5.QtCore import *
 from PyQt5 import QtCore
 
 from gui_data_simulator import load_abort_ranges
-from network_transfer.libserver import BaseServer
+from network_transfer.libserver import BaseServer, ThreadedServer
+# from SDA import Status
 
 
 class HyperGui(QMainWindow):
@@ -51,15 +52,15 @@ class HyperGui(QMainWindow):
     # 'V_bad_time_elapsed'
 
     # ******* Constructor for the class *******
-    def __init__(self, host=None, port=None, **kwargs):
+    def __init__(self, host='localhost', port=5050, **kwargs):
         super().__init__()
 
         self.data_q = Queue()
         self.host = host
         self.port = port
-        if host and port:
-            # start server thread here
-            pass
+        self.server = ThreadedServer(q=self.data_q, host=self.host, port=self.port)
+        self.server.setDaemon(True)
+        self.server.start()
 
         # static for testing, need to change with data
         self.state = ''
@@ -68,6 +69,7 @@ class HyperGui(QMainWindow):
 
         with open('sensors_config.yaml') as f:
             tables = yaml.safe_load(f)
+        self.pod_dyn_nms = tables['pod_dyn_table']
         self.pod_hlth_nms = tables['pod_health']
         self.env_tbl_nms = tables['environment_table']
         self.data_dict = {k:np.nan for v in tables.values() for k in v}
@@ -107,7 +109,7 @@ class HyperGui(QMainWindow):
 
         #  Adjusting the table for Pod Dynamics
         self.pod_dyn_table = QTableWidget(self)
-        self.pod_dyn_table.setRowCount(22)
+        self.pod_dyn_table.setRowCount(len(self.pod_dyn_nms))
         self.pod_dyn_table.setColumnCount(4)
         self.pod_dyn_table.resize(425, 320)
         self.pod_dyn_table.move(5, 420)
@@ -365,17 +367,47 @@ class HyperGui(QMainWindow):
             return '<h2>State:</h2> '
         else:
             return '<h2>State: {}</h2> '.format(state)
+    
+    
+    # def _read_status(self, pStatus):
+    #     # dynamics
+    #     self.data_dict['pos'] = pStatus.true_data['D']['val']
+    #     self.data_dict['stp_cnt'] = pStatus.true_data['stripe_count']
+    #     self.data_dict['spd'] = pStatus.true_data['V']['val']
+    #     self.data_dict['accl'] = pStatus.true_data['A']['val']
+    #     self.data_dict['IMU1_Z'] = pStatus.sensor_filter['IMU1_Z']['val']
+    #     self.data_dict['IMU2_z'] = pStatus.sensor_filter['IMU2_Z']['val']
+    #     self.data_dict['thrtl'] = pStatus.throttle
+    #     self.data_dict['lidar'] = pStatus.sensor_filter['LIDAR']['val']
+
 
     # This function is running on the thread separate from initializing the gui
     def update_txt(self):
         # Random number generator
         test_val = random.uniform(0, 3)
 
+        # check for new data
+        if not self.data_q.empty():
+            self.data_dict.update(self.data_q.get())
+        #     pstatus = pickle.loads(self.data_q.get())
+        #     self._read_status(pstatus)
+
         # update current state
         state = self.state
         self.state_tbox.setText(self._state_txt(state))
 
-        # Update Health and Environment tables
+        # Update tables
+        # Update Dynamics Table
+        for i,k in enumerate(self.pod_dyn_nms):
+            value = self.data_dict.get(k, 'err')
+            if type(value) in {int, float}:
+                self.pod_dyn_table.setItem(i, 1, QTableWidgetItem(
+                    '{:.2f}'.format(value)
+                ))
+            else:
+                self.pod_dyn_table.setItem(i, 1, QTableWidgetItem(
+                    '{}'.format(value)
+                ))
         # Upate Health table
         for i,k in enumerate(self.pod_hlth_nms):
             sensor = self.abort_ranges[state].get(k, {'Low':'', 'High':''})
