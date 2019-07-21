@@ -4,10 +4,6 @@ def Safing(object, **kwargs):
     # autosequence
     print('{} is safing.'.format(object.name))
 
-    # transitions
-    object.pod_safe()
-    sleep(1)
-
 def SafeToApproach(object, **kwargs):
     # autosequence
     print('{} is now safe to approach.'.format(object.name))
