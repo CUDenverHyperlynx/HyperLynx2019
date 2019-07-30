@@ -7,7 +7,7 @@ import io
 import struct
 
 
-class BaseClient():
+class BaseClient:
     def __init__(self):
         self.sel = None
 
@@ -66,6 +66,7 @@ class BaseClient():
         events = selectors.EVENT_READ | selectors.EVENT_WRITE
         message = Message(self.sel, sock, addr, request)
         self.sel.register(sock, events, data=message)
+
 
 class Message:
     def __init__(self, selector, sock, addr, request):
@@ -272,7 +273,6 @@ class Message:
         self.close()
 
 
-
 if __name__ == "__main__":
     import argparse
 
@@ -286,7 +286,7 @@ if __name__ == "__main__":
         host, port = args.server.split(':')
         port = int(port)
     else:
-        host, port = ('localhost', 5000)
+        host, port = ('localhost', 5050)
 
     data = {'test1': [1,2,3,4,5], 'test2': ['abcd','1234',5,7]}
     client.send_message(host, port, 'send_data', data)
