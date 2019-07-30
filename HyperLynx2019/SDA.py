@@ -62,8 +62,9 @@ import pickle
 #from argparse import ArgumentParser
 #import smbus
 import Hyperlynx_ECS, flight_sim
+
+# from Client import send_server
 from network_transfer.libclient import BaseClient
-from Client import send_server
 import timeouts
 import can_bms
 
