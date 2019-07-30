@@ -46,19 +46,31 @@
    John Brenner & Jeff Stanek
 '''
 
-from time import sleep, clock
+'''
+Instead of print statements as error messages lets create function calls for each error
+Make a function called error_log() and it will be passed a string that we can customize
+Then we receive a time stamped log file as an output
+Each main loop will have a separate timestamp
+'''
+
+from time import clock
 import socket, struct
 import numpy
 import datetime
 import os, psutil
+import pickle
 #from argparse import ArgumentParser
 #import smbus
 import Hyperlynx_ECS, flight_sim
-from Client import send_server
+# from Client import send_server
+from network_transfer.libclient import BaseClient
+import timeouts
+import can_bms
 
 class Status():
     # Definition of State Numbers
     SafeToApproach = 1
+    PreLaunch = 2
     Launching = 3
     BrakingHigh = 5
     Crawling = 6
@@ -67,6 +79,7 @@ class Status():
     # Init dictionaries
     abort_ranges = {}           # Dict of dicts (below)
     abort_ranges[SafeToApproach] = {}
+    abort_ranges[PreLaunch] = {}
     abort_ranges[Launching] = {}
     abort_ranges[BrakingHigh] = {}
     abort_ranges[Crawling] = {}
@@ -115,6 +128,8 @@ class Status():
         self.IMU_bad_time = None
         self.V_bad_time = None
 
+        self.state_timeout = [0,0,0,0,0,0,0,0]
+        self.state_timeout_limits = timeouts.get()
         self.filter_length = 10         # Moving average for sensor data filter
 
         # SPACEX CONFIG DATA
@@ -130,7 +145,6 @@ class Status():
         self.sensor_poll = Hyperlynx_ECS.HyperlynxECS()
         self.sensor_poll.initializeSensors()
         self.sensor_poll.initializeIO()
-
 
         # DEBUG init for script:
         self.Quit = False
@@ -169,6 +183,19 @@ class Status():
             file.write("\n")
         file.close()
         print("Log file created: " + str(self.file_name))
+    
+    def data_dump(self):
+        data_dict = {}
+        data_dict['pos'] = self.true_data['D']['val']
+        data_dict['stp_cnt'] = self.true_data['stripe_count']
+        data_dict['spd'] = self.true_data['V']['val']
+        data_dict['accl'] = self.true_data['A']['val']
+        data_dict['IMU1_Z'] = self.sensor_filter['IMU1_Z']['val']
+        data_dict['IMU2_z'] = self.sensor_filter['IMU2_Z']['val']
+        data_dict['thrtl'] = self.throttle
+        data_dict['lidar'] = self.sensor_filter['LIDAR']['val']
+        return data_dict
+
 
 def init():
     # Create Abort Range and init sensor_data Dictionary from template file
@@ -176,6 +203,7 @@ def init():
                                    dtype=str)
     abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12))
 
+    # Assign abort conditions to each state
     for i in range(0, len(abort_names)):
         if not str(abort_names[i]) in PodStatus.sensor_data:
             PodStatus.sensor_data[abort_names[i]] = 0
@@ -194,6 +222,7 @@ def init():
                                                                  'Trigger': abort_vals[i, 9],
                                                                  'Fault': abort_vals[i, 10]
                                                                  }
+            PodStatus.abort_ranges[PodStatus.PreLaunch] = PodStatus.abort_ranges[PodStatus.Launching]
         if abort_vals[i, 5] == 1:
             PodStatus.abort_ranges[PodStatus.BrakingHigh][abort_names[i]] = {'Low': abort_vals[i, 0],
                                                                    'High': abort_vals[i, 1],
@@ -241,6 +270,7 @@ def init():
         print('IMU1_Z: ' + str(PodStatus.sensor_data['IMU1_Z']))
         print('IMU2_Z: ' + str(PodStatus.sensor_data['IMU2_Z']))
         print("IMU init failed.")
+        PodStatus.Fault = True
 
     PodStatus.create_log()
 
@@ -268,7 +298,7 @@ def poll_sensors():
     # If you want to run the flight sim:
     if PodStatus.flight_sim is True:
 
-        #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
+        # PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = 4
         PodStatus.sensor_data['LVBatt_Voltage'] = 12
@@ -280,11 +310,11 @@ def poll_sensors():
         tempAccel1 = PodStatus.sensor_poll.getAcceleration(1)
         PodStatus.sensor_data['IMU1_X'] = tempAccel1[1]
         PodStatus.sensor_data['IMU1_Y'] = tempAccel1[2]
-        #PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
+        # PodStatus.sensor_data['IMU1_Z'] = tempAccel1[0]
         tempAccel2 = PodStatus.sensor_poll.getAcceleration(2)
         PodStatus.sensor_data['IMU2_X'] = tempAccel2[1]
         PodStatus.sensor_data['IMU2_Y'] = tempAccel2[2]
-        #PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
+        # PodStatus.sensor_data['IMU2_Z'] = tempAccel2[0]
         PodStatus.sensor_data['LIDAR'] = PodStatus.para_max_tube_length - PodStatus.true_data['D']['val']
         if PodStatus.sensor_data['LIDAR'] > 150: PodStatus.sensor_data['LIDAR'] = 150
 
@@ -292,7 +322,7 @@ def poll_sensors():
 
     else:
         # Uncomment Brake Pressure for pulling in actual data when we have this set up
-        #PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
+        # PodStatus.sensor_data['Brake_Pressure'] = PodStatus.sensor_poll.getBrakePressure()
         PodStatus.sensor_data['LVBatt_Temp'] = PodStatus.sensor_poll.getBatteryTemp()
         PodStatus.sensor_data['LVBatt_Current'] = PodStatus.sensor_poll.getCurrentLevel()
         PodStatus.sensor_data['LVBatt_Voltage'] = PodStatus.sensor_poll.getVoltageLevel()
@@ -351,6 +381,7 @@ def poll_sensors():
     if PodStatus.MET > 0:
         PodStatus.MET = clock()-PodStatus.MET_starttime
 
+
 def filter_data():
     """ Filters sensor data based on moving average.
     """
@@ -382,6 +413,7 @@ def filter_data():
                     print('Did not add ' + str(key) + ' to q: ' + str(PodStatus.sensor_data[str(key)]) + str(PodStatus.MET))
                     print('Current std dev: ' + str(PodStatus.sensor_filter[str(key)]['std_dev']))
             PodStatus.sensor_filter[str(key)]['val'] = numpy.mean(PodStatus.sensor_filter[str(key)]['q'])
+
 
 def sensor_fusion():
     """ Combines various filtered sensor data to a common solution."""
@@ -456,6 +488,7 @@ def sensor_fusion():
 
     ### BEGIN VELOCITY FUSION
     PodStatus.true_data['V']['val'] = PodStatus.sensor_data['SD_MotorData_MotorRPM'] * PodStatus.wheel_circum / 60
+
     if PodStatus.true_data['V']['val'] < 0: PodStatus.true_data['V']['val'] = 0
     # If queue is not full, fill queue
     # if len(PodStatus.true_data['V']['q']) < PodStatus.filter_length:
@@ -503,24 +536,25 @@ def sensor_fusion():
 
     PodStatus.D_diff = PodStatus.true_data['D']['val'] - PodStatus.stripe_count
 
-    if PodStatus.true_data['D']['val'] > 25:
-        temp_count = PodStatus.true_data['D']['val'] / 100
-        temp_dec = abs(temp_count - numpy.around(temp_count))
-        if temp_dec < 0.2 and PodStatus.D_diff > 20:
-            print("Looking for stripe")
-            if PodStatus.sensor_data['LST_Left'] == temp_count:
-                print("Left stripe counted!")
-                PodStatus.stripe_count = PodStatus.sensor_data['LST_Left']
-                PodStatus.sensor_data['LST_Right'] = PodStatus.sensor_data['LST_Left']
-            elif PodStatus.sensor_data['LST_Right'] == temp_count:
-                print("Right stripe counted!")
-                PodStatus.stripe_count = PodStatus.sensor_data['LST_Right']
-                PodStatus.sensor_data['LST_Left'] = PodStatus.sensor_data['LST_Right']
-            else:
-                print("No stripe counted, still waiting.")
-
-        else:
-            pass
+    ### Unnecessary block, since we count stripes independently and take max as true_data
+    # if PodStatus.true_data['D']['val'] > 25:
+    #     temp_count = PodStatus.true_data['D']['val'] / 100
+    #     temp_dec = abs(temp_count - numpy.around(temp_count))
+    #     if temp_dec < 0.2 and PodStatus.D_diff > 20:
+    #         print("Looking for stripe")
+    #         if PodStatus.sensor_data['LST_Left'] == temp_count:
+    #             print("Left stripe counted!")
+    #             PodStatus.stripe_count = PodStatus.sensor_data['LST_Left']
+    #             PodStatus.sensor_data['LST_Right'] = PodStatus.sensor_data['LST_Left']
+    #         elif PodStatus.sensor_data['LST_Right'] == temp_count:
+    #             print("Right stripe counted!")
+    #             PodStatus.stripe_count = PodStatus.sensor_data['LST_Right']
+    #             PodStatus.sensor_data['LST_Left'] = PodStatus.sensor_data['LST_Right']
+    #         else:
+    #             print("No stripe counted, still waiting.")
+    #
+    #     else:
+    #         pass
 
 
     ### END DISTANCE FUSION
@@ -592,9 +626,14 @@ def eval_abort():
         print("ABORT TRIGGERS FOUND: \t" + str(int(PodStatus.total_triggers)))
         print("FLAGGING ABORT == TRUE")
         PodStatus.Abort = True         # This is the ONLY location an abort can be reached during this function
-        PodStatus.cmd_int['Abort'] = 1
+        # PodStatus.cmd_int['Abort'] = 1
+
 
 def rec_data():
+
+    ### CAN BUS RECEIVE ###
+    bms_data = can_bms.run()
+
     ###__ACTUAL GUI__###
     if gui == '2':
         ### RECEIVE DATA FROM GUI ###
@@ -604,6 +643,7 @@ def rec_data():
         # Have a running clock for GUI; if loss of connection > 2 seconds, will abort
 
         pass
+
     ###DEBUG CONSOLE GUI###
     if gui == '1':
         """
@@ -651,18 +691,18 @@ def rec_data():
             if a == '2':
                 if PodStatus.HV is False:
                     PodStatus.cmd_ext['HV'] = 1
-                    #PodStatus.HV = True
+                    # PodStatus.HV = True
                 else:
                     PodStatus.cmd_ext['HV'] = 0
-                    #PodStatus.HV = False
+                    # PodStatus.HV = False
             elif a == '3':
                 if PodStatus.cmd_ext['Vent_Sol'] == 0:
                     PodStatus.cmd_ext['Vent_Sol'] = 1           # Brake Vent opens
-                    #PodStatus.Vent_Sol = 0
-                    #PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
+                    # PodStatus.Vent_Sol = 0
+                    # PodStatus.sensor_data['Brake_Pressure'] = 15      # Change brake pressure to atmo
                 else:
                     PodStatus.cmd_ext['Vent_Sol'] = 0
-                    #PodStatus.Vent_Sol = 1
+                    # PodStatus.Vent_Sol = 1
             elif a == '4':
                 if PodStatus.cmd_ext['Res1_Sol'] == 0:
                     PodStatus.cmd_ext['Res1_Sol'] = 1
@@ -720,6 +760,7 @@ def rec_data():
             #     pass
         elif PodStatus.state == PodStatus.BrakingHigh:
             pass
+
         elif PodStatus.state == PodStatus.Crawling:
             print("\n*** MENU ***\n\t1. Abort\n\t2. Quit")
             a = input('Enter choice: ')
@@ -730,11 +771,14 @@ def rec_data():
                 PodStatus.Quit = True
             else:
                 pass
+
         elif PodStatus.state == PodStatus.BrakingLow:
             pass
+
         else:
             pass
         ### END TEST SCRIPT
+
 
 def do_commands():
     """
@@ -763,7 +807,6 @@ def do_commands():
         else:
             PodStatus.MC_Pump = False
 
-
     # COMMANDS FOR ALL STATES
     # Brake Solenoid operation
     PodStatus.sensor_poll.switchSolenoid(3, PodStatus.cmd_int['Vent_Sol'])
@@ -779,7 +822,7 @@ def do_commands():
     PodStatus.HV = bool(PodStatus.cmd_int['HV'])
 
     # Abort Command
-    if PodStatus.Abort == True:
+    if PodStatus.Abort:
         abort()
 
     # Isolation green LED   DEBUG NEED VAR DATA FOR BMS
@@ -799,11 +842,11 @@ def spacex_data():
     distance = PodStatus.true_data['D']['val'] * 30.48   # ft to cm
 
     if (clock()-PodStatus.spacex_lastsend) < (1/PodStatus.spacex_rate):
-        #print("No packet sent.")
+        # print("No packet sent.")
         pass
     else:
         PodStatus.spacex_lastsend = clock()
-        #print("SpaceX packet sent at " + str(PodStatus.spacex_lastsend))
+        # print("SpaceX packet sent at " + str(PodStatus.spacex_lastsend))
 
         ### SpaceX-provided code
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -812,13 +855,14 @@ def spacex_data():
                              int(distance), int(speed), 0, 0, 0, 0, int(PodStatus.stripe_count) // 3048)
         sock.sendto(packet, server)
 
+
 def send_data():        # Sends data to TCP (GUI) and CAN (BMS/MC)
 
     ### Send to CAN ###
 
     ### Send to TCP ###
-    send_server(PodStatus)
-
+    #send_server(PodStatus)
+    pass
 
 def run_state():
     """
@@ -844,6 +888,21 @@ def run_state():
 
         # TRANSITIONS
         # None.  Only transition from S2A comes from do_commands() function
+
+    # PRELAUNCH State
+    elif PodStatus.state == 2:
+        # Set Motor Controller Parameters
+        # Emerg Brake / Active? / Forward
+
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
 
 
     # LAUNCHING STATE
@@ -873,7 +932,8 @@ def run_state():
                     PodStatus.throttle = 0
 
         # TRANSITIONS
-        if PodStatus.true_data['D']['val'] > PodStatus.para_BBP:
+        if (PodStatus.true_data['D']['val'] > PodStatus.para_BBP) or \
+                (PodStatus.true_data['stripe_count']*100 > PodStatus.para_BBP):
             print("Pod has crossed BBP.")
             transition()
         elif PodStatus.true_data['V']['val'] > PodStatus.para_max_speed:
@@ -882,12 +942,20 @@ def run_state():
         elif PodStatus.MET > PodStatus.para_max_time:
             print("Pod has exceeded max time.")
             transition()
-
         # TRANSITIONS FOR BAD DATA
         elif PodStatus.abort_ranges[PodStatus.state]['IMU_bad_time_elapsed']['Fault'] == 1:
             print("Transition for bad IMU data.")
             transition()
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
 
     # COAST (NOT USED)
 
@@ -904,20 +972,28 @@ def run_state():
         if PodStatus.true_data['V']['val'] <= 0.5 and PodStatus.stopped_time <= 0:
             PodStatus.stopped_time = clock()
 
+        # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
+        # IF ERRANT SPEED VALUES > 0.5 WHILE ACTUALLY
+        # STOPPED, COULD CAUSE EXCESSIVE DISCHARGE
+        # OF RESERVOIRS AND LOSS OF BRAKE RETRACTION ABILITY
         if PodStatus.true_data['V']['val'] > 0.5:
-                                        # THIS VALUE NEEDS TO BE THOROUGHLY TESTED;
-                                        # IF ERRANT SPEED VALUES > 0.5 WHILE ACTUALLY
-                                        # STOPPED, COULD CAUSE EXCESSIVE DISCHARGE
-                                        # OF RESERVOIRS AND LOSS OF BRAKE RETRACTION
-                                        # ABILITY
             PodStatus.stopped_time = 0              # RESET STOPPED TIME
             if PodStatus.cmd_int['Vent_Sol'] == 1:    # Is brake vent closed?
                 print("Opening Vent Sol")
                 PodStatus.cmd_int['Vent_Sol'] = 0       # open brake vent
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
 
         # DO NOTHING ELSE UNTIL STOPPED
-        # RECONFIGURE FOR CRAWLING
+
 
         ## RECONFIGURE FOR CRAWLING STATE
 
@@ -939,7 +1015,6 @@ def run_state():
                 print("Brakes retracted, closing Res1 solenoid.")
                 PodStatus.cmd_int['Res1_Sol'] = 0  # CLOSE RES#1 SOLENOID
                 transition()
-
 
     # CRAWLING
     # ONLY way to transition() is if LIDAR < 90ft.  Probably needs a 2nd/3rd stop point (time/dist)
@@ -965,12 +1040,23 @@ def run_state():
             print("LIDAR is less than 90 feet")
             transition()
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
     # BRAKE, FINAL
     elif PodStatus.state == 7:
         PodStatus.spacex_state = 5
         print("Entering final braking state.")
 
         PodStatus.throttle = 0
+        PodStatus.cmd_int['HV'] = 0
 
         #     PodStatus.stopped_time = 0
         if PodStatus.true_data['V']['val'] > 0.5:
@@ -982,9 +1068,19 @@ def run_state():
         else:
             transition()
 
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
     else:
         PodStatus.state = PodStatus.BrakingLow
-        
+
         #DEBUG
         print("Invalid pod state found: " + str(PodStatus.state))
         print("Quitting")
@@ -993,6 +1089,7 @@ def run_state():
         if x == '1': PodStatus.Quit = True
         elif x == '2': PodStatus.state = PodStatus.SafeToApproach
         else: PodStatus.state = PodStatus.BrakingLow
+
 
 def transition():
     """
@@ -1007,10 +1104,42 @@ def transition():
         print("TRANS: LAUNCH(3) TO BRAKE(5)")
 
     elif PodStatus.state == 5:
-        PodStatus.state = 6
-        print("TRANS: BRAKE(5) to CRAWLING(6)")
+        # Reconfig1-2-3 States
+        # Close Brake Vent, open res#1 solenoid, close res#1 solenoid
+        # APPLIES TO CONFIGS WITH NO RES IN-LINE REGULATOR
+        if PodStatus.cmd_int['Vent_Sol'] == 0:
+            PodStatus.cmd_int['Vent_Sol'] = 1     # CLOSE VENT SOL
+        elif PodStatus.Vent_Sol:
+            PodStatus.cmd_int['Res1_Sol'] = 1       # OPEN RES#1 SOL
+        elif PodStatus.Res1_Sol:
+            if PodStatus.sensor_data['Brake_Pressure'] > 177:
+                PodStatus.cmd_int['Res1_Sol'] = 0   # CLOSE RES#1 SOL
+                PodStatus.state = 6
+                print("TRANS: BRAKE(5) to CRAWLING(6)")
+
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
 
     elif PodStatus.state == 6:
+        ### RECONFIG 4 STATE
+        # TELL SD100 TO CHANGE DRIVE MODE, SET EMERG BRAKE
+        # Timeout
+        if PodStatus.state_timeout[PodStatus.state] == 0:
+            PodStatus.state_timeout[PodStatus.state] = clock()
+        PodStatus.state_timeout[PodStatus.state] = clock() - PodStatus.state_timeout[PodStatus.state]
+
+        # Timeout Transition
+        if PodStatus.state_timeout[PodStatus.state] > PodStatus.state_timeout_limits[PodStatus.state]:
+            PodStatus.Fault = True
+            PodStatus.Abort = True
+
         PodStatus.state = 7
         print("TRANS: CRAWLING(6) TO BRAKE(7)")
 
@@ -1026,6 +1155,7 @@ def transition():
         PodStatus.Fault = True
         PodStatus.Quit = True
 
+
 def abort():
     """
     Determines how the pod will abort from each specific state.  Generally, the pod will be
@@ -1034,6 +1164,9 @@ def abort():
     """
     if PodStatus.state == 1:          # S2A STATE FUNCTIONS
         print("Abort flagged in S2A.")
+
+    elif PodStatus.state == 2:          # PreLaunch Abort
+        PodStatus.state = 7
 
     elif PodStatus.state == 3:          # LAUNCH STATE FUNCTIONS
         print("ABORTING from 3 to 7")
@@ -1055,6 +1188,7 @@ def abort():
     else:
         PodStatus.state = 1
 
+
 def write_file():
     """
     Stores sensor_data and commands dicts to onboard SD card at the specified rate (10Hz)
@@ -1066,6 +1200,7 @@ def write_file():
     else:
         file = open(os.path.join('logs/', PodStatus.file_name), 'a')
         with file:
+
             ### Log sensor_data
             for key in PodStatus.sensor_data:
                 if str(key) in PodStatus.abort_ranges[PodStatus.state]:
@@ -1076,6 +1211,7 @@ def write_file():
                 line = str(key) + '\t' + str(PodStatus.sensor_data[str(key)]) + '\t' \
                        + str(int(fault_code)) + '\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
+
             ### Log commands
             for key in PodStatus.cmd_ext:
                 line = 'ext_' + str(key) + '\t' + str(PodStatus.cmd_ext[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
@@ -1083,6 +1219,7 @@ def write_file():
             for key in PodStatus.cmd_int:
                 line = 'int_' + str(key) + '\t' + str(PodStatus.cmd_int[str(key)]) + '\t\t' + str(round(clock(),2)) + '\n'
                 file.write(line)
+
             ### Log pod state variables
             line = 'state' + '\t' + str(PodStatus.state) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
                     + 'spacex_state' + '\t' + str(PodStatus.spacex_state) + '\t' + str(0) + '\t' + str(round(clock(),2)) + '\n' \
@@ -1102,24 +1239,23 @@ def write_file():
 
         PodStatus.log_lastwrite = clock()
 
+
 if __name__ == "__main__":
 
     PodStatus = Status()
 
-    gui = '0'
-    print('Which GUI should I use?\n')
-    print('\t1\tConsole')
-    print('\t2\tExternal')
-    while (gui!= '1' and gui!= '2'):
-        gui = str(input('Enter choice: '))
+    gui = '2'
+    # print('Which GUI should I use?\n')
+    # print('\t1\tConsole')
+    # print('\t2\tExternal')
+    # while gui != '1' and gui != '2':
+    #     gui = str(input('Enter choice: '))
 
     init()
 
     if PodStatus.init is False:
         PodStatus.Quit = True
         print("Failed to init.")
-
-
 
     while PodStatus.Quit is False:
         write_file()
@@ -1131,8 +1267,7 @@ if __name__ == "__main__":
         eval_abort()
         rec_data()
         spacex_data()
-        send_data()
-
+        client.send_message(*addr, 'send_data', PodStatus.data_dump())
 
     # DEBUG...REMOVE BEFORE FLIGHT
     print("Quitting")

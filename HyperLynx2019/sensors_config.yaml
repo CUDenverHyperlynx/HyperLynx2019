@@ -1,0 +1,36 @@
+# sensor names
+
+pod_health:
+  bms_low_v:            BMS Low Cell Voltage [V]
+  bms_temp:             BMS Cell Temp [C]
+  bms_pack_v:           BMS Pack Voltage [V]
+  Brake_Pressure:       Brake Pressure
+  D_diff:               D diff
+  IMU_bad_time_elapsed: IMU bad time elapsed
+  LVBatt_Voltage:       LV Batt Voltage [V]
+  LVBatt_Current:       LV Batt Current [A]
+  LVBatt_Temp:          LV Batt Temp [C]
+  RPi_Mem_Free:         RPi Mem Free [%]
+  RPi_Mem_Load:         RPi Mem Load [%]
+  RPi_Mem_Used:         RPi Mem Used [%]
+  RPi_Proc_Load:        RPi Proc Load [%]
+  RPi_Temp:             RPi Temp [C]
+  V_bad_time_elapsed:   V bad time elapsed
+
+environment_table:
+  Ambient_Pressure:     Ambient pressure [psi]
+  Ambient_Temperature:  Ambient Temp [C]
+  PV_Left_Pressure:     PV (left) pressure [psi]
+  PV_Left_Temp:         PV (left) temp [C]
+  PV_Right_Pressure:    PV (right) pressure [psi]
+  PV_Right_Temp:        PV (right) temp [C]
+
+pod_dyn_table:
+  pos:      Position [ft]
+  stp_cnt:  Stripe Count
+  spd:      Speed [ft/s]
+  accl:     Acceleration [ft/s^2]
+  IMU1_Z:   IMU1
+  IMU2_Z:   IMU2
+  thrtl:    Throttle
+  lidar:    Lidar -

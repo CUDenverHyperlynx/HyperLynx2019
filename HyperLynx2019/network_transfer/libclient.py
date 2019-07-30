@@ -7,7 +7,7 @@ import io
 import struct
 
 
-class BaseClient():
+class BaseClient:
     def __init__(self):
         self.sel = None
 
@@ -25,7 +25,8 @@ class BaseClient():
                     except Exception:
                         print(
                             "main: error: exception for",
-                            f"{message.addr}:\n{traceback.format_exc()}",
+                            "{addr}:\n{traceback}"\
+                            .format(addr=message.addr, traceback=traceback.format_exc()),
                         )
                         message.close()
                 # Check for a socket being monitored to continue.
@@ -66,6 +67,7 @@ class BaseClient():
         message = Message(self.sel, sock, addr, request)
         self.sel.register(sock, events, data=message)
 
+
 class Message:
     def __init__(self, selector, sock, addr, request):
         self.selector = selector
@@ -88,7 +90,8 @@ class Message:
         elif mode == "rw":
             events = selectors.EVENT_READ | selectors.EVENT_WRITE
         else:
-            raise ValueError(f"Invalid events mask mode {repr(mode)}.")
+            raise ValueError("Invalid events mask mode {}."\
+                                .format(repr(mode)))
         self.selector.modify(self.sock, events, data=self)
 
     def _read(self):
@@ -145,11 +148,11 @@ class Message:
     def _process_response_json_content(self):
         content = self.response
         result = content.get("result")
-        print(f"got result: {result}")
+        print("got result: {}".format(result))
 
     def _process_response_binary_content(self):
         content = self.response
-        print(f"got response: {repr(content)}")
+        print("got response: {}".format(repr(content)))
 
     def process_events(self, mask):
         if mask & selectors.EVENT_READ:
@@ -188,16 +191,16 @@ class Message:
             self.selector.unregister(self.sock)
         except Exception as e:
             print(
-                f"error: selector.unregister() exception for",
-                f"{self.addr}: {repr(e)}",
+                "error: selector.unregister() exception for",
+                "{}: {}".format(self.addr, repr(e)),
             )
 
         try:
             self.sock.close()
         except OSError as e:
             print(
-                f"error: socket.close() exception for",
-                f"{self.addr}: {repr(e)}",
+                "error: socket.close() exception for",
+                "{}: {}".format(self.addr, repr(e)),
             )
         finally:
             # Delete reference to socket object for garbage collection
@@ -245,7 +248,7 @@ class Message:
                 "content-encoding",
             ):
                 if reqhdr not in self.jsonheader:
-                    raise ValueError(f'Missing required header "{reqhdr}".')
+                    raise ValueError('Missing required header "{}".'.format(reqhdr))
 
     def process_response(self):
         content_len = self.jsonheader["content-length"]
@@ -262,9 +265,28 @@ class Message:
             # Binary or unknown content-type
             self.response = data
             print(
-                f'received {self.jsonheader["content-type"]} response from',
+                'received {} response from'.format(self.jsonheader["content-type"]),
                 self.addr,
             )
             self._process_response_binary_content()
         # Close when response has been processed
         self.close()
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Pod Data Simulator')
+    parser.add_argument('--server', help='<host>:<port>')
+    args = parser.parse_args()
+
+    client = BaseClient()
+
+    if args.server:
+        host, port = args.server.split(':')
+        port = int(port)
+    else:
+        host, port = ('localhost', 5050)
+
+    data = {'test1': [1,2,3,4,5], 'test2': ['abcd','1234',5,7]}
+    client.send_message(host, port, 'send_data', data)
