@@ -62,9 +62,8 @@ import pickle
 #from argparse import ArgumentParser
 #import smbus
 import Hyperlynx_ECS, flight_sim
+# from Client import send_server
 from network_transfer.libclient import BaseClient
-from Client import send_server
-import timeouts
 
 class Status():
     # Definition of State Numbers
@@ -168,36 +167,6 @@ class Status():
 
         # INITIATE LOG RATE INFO
         self.log_lastwrite = clock()            # Saves last time of file write to control log rate
-        self.log_rate = 10                      # Hz
-
-    def create_log(self):
-        ### Create log file ###
-        date = datetime.datetime.today()
-        new_number = str(date.year) + str(date.month) + str(date.day) \
-                     + str(date.hour) + str(date.minute) + str(date.second)
-        self.file_name = 'log_' + new_number
-        file = open(os.path.join('logs/', self.file_name), 'a')
-        columns = ['Label', 'Value', 'Fault', 'Time']
-        with file:
-            file.write('\t'.join(map(lambda column_title: "\"" + column_title + "\"", columns)))
-            file.write("\n")
-        file.close()
-        print("Log file created: " + str(self.file_name))
-    
-    def data_dump(self):
-        data_dict = {}
-        data_dict['pos'] = self.true_data['D']['val']
-        data_dict['stp_cnt'] = self.true_data['stripe_count']
-        data_dict['spd'] = self.true_data['V']['val']
-        data_dict['accl'] = self.true_data['A']['val']
-        data_dict['IMU1_Z'] = self.sensor_filter['IMU1_Z']['val']
-        data_dict['IMU2_z'] = self.sensor_filter['IMU2_Z']['val']
-        data_dict['thrtl'] = self.throttle
-        data_dict['lidar'] = self.sensor_filter['LIDAR']['val']
-        return data_dict
-
-def init():
-    # Create Abort Range and init sensor_data Dictionary from template file
     abort_names = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(0, 1),
                                    dtype=str)
     abort_vals = numpy.genfromtxt('abortranges.dat', skip_header=1, delimiter='\t', usecols=numpy.arange(1, 12))
